@@ -1,0 +1,79 @@
+# Wiki staleness ignore list — edit freely.
+# Filters changed-file detection (git paths + mtime scan).
+
+# Dependencies
+node_modules/
+vendor/
+venv/
+.venv/
+
+# Build output
+dist/
+build/
+.svelte-kit/
+.next/
+out/
+target/
+*.min.js
+*.min.css
+
+# Lockfiles
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+Cargo.lock
+poetry.lock
+composer.lock
+
+# Secrets / env
+.env
+.env.*
+*.pem
+*.key
+
+# Caches & temp
+.cache/
+.tmp/
+*.log
+coverage/
+.nyc_output/
+
+# VCS / editor / pi
+.git/
+.vscode/
+.idea/
+.pi/
+.agents/
+
+# Runtime state
+.work/
+cookies.txt
+
+# The wiki itself (avoid self-trigger)
+docs/wiki/
+
+# Generated
+*.generated.*
+db-docs.html
+
+# OS shortcuts / junk
+*.lnk
+
+# Dashboard demo-data seed/inspect tooling (dev-only, not core code)
+scripts/seed-week.mjs
+scripts/seed-month.mjs
+scripts/lint-seed.mjs
+scripts/reset-seed.mjs
+scripts/verify-week.mjs
+scripts/verify-month.mjs
+scripts/inspect-week.mjs
+scripts/inspect-shapes.mjs
+
+# One-off block-slug backfill migrations (dev-only, already run)
+scripts/backfill-block-slugs.mjs
+scripts/backfill-block-slugs-retry.mjs
+
+# Standalone exploratory/research artifacts (drafts, test SVGs, research docs)
+docs/tests/
+docs/svg-illustrations/
+docs/tubemap-options.html
