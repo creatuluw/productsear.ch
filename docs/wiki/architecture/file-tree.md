@@ -2,21 +2,21 @@
 type: Artifact
 title: File tree
 description: Complete project file listing with per-file descriptions.
-timestamp: "2026-07-03T13:25:27.632Z"
+timestamp: "2026-07-04T00:00:00.000Z"
 ---
 
-# File tree — generated 2026-07-03
+# File tree — generated 2026-07-04
 # Excludes .git, node_modules, .svelte-kit, build, .pi, .work, .agents.
 # [description] — shorthand summary of each file's function
 
 .
-├── .env [local env, gitignored — OPENAI_API_KEY + DATABASE_URL]
-├── .env.example [committed env template with sk-REPLACE_ME]
+├── .env [local env, gitignored — DATABASE_URL + VOYAGE_API_KEY + chat provider keys]
+├── .env.example [committed env template; Voyage keys + DeepSeek/OpenAI chat config]
 ├── .gitignore
 ├── .prettierrc
 ├── README.md
 ├── eslint.config.js [flat config: typescript-eslint + eslint-plugin-svelte]
-├── package.json [SvelteKit 2 + adapter-node + Drizzle + ai SDK + Tailwind 4]
+├── package.json [SvelteKit 2 + adapter-node + Drizzle + ai SDK + Tailwind 4; `start` = node build]
 ├── package-lock.json
 ├── svelte.config.js [adapter-node]
 ├── tsconfig.json [TS strict]
@@ -51,12 +51,18 @@ timestamp: "2026-07-03T13:25:27.632Z"
 │       ├── index.md [wiki landing page linking all sections]
 │       ├── last_updated.md [sync marker]
 │       └── log.md [chronological update/changelog log]
-├── research_semantic_search/
-│   └── research_report.md [research backing the search/RAG stack decision]
+├── docs/
+│   ├── research_semantic_search/
+│   │   └── research_report.md [research backing the search/RAG stack decision]
+│   └── wiki/ [OKF knowledge wiki bundle]  (see below)
 ├── scripts/
 │   ├── embed-bookmarks.ts [resumable batched embedding backfill; --dry-run]
-│   ├── migrate.ts [applies SQL migration]
-│   └── migration.sql [enable pgvector, create bookmark_embeddings + HNSW + GIN]
+│   ├── migrate.ts [applies a SQL migration file to DATABASE_URL]
+│   ├── migration.sql [enable pgvector, create bookmark_embeddings (384-dim) + HNSW + GIN — original schema]
+│   ├── migration-384.sql [original OpenAI/hf 384-dim variant, superseded by voyage-1024]
+│   └── migration-voyage-1024.sql [Voyage voyage-4-large 1024-dim embedding column + index]
+├── static/
+│   └── favicon.svg
 └── src/
     ├── app.css [Tailwind 4 import]
     ├── app.d.ts [SvelteKit app typings]
@@ -66,7 +72,8 @@ timestamp: "2026-07-03T13:25:27.632Z"
     │       ├── bookmark-text.ts [builds the one searchable text blob per bookmark]
     │       ├── db/
     │       │   └── index.ts [Drizzle/postgres-js client; reads process.env]
-    │       ├── embeddings.ts [OpenAI text-embedding-3-small client; reads process.env]
+    │       ├── embeddings.ts [Voyage AI embedding client; default voyage-4-large 1024-dim; raw fetch, no SDK]
+    │       ├── rerank.ts [Voyage rerank-2.5-lite cross-encoder re-scoring client; shares VOYAGE_API_KEY]
     │       ├── rag.ts [retrieval + prompt + streaming answer via AI SDK streamText]
     │       └── search.ts [single hybrid RRF SQL query: cosine + ts_rank]
     └── routes/
@@ -76,4 +83,7 @@ timestamp: "2026-07-03T13:25:27.632Z"
             ├── ask/
             │   └── +server.ts [GET /api/ask — streaming RAG]
             └── search/
-                └── +server.ts [GET /api/search — hybrid RRF search]
+                └── +server.ts [GET /api/search — hybrid RRF search + Voyage rerank]
+└── .github/
+    └── workflows/
+        └── embed-new-bookmarks.yml [daily cron + manual dispatch: embeds new bookmarks]

@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { Search, Sparkles, ExternalLink, Loader2 } from 'lucide-svelte';
+	import { marked } from 'marked';
+
+	marked.setOptions({ gfm: true, breaks: true });
 
 	type Source = {
 		id: number;
@@ -228,8 +231,10 @@
 					<Loader2 size={16} class="animate-spin" /> Thinking…
 				</div>
 			{/if}
-			<div class="whitespace-pre-wrap text-sm leading-relaxed text-ink">
-				{answer}{#if loading}<span class="animate-pulse text-primary">▋</span>{/if}
+			<div class="md text-sm leading-relaxed text-ink">
+				{#if answer}
+					{@html marked.parse(answer)}
+				{/if}{#if loading}<span class="animate-pulse text-primary">▋</span>{/if}
 			</div>
 			{#if askSources.length}
 				<div class="mt-4 border-t border-ink/10 pt-3">
