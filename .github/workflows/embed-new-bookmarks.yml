@@ -1,0 +1,59 @@
+# Embed new bookmarks daily. The backfill script is resumable — it builds the
+# set of already-embedded bookmark_ids and only processes the rest — so a daily
+# run picks up anything the Raindrop sync added since the last run.
+#
+# Secrets required (Settings → Secrets and variables → Actions):
+#   DATABASE_URL   — Railway Postgres connection string
+#   VOYAGE_API_KEY — Voyage AI API key (embeddings)
+
+name: Embed new bookmarks
+
+on:
+  schedule:
+    # 04:17 UTC daily — off the top of the hour to dodge GitHub's cron rush.
+    - cron: '17 4 * * *'
+  workflow_dispatch: # manual "Run workflow" button
+
+permissions:
+  contents: read
+
+# Never run two embed jobs at once — concurrent Voyage calls + DB writes on the
+# same table would race on the unique bookmark_id upserts.
+concurrency:
+  group: embed-bookmarks
+  cancel-in-progress: false
+
+jobs:
+  embed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      VOYAGE_API_KEY: ${{ secrets.VOYAGE_API_KEY }}
+      EMBEDDING_MODEL: voyage-4-large
+      EMBEDDING_DIMENSIONS: '1024'
+      DB_SCHEMA: te9_dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Sanity check secrets present
+        run: |
+          test -n "$DATABASE_URL"  || { echo "::error::DATABASE_URL secret is not set"; exit 1; }
+          test -n "$VOYAGE_API_KEY" || { echo "::error::VOYAGE_API_KEY secret is not set"; exit 1; }
+
+      - name: Embed new bookmarks
+        run: npm run embed
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Embed run: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "See the log above for the 'Already embedded' vs 'To embed' counts." >> "$GITHUB_STEP_SUMMARY"
