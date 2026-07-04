@@ -76,7 +76,7 @@ export const bookmarkEmbeddings = pgTable(
 	{
 		id: integer('id').primaryKey(),
 		bookmarkId: integer('bookmark_id').notNull().unique(),
-		embedding: vector('embedding', { dimensions: 384 }).notNull(),
+		embedding: vector('embedding', { dimensions: 1024 }).notNull(),
 		searchTsv: text('search_tsv'),
 		model: text('model').notNull(),
 		embeddedAt: timestamp('embedded_at', { withTimezone: true }).notNull().defaultNow()

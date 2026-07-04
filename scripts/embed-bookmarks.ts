@@ -84,7 +84,7 @@ for (let i = 0; i < todo.length; i += BATCH) {
 			category: r.category, tags: r.analysis_tags
 		})
 	);
-	const vectors = await embedTexts(texts);
+	const vectors = await embedTexts(texts, 'document');
 
 	await sql.begin(async (tx) => {
 		for (let j = 0; j < batch.length; j++) {
@@ -95,7 +95,7 @@ for (let i = 0; i < todo.length; i += BATCH) {
 			// and keyword search operate over identical content.
 			await tx`
 				INSERT INTO te9_dev.bookmark_embeddings (bookmark_id, embedding, search_tsv, model)
-				VALUES (${r.id}, ${vecStr}::vector, to_tsvector('english', ${text}), ${process.env.EMBEDDING_MODEL ?? 'Xenova/all-MiniLM-L6-v2'})
+				VALUES (${r.id}, ${vecStr}::vector, to_tsvector('english', ${text}), ${process.env.EMBEDDING_MODEL ?? 'voyage-4-large'})
 				ON CONFLICT (bookmark_id) DO UPDATE
 					SET embedding = EXCLUDED.embedding,
 					    search_tsv = EXCLUDED.search_tsv,

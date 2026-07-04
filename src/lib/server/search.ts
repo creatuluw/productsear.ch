@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { db } from './db';
 import { embedQuery } from './embeddings';
+import { rerank } from './rerank';
 
 export interface SearchResult {
 	id: number;
@@ -14,7 +15,21 @@ export interface SearchResult {
 	vecDistance: number;
 	textRank: number;
 	rrf: number;
+	rerankScore: number | null;
 	snippet: string;
+}
+
+// RRF retrieves this many candidates, then the cross-encoder reranker narrows
+// to `limit`. Pool > limit is what makes reranking meaningful.
+const RERANK_POOL = 50;
+
+function rerankText(r: {
+	title: string;
+	purpose: string | null;
+	excerpt: string | null;
+	tags: string | null;
+}): string {
+	return [r.title, r.purpose, r.excerpt, r.tags].filter(Boolean).join(' · ');
 }
 
 /**
@@ -27,6 +42,10 @@ export interface SearchResult {
  */
 export async function hybridSearch(query: string, limit = 20): Promise<SearchResult[]> {
 	const queryVec = await embedQuery(query);
+
+	// Fetch a candidate pool (RERANK_POOL, or `limit` if it's larger) from the
+	// fused rank list, then hand off to the cross-encoder reranker.
+	const poolSize = Math.max(limit, RERANK_POOL);
 
 	const rows = (await db.execute<{
 		bookmark_id: number;
@@ -71,10 +90,10 @@ export async function hybridSearch(query: string, limit = 20): Promise<SearchRes
 			) AS snippet
 		FROM ranked
 		ORDER BY rrf DESC
-		LIMIT ${limit}
+		LIMIT ${poolSize}
 	`));
 
-	return rows.map((r) => ({
+	const mapped: SearchResult[] = rows.map((r) => ({
 		id: r.bookmark_id,
 		title: r.title,
 		url: r.url,
@@ -86,6 +105,22 @@ export async function hybridSearch(query: string, limit = 20): Promise<SearchRes
 		vecDistance: Number(r.vec_distance),
 		textRank: Number(r.text_rank),
 		rrf: Number(r.rrf),
+		rerankScore: null,
 		snippet: r.snippet
 	}));
+
+	if (mapped.length <= limit) return mapped;
+
+	// Cross-encoder rerank over the pool, fall back to RRF order on failure.
+	try {
+		const order = await rerank(
+			query,
+			mapped.map(rerankText),
+			limit
+		);
+		return order.map((i) => mapped[i]);
+	} catch (e) {
+		console.error('rerank failed, returning RRF order:', e);
+		return mapped.slice(0, limit);
+	}
 }

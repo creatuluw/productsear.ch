@@ -14,9 +14,10 @@ export function buildSearchText(
 	content: Pick<BookmarkContent, 'markdown'> | undefined,
 	analysis: Pick<BookmarkAnalysis, 'purpose' | 'howToUse' | 'relevance' | 'category' | 'tags'> | undefined
 ): string {
-	// ponytail: hard cap content at ~1500 chars — embedding-3-small handles long input
-	// but analysis + metadata are the high-signal parts for our query type.
-	const contentSnippet = (content?.markdown ?? '').slice(0, 1500);
+	// ponytail: cap content at ~6000 chars. Voyage voyage-4-large takes 32k tokens,
+	// so we no longer truncate aggressively (the old 1500 limit was for MiniLM's
+	// 512-token cap). Analysis + metadata stay the highest-signal parts.
+	const contentSnippet = (content?.markdown ?? '').slice(0, 6000);
 	const parts = [
 		`Title: ${b.title}`,
 		b.domain ? `Domain: ${b.domain}` : '',

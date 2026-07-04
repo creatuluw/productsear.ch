@@ -128,27 +128,33 @@
 
 <svelte:head><title>productsear.ch — semantic bookmark search</title></svelte:head>
 
-<main class="mx-auto max-w-3xl px-4 py-10">
-	<header class="mb-8 text-center">
-		<h1 class="text-3xl font-bold tracking-tight">productsear.ch</h1>
-		<p class="text-[var(--color-muted)] mt-1">Semantic search over 2,270 bookmarks</p>
+<main class="mx-auto max-w-3xl px-4 py-12">
+	<header class="mb-9 text-center">
+		<h1
+			class="mb-2 text-balance text-3xl font-medium tracking-[-0.02em] text-ink md:text-[2.75rem] md:leading-[1.05]"
+		>
+			productsear.ch
+		</h1>
+		<p class="tracking-wide text-muted">Semantic search over 2,270 bookmarks</p>
 	</header>
 
-	<div class="mb-4 flex justify-center gap-2">
+	<div class="mb-5 flex justify-center gap-2">
 		<button
-			class="rounded-full px-4 py-1.5 text-sm font-medium transition"
-			class:bg-accent={mode === 'search'}
-			class:text-accent-fg={mode === 'search'}
-			class:bg-surface={mode !== 'search'}
+			class="rounded-full px-4 py-1.5 text-sm font-medium tracking-wide transition-colors duration-200"
+			class:bg-primary={mode === 'search'}
+			class:text-primary-fg={mode === 'search'}
+			class:bg-cream={mode !== 'search'}
+			class:text-ink={mode !== 'search'}
 			onclick={() => setMode('search')}
 		>
 			<Search size={14} class="mr-1 inline-block" /> Search
 		</button>
 		<button
-			class="rounded-full px-4 py-1.5 text-sm font-medium transition"
-			class:bg-accent={mode === 'ask'}
-			class:text-accent-fg={mode === 'ask'}
-			class:bg-surface={mode !== 'ask'}
+			class="rounded-full px-4 py-1.5 text-sm font-medium tracking-wide transition-colors duration-200"
+			class:bg-primary={mode === 'ask'}
+			class:text-primary-fg={mode === 'ask'}
+			class:bg-cream={mode !== 'ask'}
+			class:text-ink={mode !== 'ask'}
 			onclick={() => setMode('ask')}
 		>
 			<Sparkles size={14} class="mr-1 inline-block" /> Ask
@@ -159,47 +165,56 @@
 		<input
 			bind:value={query}
 			oninput={onInput}
-			placeholder={mode === 'search' ? 'Search bookmarks…' : 'Ask anything, e.g. "SaaS ideas from these packages"'}
-			class="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-base shadow-sm outline-none focus:border-[var(--color-accent)]"
+			placeholder={mode === 'search'
+				? 'Search bookmarks…'
+				: 'Ask anything, e.g. "SaaS ideas from these packages"'}
+			class="chrome-border w-full rounded-xl border border-ink/10 bg-cream/[0.5] px-4 py-3.5 text-base text-ink placeholder:text-muted/70 shadow-sm outline-none transition focus:bg-cream/80"
 		/>
 	</form>
 
 	{#if error_}
-		<div class="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+		<div class="mb-4 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm text-primary">
 			{error_}
 		</div>
 	{/if}
 
 	{#if mode === 'search'}
 		{#if tookMs !== null}
-			<p class="mb-3 text-xs text-[var(--color-muted)]">
+			<p class="mb-3 font-mono text-xs tracking-wide text-muted">
 				{loading ? 'Searching…' : `${results.length} results in ${tookMs}ms`}
 			</p>
 		{/if}
 		<ul class="space-y-3">
 			{#each results as r (r.id)}
-				<li class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-					<a href={r.url} target="_blank" rel="noopener" class="group">
-						<div class="flex items-center gap-1 text-xs text-[var(--color-muted)]">
+				<li
+					class="group rounded-lg border border-ink/10 bg-cream/[0.03] p-4 transition-all duration-200 hover:-translate-y-px hover:border-ink/15 hover:bg-cream/[0.07]"
+				>
+					<a href={r.url} target="_blank" rel="noopener">
+						<div class="flex items-center gap-1 font-mono text-xs tracking-wide text-muted">
 							<span>{r.domain ?? host(r.url)}</span>
 							<ExternalLink size={11} class="opacity-0 transition group-hover:opacity-100" />
 						</div>
-						<h3 class="mt-0.5 font-semibold text-[var(--color-text)] group-hover:text-[var(--color-accent)]">
+						<h3
+							class="mt-1 font-medium tracking-[-0.01em] text-ink transition-colors group-hover:text-primary"
+						>
 							{r.title}
 						</h3>
 					</a>
 					{#if r.snippet}
-						<p class="mt-1 text-sm text-[var(--color-text)] opacity-80">
+						<p class="mt-1.5 text-sm leading-relaxed text-ink/80">
 							{@html r.snippet}
 						</p>
 					{/if}
 					{#if r.purpose}
-						<p class="mt-1.5 text-sm italic text-[var(--color-muted)]">{r.purpose}</p>
+						<p class="mt-1.5 text-sm italic text-muted">{r.purpose}</p>
 					{/if}
 					{#if r.tags}
-						<div class="mt-2 flex flex-wrap gap-1">
+						<div class="mt-2.5 flex flex-wrap gap-1">
 							{#each r.tags.split(',').map((t) => t.trim()).filter(Boolean).slice(0, 6) as tag, i (tag + i)}
-								<span class="rounded-full bg-[var(--color-border)] px-2 py-0.5 text-xs">{tag}</span>
+								<span
+									class="rounded-full border border-ink/10 bg-ink/[0.03] px-2 py-0.5 font-mono text-xs tracking-wide text-muted"
+									>{tag}</span
+								>
 							{/each}
 						</div>
 					{/if}
@@ -207,18 +222,20 @@
 			{/each}
 		</ul>
 	{:else if loading || answer}
-		<div class="prose-sm rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+		<div class="chrome-border rounded-xl border border-ink/10 bg-cream/[0.03] p-5">
 			{#if loading && !answer}
-				<div class="flex items-center gap-2 text-sm text-[var(--color-muted)]">
+				<div class="flex items-center gap-2 font-mono text-sm tracking-wide text-muted">
 					<Loader2 size={16} class="animate-spin" /> Thinking…
 				</div>
 			{/if}
-			<div class="whitespace-pre-wrap text-sm leading-relaxed">
-				{answer}{#if loading}<span class="animate-pulse">▋</span>{/if}
+			<div class="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+				{answer}{#if loading}<span class="animate-pulse text-primary">▋</span>{/if}
 			</div>
 			{#if askSources.length}
-				<div class="mt-4 border-t border-[var(--color-border)] pt-3">
-					<p class="mb-2 text-xs font-semibold uppercase text-[var(--color-muted)]">Sources</p>
+				<div class="mt-4 border-t border-ink/10 pt-3">
+					<p class="mb-2 font-mono text-xs font-semibold uppercase tracking-wide text-muted">
+						Sources
+					</p>
 					<ul class="space-y-1">
 						{#each askSources as s, i (s.id)}
 							<li>
@@ -226,7 +243,7 @@
 									href={s.url}
 									target="_blank"
 									rel="noopener"
-									class="text-sm text-[var(--color-accent)] hover:underline"
+									class="font-mono text-sm tracking-wide text-primary hover:underline"
 								>
 									[{i + 1}] {s.title}
 								</a>
