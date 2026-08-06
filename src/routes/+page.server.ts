@@ -2,9 +2,12 @@ import { sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
 
-// Live corpus size for the homepage hero. Cheap count(*) — the bookmarks table
-// is the read-only Raindrop-synced mirror; this is what "search over N" means.
+// Live corpus state for the homepage hero readout: corpus size + when the
+// external Raindrop sync last touched the table. Cheap scalar queries.
 export const load: PageServerLoad = async () => {
-	const rows = await db.execute<{ n: number }>(sql`SELECT count(*)::int AS n FROM te9_dev.bookmarks`);
-	return { bookmarkCount: rows[0].n };
+	const c = await db.execute<{ n: number }>(sql`SELECT count(*)::int AS n FROM te9_dev.bookmarks`);
+	const s = await db.execute<{ t: string | null }>(
+		sql`SELECT max(synced_at)::text AS t FROM te9_dev.bookmarks`
+	);
+	return { bookmarkCount: c[0].n, lastSynced: s[0].t };
 };

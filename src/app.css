@@ -14,32 +14,58 @@ label {
 	cursor: pointer;
 }
 
+/*
+  Instrument-grade precision tool. Tokens in OKLCH (perceptually uniform);
+  neutrals tinted toward the brand hue (green ~165) for subconscious cohesion.
+  Trust = legibility, Proficiency = precision/data-forward, Speed = focus.
+*/
 @theme {
-	/* agentos-sdk.dev palette */
-	--color-paper: #efefef;
-	--color-cream: #f4f1e7;
-	--color-ink: #1b1916;
-	--color-primary: #ff6a00;
-	--color-primary-fg: #ffffff;
-	--color-olive: #5c6b4f;
-	--color-sage: #93a286;
-	--color-gold: #d4b483;
-	--color-muted: #8a8478;
+	--color-canvas: oklch(0.985 0.004 165);
+	--color-surface: oklch(0.995 0.003 165);
+	--color-ink: oklch(0.22 0.012 165);
+	--color-ink-soft: oklch(0.48 0.012 165);
+	--color-ink-faint: oklch(0.7 0.01 165);
+	--color-accent: oklch(0.42 0.09 165);
+	--color-accent-hover: oklch(0.36 0.1 165);
+	--color-signal: oklch(0.68 0.14 70);
+	--color-success: oklch(0.55 0.11 165);
+	--color-danger: oklch(0.54 0.16 27);
 
-	--font-sans: 'Manrope', 'Segoe UI', system-ui, sans-serif;
-	--font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
+	--font-sans: 'Hanken Grotesk', 'Segoe UI', system-ui, sans-serif;
+	--font-mono: 'Martian Mono', SFMono-Regular, monospace;
+
+	--radius: 0.375rem;
 }
 
-/* Body: warm paper + barely-there fractal grain (agentos-sdk.dev paper-grain) */
 html,
 body {
-	background-color: var(--color-paper);
-	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.045 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>");
+	background-color: var(--color-canvas);
 	color: var(--color-ink);
 	font-family: var(--font-sans);
 	font-weight: 400;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
+
+/* numerals align like a gauge readout */
+.mono,
+code,
+pre,
+kbd {
+	font-variant-numeric: tabular-nums;
+}
+
+/* selection + focus ring — accessibility, accent-tinted.
+   Inputs excluded: the search field uses its own gold underline (focus:border-signal)
+   as its focus indicator instead of this green outline. */
+::selection {
+	background: oklch(0.42 0.09 165 / 0.18);
+	color: var(--color-ink);
+}
+:where(a, button, textarea, select, [tabindex]):focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+	border-radius: 2px;
 }
 
 /* ---- Markdown prose for Ask-mode answers ---- */
@@ -74,7 +100,7 @@ body {
 	font-size: 1.05em;
 }
 .md a {
-	color: var(--color-primary);
+	color: var(--color-accent);
 	text-decoration: underline;
 	text-underline-offset: 2px;
 }
@@ -99,19 +125,22 @@ body {
 	margin: 0.25em 0;
 }
 .md li::marker {
-	color: var(--color-muted);
+	color: var(--color-ink-faint);
 }
+/* blockquote: tinted block, hairline on all sides — no side-stripe (that's a banned tell) */
 .md blockquote {
-	border-left: 3px solid var(--color-gold);
+	border: 1px solid oklch(0.22 0.012 165 / 0.1);
+	border-radius: var(--radius);
+	background: oklch(0.97 0.006 165);
 	margin: 0.75em 0;
-	padding: 0.1em 0 0.1em 1em;
-	color: var(--color-muted);
+	padding: 0.6em 1em;
+	color: var(--color-ink-soft);
 	font-style: italic;
 }
 .md code {
 	font-family: var(--font-mono);
-	font-size: 0.85em;
-	background: color-mix(in srgb, var(--color-ink) 7%, transparent);
+	font-size: 0.82em;
+	background: oklch(0.22 0.012 165 / 0.06);
 	border-radius: 4px;
 	padding: 0.1em 0.35em;
 }
@@ -119,8 +148,8 @@ body {
 	margin: 0.9em 0;
 	padding: 0.9em 1em;
 	border-radius: 8px;
-	background: color-mix(in srgb, var(--color-ink) 92%, transparent);
-	color: #f4f1e7;
+	background: oklch(0.22 0.012 165 / 0.94);
+	color: oklch(0.96 0.004 165);
 	overflow-x: auto;
 }
 .md pre code {
@@ -130,7 +159,7 @@ body {
 }
 .md hr {
 	border: none;
-	border-top: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+	border-top: 1px solid oklch(0.22 0.012 165 / 0.12);
 	margin: 1.25em 0;
 }
 .md table {
@@ -141,68 +170,11 @@ body {
 }
 .md th,
 .md td {
-	border: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+	border: 1px solid oklch(0.22 0.012 165 / 0.12);
 	padding: 0.4em 0.6em;
 	text-align: left;
 }
 .md th {
 	font-weight: 600;
-	background: color-mix(in srgb, var(--color-ink) 4%, transparent);
-}
-
-/* Signature chrome gradient border — animated silver conic, hover advances it.
-   Used on the search input + focused pills. Lifted verbatim from agentos-sdk.dev. */
-@property --chrome-hover-offset {
-	syntax: '<angle>';
-	inherits: false;
-	initial-value: 0deg;
-}
-.chrome-border {
-	--chrome-angle: 135deg;
-	--chrome-hover-offset: 0deg;
-	position: relative;
-	transition: --chrome-hover-offset 0.7s cubic-bezier(0.37, 0, 0.63, 1);
-}
-.chrome-border:hover {
-	--chrome-hover-offset: 60deg;
-}
-.chrome-border::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	padding: 1px;
-	background: conic-gradient(
-		from calc(var(--chrome-angle) + var(--chrome-hover-offset)),
-		#5c6a7a,
-		#8b7d6b 5%,
-		#f0f0f0 11%,
-		#6a7e94,
-		#a09888 21%,
-		#fff 27%,
-		#4a5a6a,
-		#5e4f40 37%,
-		#d8dce0 43%,
-		#8896a4,
-		#a89880 53%,
-		#fff 59%,
-		#7a8a9c,
-		#b8b0a4 69%,
-		#f8f8f8 75%,
-		#506070,
-		#c4beb4,
-		#e8e4e0 90%,
-		#6e7c8a 94%,
-		#8a7c6c,
-		#b0a898
-	);
-	-webkit-mask:
-		linear-gradient(#fff 0 0) content-box,
-		linear-gradient(#fff 0 0);
-	mask:
-		linear-gradient(#fff 0 0) content-box,
-		linear-gradient(#fff 0 0);
-	-webkit-mask-composite: xor;
-	mask-composite: exclude;
-	pointer-events: none;
+	background: oklch(0.22 0.012 165 / 0.04);
 }

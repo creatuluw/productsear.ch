@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Search, Sparkles, ExternalLink, Loader2 } from 'lucide-svelte';
+	import { ExternalLink, Loader2 } from 'lucide-svelte';
+	import { fly } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import { marked } from 'marked';
 
 	marked.setOptions({ gfm: true, breaks: true });
@@ -37,6 +39,24 @@
 	let error_ = $state('');
 
 	let debounce: ReturnType<typeof setTimeout> | null = null;
+	let reduceMotion = $state(false);
+
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+		reduceMotion = mq.matches;
+		const update = () => (reduceMotion = mq.matches);
+		mq.addEventListener('change', update);
+		return () => mq.removeEventListener('change', update);
+	});
+
+	// teach the interface: real queries this corpus can answer
+	const examples = [
+		'voyage rate limit backfill',
+		'cross-encoder rerank',
+		'csrf origin adapter-node',
+		'raindrop sync mirror'
+	];
 
 	async function runSearch() {
 		const q = query.trim();
@@ -122,6 +142,12 @@
 		error_ = '';
 	}
 
+	function pickExample(ex: string) {
+		if (mode !== 'search') setMode('search');
+		query = ex;
+		runSearch();
+	}
+
 	function host(url: string): string {
 		try {
 			return new URL(url).host;
@@ -129,120 +155,191 @@
 			return url;
 		}
 	}
+
+	function fmtSynced(iso: string | null): string {
+		if (!iso) return '—';
+		const d = new Date(iso);
+		if (Number.isNaN(d.getTime())) return '—';
+		const hh = String(d.getUTCHours()).padStart(2, '0');
+		const mm = String(d.getUTCMinutes()).padStart(2, '0');
+		return `${hh}:${mm} UTC`;
+	}
+
+	const rowIn = (i: number) => ({
+		y: reduceMotion ? 0 : 8,
+		duration: reduceMotion ? 0 : 180,
+		delay: reduceMotion ? 0 : Math.min(i * 35, 280),
+		easing: cubicOut
+	});
 </script>
 
-<svelte:head><title>productsear.ch — semantic bookmark search</title></svelte:head>
+<svelte:head><title>productsear.ch — semantic</title></svelte:head>
 
-<main class="mx-auto max-w-3xl px-4 py-12">
-	<header class="mb-9 text-center">
-		<h1
-			class="mb-2 text-balance text-3xl font-medium tracking-[-0.02em] text-ink md:text-[2.75rem] md:leading-[1.05]"
-		>
+<main class="mx-auto max-w-[1400px] px-6 py-14 sm:px-10 lg:px-14">
+	<!-- Instrument readout: the signature. Live, transparent state = trust + proficiency. -->
+	<dl
+		class="mb-10 grid grid-cols-2 overflow-hidden rounded-[var(--radius)] border border-ink/10 sm:grid-cols-4"
+	>
+		<div class="border-b border-ink/10 px-4 py-3 sm:border-b-0 sm:border-r">
+			<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">Corpus</dt>
+			<dd class="mt-1.5 flex items-center gap-2 font-mono text-lg text-ink">
+				<span class="status-dot" aria-hidden="true"></span>{data.bookmarkCount.toLocaleString()}
+			</dd>
+		</div>
+		<div class="border-b border-ink/10 px-4 py-3 sm:border-b-0 sm:border-r">
+			<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">Indexed</dt>
+			<dd class="mt-1.5 font-mono text-lg text-ink">{fmtSynced(data.lastSynced)}</dd>
+		</div>
+		<div class="border-r border-ink/10 px-4 py-3">
+			<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">Latency</dt>
+			<dd class="mt-1.5 font-mono text-lg text-ink">{tookMs !== null ? `${tookMs}ms` : '—'}</dd>
+		</div>
+		<div class="px-4 py-3">
+			<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">Pipeline</dt>
+			<dd class="mt-1.5 font-mono text-lg text-ink">hybrid<span class="text-ink-faint"> · </span>rerank</dd>
+		</div>
+	</dl>
+
+	<header class="mb-8">
+		<p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">// semantic search</p>
+		<h1 class="mt-2.5 text-[2rem] font-semibold leading-none tracking-[-0.025em] text-ink">
 			productsear.ch
 		</h1>
-		<p class="tracking-wide text-muted">Semantic search over {data.bookmarkCount.toLocaleString()} bookmarks</p>
 	</header>
 
-	<div class="mb-5 flex justify-center gap-2">
+	<!-- mode toggle: lowercase mono pills -->
+	<div class="mb-6 flex gap-2">
 		<button
-			class="rounded-full px-4 py-1.5 text-sm font-medium tracking-wide transition-colors duration-200"
-			class:bg-primary={mode === 'search'}
-			class:text-primary-fg={mode === 'search'}
-			class:bg-cream={mode !== 'search'}
-			class:text-ink={mode !== 'search'}
 			onclick={() => setMode('search')}
+			class="rounded-full px-3.5 py-1.5 font-mono text-xs transition-colors duration-150 {mode ===
+			'search'
+				? 'bg-ink text-canvas'
+				: 'border border-ink/15 text-ink-soft hover:border-ink/35 hover:text-ink'}"
 		>
-			<Search size={14} class="mr-1 inline-block" /> Search
+			search
 		</button>
 		<button
-			class="rounded-full px-4 py-1.5 text-sm font-medium tracking-wide transition-colors duration-200"
-			class:bg-primary={mode === 'ask'}
-			class:text-primary-fg={mode === 'ask'}
-			class:bg-cream={mode !== 'ask'}
-			class:text-ink={mode !== 'ask'}
 			onclick={() => setMode('ask')}
+			class="rounded-full px-3.5 py-1.5 font-mono text-xs transition-colors duration-150 {mode ===
+			'ask'
+				? 'bg-ink text-canvas'
+				: 'border border-ink/15 text-ink-soft hover:border-ink/35 hover:text-ink'}"
 		>
-			<Sparkles size={14} class="mr-1 inline-block" /> Ask
+			ask
 		</button>
 	</div>
 
-	<form onsubmit={onSubmit} class="mb-6">
+	<form onsubmit={onSubmit} class="mb-8">
 		<input
 			bind:value={query}
 			oninput={onInput}
-			placeholder={mode === 'search'
-				? 'Search bookmarks…'
-				: 'Ask anything, e.g. "SaaS ideas from these packages"'}
-			class="chrome-border w-full rounded-xl border border-ink/10 bg-cream/[0.5] px-4 py-3.5 text-base text-ink placeholder:text-muted/70 shadow-sm outline-none transition focus:bg-cream/80"
+			placeholder={mode === 'search' ? 'Search bookmarks…' : 'Ask anything…'}
+			autocomplete="off"
+			spellcheck={mode === 'search' ? false : true}
+			class="w-full border-0 border-b-2 border-ink bg-transparent px-0 py-3 text-2xl font-medium tracking-[-0.01em] text-ink outline-none transition-colors duration-200 placeholder:text-ink-faint/70 focus:border-signal"
+			style="caret-color: var(--color-signal)"
 		/>
+		<div class="mt-2 flex items-center justify-between font-mono text-[11px] text-ink-faint">
+			<span>
+				{mode === 'search' ? 'semantic + full-text · ranked' : 'grounded answer over top results'}
+			</span>
+			<span>⏎ {mode}</span>
+		</div>
 	</form>
 
 	{#if error_}
-		<div class="mb-4 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm text-primary">
+		<div
+			class="mb-5 rounded-[var(--radius)] border border-danger/25 bg-danger/[0.06] px-4 py-3 text-sm text-danger"
+		>
 			{error_}
 		</div>
 	{/if}
 
 	{#if mode === 'search'}
 		{#if tookMs !== null}
-			<p class="mb-3 font-mono text-xs tracking-wide text-muted">
-				{loading ? 'Searching…' : `${results.length} results in ${tookMs}ms`}
+			<p class="mb-3 font-mono text-[11px] text-ink-faint">
+				{loading ? 'searching…' : `${results.length} result${results.length === 1 ? '' : 's'}`}
 			</p>
 		{/if}
-		<ul class="space-y-3">
-			{#each results as r (r.id)}
-				<li
-					class="group rounded-lg border border-ink/10 bg-cream/[0.03] p-4 transition-all duration-200 hover:-translate-y-px hover:border-ink/15 hover:bg-cream/[0.07]"
-				>
-					<a href={r.url} target="_blank" rel="noopener">
-						<div class="flex items-center gap-1 font-mono text-xs tracking-wide text-muted">
-							<span>{r.domain ?? host(r.url)}</span>
-							<ExternalLink size={11} class="opacity-0 transition group-hover:opacity-100" />
-						</div>
-						<h3
-							class="mt-1 font-medium tracking-[-0.01em] text-ink transition-colors group-hover:text-primary"
-						>
-							{r.title}
-						</h3>
-					</a>
-					{#if r.snippet}
-						<p class="mt-1.5 text-sm leading-relaxed text-ink/80">
-							{@html r.snippet}
-						</p>
-					{/if}
-					{#if r.purpose}
-						<p class="mt-1.5 text-sm italic text-muted">{r.purpose}</p>
-					{/if}
-					{#if r.tags}
-						<div class="mt-2.5 flex flex-wrap gap-1">
-							{#each r.tags.split(',').map((t) => t.trim()).filter(Boolean).slice(0, 6) as tag, i (tag + i)}
+
+		{#if results.length > 0}
+			<ul class="grid grid-cols-1 gap-x-12 xl:grid-cols-2">
+				{#each results as r, i (r.id)}
+					<li
+						transition:fly={rowIn(i)}
+						class="group grid grid-cols-[2rem_1fr_auto] gap-4 rounded-[var(--radius)] border-t border-ink/10 px-3 py-5 transition-colors duration-150 hover:bg-ink/[0.018]"
+					>
+						<span class="pt-1 font-mono text-[11px] text-ink-faint">
+							{String(i + 1).padStart(2, '0')}
+						</span>
+						<div class="min-w-0">
+							<a href={r.url} target="_blank" rel="noopener" class="block">
 								<span
-									class="rounded-full border border-ink/10 bg-ink/[0.03] px-2 py-0.5 font-mono text-xs tracking-wide text-muted"
-									>{tag}</span
+									class="font-mono text-[11px] uppercase tracking-[0.06em] text-accent"
 								>
-							{/each}
+									{r.domain ?? host(r.url)}
+								</span>
+								<ExternalLink
+									size={10}
+									class="ml-1 inline-block opacity-0 transition-opacity duration-150 group-hover:opacity-60"
+								/>
+								<h3
+									class="mt-0.5 font-semibold tracking-[-0.01em] text-ink transition-colors duration-150 group-hover:text-accent"
+								>
+									{r.title}
+								</h3>
+							</a>
+							{#if r.snippet}
+								<p class="mt-1.5 text-[15px] leading-relaxed text-ink-soft snippet">
+									{@html r.snippet}
+								</p>
+							{/if}
+							{#if r.purpose}
+								<p class="mt-1 text-[13px] italic text-ink-faint">{r.purpose}</p>
+							{/if}
+							{#if r.tags}
+								<div class="mt-2.5 flex flex-wrap gap-1.5">
+									{#each r.tags.split(',').map((t) => t.trim()).filter(Boolean).slice(0, 6) as tag, ti (tag + ti)}
+										<span
+											class="rounded border border-ink/10 px-1.5 py-0.5 font-mono text-[10.5px] text-ink-faint"
+											>{tag}</span
+										>
+									{/each}
+								</div>
+							{/if}
 						</div>
-					{/if}
-				</li>
-			{/each}
-		</ul>
+						<span class="pt-1.5 text-right font-mono text-[11px] text-ink-faint">
+							{r.rrf.toFixed(2)}
+						</span>
+					</li>
+				{/each}
+			</ul>
+		{:else if !query && !loading && tookMs === null}
+			<p class="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-ink-faint">try</p>
+			<div class="flex flex-wrap gap-2">
+				{#each examples as ex (ex)}
+					<button
+						onclick={() => pickExample(ex)}
+						class="rounded-full border border-ink/12 px-3 py-1.5 font-mono text-[13px] text-ink-soft transition-colors duration-150 hover:border-ink/35 hover:text-ink"
+					>
+						{ex}
+					</button>
+				{/each}
+			</div>
+		{/if}
 	{:else if loading || answer}
-		<div class="chrome-border rounded-xl border border-ink/10 bg-cream/[0.03] p-5">
+		<div class="rounded-[var(--radius)] border border-ink/10 bg-surface px-5 py-5">
 			{#if loading && !answer}
-				<div class="flex items-center gap-2 font-mono text-sm tracking-wide text-muted">
-					<Loader2 size={16} class="animate-spin" /> Thinking…
+				<div class="flex items-center gap-2 font-mono text-sm text-ink-soft">
+					<Loader2 size={15} class="animate-spin" /> thinking…
 				</div>
 			{/if}
-			<div class="md text-sm leading-relaxed text-ink">
-				{#if answer}
-					{@html marked.parse(answer)}
-				{/if}{#if loading}<span class="animate-pulse text-primary">▋</span>{/if}
+			<div class="md text-[15px] leading-relaxed text-ink">
+				{#if answer}{@html marked.parse(answer)}{/if}{#if loading}<span class="text-signal">▋</span>{/if}
 			</div>
 			{#if askSources.length}
-				<div class="mt-4 border-t border-ink/10 pt-3">
-					<p class="mb-2 font-mono text-xs font-semibold uppercase tracking-wide text-muted">
-						Sources
-					</p>
+				<div class="mt-5 border-t border-ink/10 pt-4">
+					<p class="mb-2 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-faint">Sources</p>
 					<ul class="space-y-1">
 						{#each askSources as s, i (s.id)}
 							<li>
@@ -250,7 +347,7 @@
 									href={s.url}
 									target="_blank"
 									rel="noopener"
-									class="font-mono text-sm tracking-wide text-primary hover:underline"
+									class="font-mono text-[13px] text-accent transition-colors hover:text-accent-hover hover:underline"
 								>
 									[{i + 1}] {s.title}
 								</a>
@@ -262,3 +359,38 @@
 		</div>
 	{/if}
 </main>
+
+<style>
+	.status-dot {
+		display: inline-block;
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--color-success);
+		box-shadow: 0 0 0 0 var(--color-success);
+		animation: ps-pulse 2.6s ease-out infinite;
+	}
+	@keyframes ps-pulse {
+		0% {
+			box-shadow: 0 0 0 0 oklch(0.55 0.11 165 / 0.45);
+		}
+		70% {
+			box-shadow: 0 0 0 7px oklch(0.55 0.11 165 / 0);
+		}
+		100% {
+			box-shadow: 0 0 0 0 oklch(0.55 0.11 165 / 0);
+		}
+	}
+	/* result snippets: highlight matches without a banned side-stripe */
+	.snippet :global(mark) {
+		background: oklch(0.68 0.14 70 / 0.22);
+		color: var(--color-ink);
+		border-radius: 2px;
+		padding: 0 1px;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.status-dot {
+			animation: none;
+		}
+	}
+</style>
