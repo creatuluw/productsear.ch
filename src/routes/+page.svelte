@@ -4,6 +4,8 @@
 
 	marked.setOptions({ gfm: true, breaks: true });
 
+	let { data } = $props();
+
 	type Source = {
 		id: number;
 		title: string;
@@ -138,7 +140,7 @@
 		>
 			productsear.ch
 		</h1>
-		<p class="tracking-wide text-muted">Semantic search over 2,270 bookmarks</p>
+		<p class="tracking-wide text-muted">Semantic search over {data.bookmarkCount.toLocaleString()} bookmarks</p>
 	</header>
 
 	<div class="mb-5 flex justify-center gap-2">
