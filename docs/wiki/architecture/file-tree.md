@@ -78,7 +78,8 @@ timestamp: "2026-07-04T00:00:00.000Z"
     │       └── search.ts [single hybrid RRF SQL query: cosine + ts_rank]
     └── routes/
         ├── +layout.svelte
-        ├── +page.svelte [search UI + Ask mode]
+        ├── +page.server.ts [load: SELECT count(*) FROM te9_dev.bookmarks → live homepage bookmark count]
+        ├── +page.svelte [search UI + Ask mode; hero renders live data.bookmarkCount]
         └── api/
             ├── ask/
             │   └── +server.ts [GET /api/ask — streaming RAG]

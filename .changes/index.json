@@ -1,0 +1,15 @@
+{
+  "generated": "2026-08-24T20:35:11Z",
+  "items": [
+    {
+      "archetype": "feature",
+      "id": "AA0001",
+      "priority": 2,
+      "status": "open",
+      "surface": "app",
+      "title": "Sync search query to URL param and make search endpoint LLM-readable",
+      "updated": "2026-08-24T20:35:11Z"
+    }
+  ],
+  "next_id": "AA0002"
+}

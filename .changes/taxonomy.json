@@ -1,0 +1,16 @@
+{
+  "archetypes": [
+    "feature",
+    "bugfix",
+    "refactor",
+    "chore",
+    "docs",
+    "perf",
+    "test"
+  ],
+  "surfaces": [
+    "app",
+    "architecture",
+    "ux"
+  ]
+}

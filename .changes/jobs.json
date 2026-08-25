@@ -1,0 +1,30 @@
+{
+  "jobs": [
+    {
+      "auto_approve": false,
+      "built_in": true,
+      "enabled": true,
+      "id": "classification-fallback",
+      "instructions": "You classify changelog log entries. You are given the taxonomy (valid archetype and surface values), and a list of unclassified log entries (item id, title, body summary). For each entry choose exactly one archetype and one surface from the taxonomy. Respond with ONLY a JSON array: [{\"item\": \"<id>\", \"archetype\": \"<value>\", \"surface\": \"<value>\"}]. No other text.",
+      "name": "Classification fallback",
+      "tools": [
+        "read:items",
+        "read:logs",
+        "read:taxonomy",
+        "write:proposals"
+      ]
+    },
+    {
+      "auto_approve": false,
+      "built_in": true,
+      "enabled": true,
+      "id": "bundling-suggestions",
+      "instructions": "You suggest work bundles. You are given open items (id, title, priority, requirements). Propose up to 3 bundles of 2-3 items that are clearly compatible (same files/area, one coherent change). Respond with ONLY a JSON array: [{\"item\": \"<primary id>\", \"bundle_with\": [\"<partner id>\", \"<partner id>\"]}]. No other text. If nothing is compatible, respond with [].",
+      "name": "Bundling suggestions",
+      "tools": [
+        "read:items",
+        "write:proposals"
+      ]
+    }
+  ]
+}

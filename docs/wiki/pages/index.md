@@ -10,3 +10,5 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [agentos-sdk.dev design system extraction](./artifacts/agentos-sdk-dev-design-system-extraction.md) — Reference design system reverse-engineered from https://agentos-sdk.dev/, to be replicated on productsear.ch. Captures exact color tokens, typography, signature
 - [Rerank service](./entities/rerank-service.md) — `src/lib/server/rerank.ts` — a thin client for the Voyage `rerank-2.5-lite` cross-encoder rerank API.
 - [Daily embed-new-bookmarks workflow](./entities/daily-embed-new-bookmarks-workflow.md) — `.github/workflows/embed-new-bookmarks.yml` — a GitHub Actions scheduled workflow that runs the [[embed-bookmarks-backfill-script]] nightly to embed only newly-
+- [productsear.ch promo video](./artifacts/productsear-ch-promo-video.md) — An animated ~6-scene promo MP4 that introduces productsear.ch: semantic bookmark search via hybrid retrieval ([[hybrid-search-via-reciprocal-rank-fusion]]) plus
+- [URL-driven search state](./concepts/url-driven-search-state.md) — What is it?

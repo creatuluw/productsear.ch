@@ -26,13 +26,14 @@ If a future session asks "where is the Raindrop sync?" or "why don't DB counts m
 - `bookmarks.synced_at` last updated **2026-08-06 06:33 UTC** (same day) — full re-sync of 2,442 rows ran today → **the external sync IS healthy and current**.
 - `raindrop_updated_at` last = 2026-08-05.
 - Raindrop collection `link-drop-34657545` shows **2,784** items; DB has **2,446**; embeddings cover **all 2,446** (0 gap).
-- The ~338-item gap between Raindrop and the DB is a **persistent filter in the external sync** (it excludes some bookmark types/broken links), **not** a stopped pipeline. Investigate that in whatever repo owns the sync.
+- The **"338-item gap" is a collection-scope mismatch, NOT a sync filter.** The Raindrop published-page headline (2,784) sums **all** of creatuluw's ~20 published collections; this app mirrors only the **LinkDrop** collection (2,454 per its own `data.collection.count`), and the DB holds 2,446 — so the true per-collection delta is **~8**, not 338. See [[raindrop-db-sync-runs-outside-this-repo-published-page-count]] for the authoritative breakdown. *(An earlier hypothesis called this a "persistent filter in the external sync" — that was wrong.)*
 
-## Related surface gotcha
+## Homepage count (now live — 2026-08-06)
 
-The homepage "2,270 bookmarks" text is **hardcoded** at `src/routes/+page.svelte:141` — it is NOT a live count. The DB actually held 2,446 on the day this was checked. Any count mismatch seen in the UI should be verified against a live `SELECT count(*) FROM te9_dev.bookmarks` before assuming a data problem.
+The homepage bookmark count is now **live, not hardcoded**: `src/routes/+page.server.ts` runs `SELECT count(*) FROM te9_dev.bookmarks` in its `load` function and `src/routes/+page.svelte` renders `data.bookmarkCount.toLocaleString()`. The old hardcoded "2,270" string has been removed. So a UI count mismatch is no longer a stale-string problem — only suspect the DB itself if the number looks wrong. *(Previously this section warned the count was hardcoded; that is no longer true.)*
 
 ## Relationships
 
 - [[embed-bookmarks-backfill-script]] — the only writer this app owns (embeddings + search_tsv only).
 - [[daily-embed-new-bookmarks-workflow]] — runs nightly; green 25–48s runs = nothing new to embed, confirming the sync-then-embed chain is current.
+- [[raindrop-db-sync-runs-outside-this-repo-published-page-count]] — authoritative source for the sync-health check and the published-page scope-mismatch breakdown; supersedes the stale count-gap reading in this note.
