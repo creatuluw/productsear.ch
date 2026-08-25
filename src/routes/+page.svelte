@@ -2,6 +2,9 @@
 	import { ExternalLink, Loader2 } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 	import { marked } from 'marked';
 
 	marked.setOptions({ gfm: true, breaks: true });
@@ -28,8 +31,14 @@
 		snippet: string;
 	};
 
-	let query = $state('');
-	let mode = $state<'search' | 'ask'>('search');
+	// query/mode are URL-managed: ?q=…&mode=ask — init from URL, sync back on change.
+	// `synced` mirrors the last params we wrote ourselves, so the effect below only
+	// reacts to external navigation (back/forward), not our own goto.
+	const initialQ = page.url.searchParams.get('q') ?? '';
+	const initialMode = page.url.searchParams.get('mode') === 'ask' ? 'ask' : 'search';
+	let query = $state(initialQ);
+	let mode = $state<'search' | 'ask'>(initialMode);
+	let synced = { q: initialQ, mode: initialMode };
 
 	let results = $state<SearchResult[]>([]);
 	let answer = $state('');
@@ -58,7 +67,41 @@
 		'raindrop sync mirror'
 	];
 
-	async function runSearch() {
+	// keep URL in sync with query/mode. push=true adds a history entry (submit/example),
+	// replace (typing, mode switch) keeps history clean.
+	function syncUrl(push: boolean) {
+		const q = query.trim();
+		if (q === synced.q && mode === synced.mode) return;
+		synced = { q, mode };
+		const p = new URLSearchParams();
+		if (q) p.set('q', q);
+		if (mode === 'ask') p.set('mode', 'ask');
+		const qs = p.toString();
+		goto(qs ? `/?${qs}` : '/', { replaceState: !push, noScroll: true, keepFocus: true });
+	}
+
+	// back/forward: adopt params from history and re-run
+	$effect(() => {
+		const q = page.url.searchParams.get('q') ?? '';
+		const m = page.url.searchParams.get('mode') === 'ask' ? 'ask' : 'search';
+		if (q === synced.q && m === synced.mode) return;
+		synced = { q, mode: m };
+		query = q;
+		mode = m;
+		results = [];
+		answer = '';
+		askSources = [];
+		tookMs = null;
+		error_ = '';
+		if (q) m === 'search' ? runSearch() : runAsk();
+	});
+
+	onMount(() => {
+		if (query.trim()) mode === 'search' ? runSearch() : runAsk();
+	});
+
+	async function runSearch(push = false) {
+		syncUrl(push);
 		const q = query.trim();
 		if (!q) {
 			results = [];
@@ -81,7 +124,8 @@
 		}
 	}
 
-	async function runAsk() {
+	async function runAsk(push = false) {
+		syncUrl(push);
 		const q = query.trim();
 		if (!q) return;
 		loading = true;
@@ -129,8 +173,8 @@
 
 	function onSubmit(e: SubmitEvent) {
 		e.preventDefault();
-		if (mode === 'search') runSearch();
-		else runAsk();
+		if (mode === 'search') runSearch(true);
+		else runAsk(true);
 	}
 
 	function setMode(m: 'search' | 'ask') {
@@ -140,12 +184,13 @@
 		askSources = [];
 		tookMs = null;
 		error_ = '';
+		syncUrl(false);
 	}
 
 	function pickExample(ex: string) {
 		if (mode !== 'search') setMode('search');
 		query = ex;
-		runSearch();
+		runSearch(true);
 	}
 
 	function host(url: string): string {
