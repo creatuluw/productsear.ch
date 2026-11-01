@@ -49,7 +49,7 @@
 	const isLlm = $derived(page.url.searchParams.get('view') === 'llm');
 </script>
 
-<div class="min-h-screen">
+<div class="flex min-h-screen flex-col">
 	<header
 		class="sticky top-0 z-20 border-b border-ink/10 bg-canvas/90 backdrop-blur supports-[backdrop-filter]:bg-canvas/75"
 	>
@@ -98,7 +98,29 @@
 		</div>
 	</header>
 
-	{@render children()}
+	<div class="flex-1">
+		{@render children()}
+	</div>
+
+	{#if !isLlm}
+		<footer class="border-t border-ink/10">
+			<div
+				class="mx-auto flex max-w-[1400px] items-end justify-between gap-6 px-6 sm:px-10 lg:px-14"
+			>
+				<p class="pb-5 pt-4 font-mono text-[11px] text-ink-faint">
+					product-search — it has already read everything you saved.
+				</p>
+				<img
+					src="/mascot-product-search.png"
+					alt="product-search, the productsear.ch bookmark-ribbon mascot"
+					width="163"
+					height="256"
+					class="h-24 w-auto sm:h-28"
+					loading="lazy"
+				/>
+			</div>
+		</footer>
+	{/if}
 
 	{#if toastVisible}
 		<div
