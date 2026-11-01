@@ -6,6 +6,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
+	import WaveLoader from '$lib/components/WaveLoader.svelte';
 
 	let { data } = $props();
 
@@ -230,9 +231,15 @@
 					{Math.round((data.analyzedCount / Math.max(1, data.bookmarkCount)) * 100)}<span class="text-ink-faint">%</span>
 				</dd>
 			</div>
-			<div class="px-4 py-3">
+			<div class="min-w-0 px-4 py-3">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">latency</dt>
-				<dd class="mt-1.5 font-mono text-base text-ink sm:text-lg">{tookMs !== null ? `${tookMs}ms` : '—'}</dd>
+				<dd class="mt-1.5 flex min-w-0 items-center font-mono text-base text-ink sm:text-lg">
+					{#if loading}
+						<WaveLoader />
+					{:else}
+						{tookMs !== null ? `${tookMs}ms` : '—'}
+					{/if}
+				</dd>
 			</div>
 		</dl>
 
@@ -242,12 +249,10 @@
 			</div>
 		{/if}
 
-		<!-- the instrument narrates its own state -->
-		{#if query && tookMs !== null}
+		<!-- the instrument narrates its own state (the busy signal lives in the latency gauge) -->
+		{#if query && tookMs !== null && !loading}
 			<p class="mb-3 break-words font-mono text-[11px] text-ink-soft">
-				{loading
-					? 'searching…'
-					: total === 0
+				{total === 0
 						? 'no strong matches'
 						: `${total} strong match${total === 1 ? '' : 'es'}${poolLimited ? ' · candidate pool exhausted' : ' · stopped at the quality floor'}`}
 				{#if tookMs !== null}<span class="text-ink-faint"> · {tookMs}ms</span>{/if}
