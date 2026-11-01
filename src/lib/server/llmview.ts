@@ -4,10 +4,24 @@
 import type { SearchResponse } from './search';
 
 export function llmPreamble(currentUrl: string): string {
-	return `> productsear.ch — semantic tool search (3.7k+ curated tools/libraries).
-> API: \`GET /api/search?q=<problem-shape>\` → ${'`purpose`'}+${'`category`'} per result, relevance-floored.
-> Query the problem shape ("url to markdown", "ocr pdf"), not sentences. Verify before adopting.
-> This page: ${currentUrl} — paste it whole into your LLM collaboration.`;
+	return `# productsear.ch — semantic tool search
+
+You are reading the LLM view of \`${currentUrl}\` — a curated corpus of 3.7k+
+tools/libraries, each with purpose, how-to-use and when-to-use metadata.
+This document is paste-ready reference data plus instructions.
+
+## Instructions
+
+1. Treat the entries below as search results: shortlist 2–4, don't trust snippets alone.
+2. **Verify before adopting**: fetch each candidate URL and confirm it is working,
+   maintained, and license-compatible. Snippets regularly describe abandoned projects.
+3. Search deeper at any time: \`GET https://productsear.ch/api/search?q=<problem-shape>\`
+   — 2–4 word noun phrases ("url to markdown", "ocr pdf"), never full sentences.
+   \`total\` is the honest count of strong matches; there is no padding.
+4. Browse by archetype: \`/compendium/<slug>\` (e.g. /compendium/rag-search) lists
+   what/how/when per entry. Append \`?view=llm\` to any page for this markdown form.
+5. Decide per candidate: name, what it does, why (not) a fit — one line each.
+`;
 }
 
 function fmtDate(iso: string | null): string {

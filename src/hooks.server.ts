@@ -1,0 +1,13 @@
+import type { Handle } from '@sveltejs/kit';
+import { wantsRawMarkdown, llmMarkdown } from '$lib/server/llms';
+
+// ?view=llm content negotiation: LLM/API clients (no Accept: text/html) get raw
+// text/markdown straight from the server; browsers fall through to the page,
+// which renders the same markdown styled.
+export const handle: Handle = async ({ event, resolve }) => {
+	if (wantsRawMarkdown(event.url, event.request)) {
+		const md = await llmMarkdown(event.url);
+		if (md) return md;
+	}
+	return resolve(event);
+};

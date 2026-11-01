@@ -2,6 +2,7 @@
 	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { ARCHETYPE_BY_SLUG } from '$lib/archetypes';
+	import LlmDoc from '$lib/components/LlmDoc.svelte';
 
 	let { data } = $props();
 
@@ -17,17 +18,20 @@
 	});
 
 	const totalPages = $derived(Math.max(1, Math.ceil(data.total / data.pageSize)));
+
+	function goToPage(e: MouseEvent) {
+		// keep default link navigation (URL state) and return the viewport to the top
+		window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+	}
+
 	const href = (p: number) => `/archive${p > 1 ? `?page=${p}` : ''}`;
 </script>
 
 <svelte:head><title>archive — productsear.ch</title></svelte:head>
 
 {#if data.llm}
-	<main class="mx-auto max-w-[900px] px-6 py-10 sm:px-10">
-		<h1 class="mb-6 font-mono text-sm text-ink-soft">/archive — llms view</h1>
-		<pre class="whitespace-pre-wrap font-mono text-[13px] leading-relaxed text-ink">{data.llm}</pre>
-	</main>
-{:else}
+		<LlmDoc md={data.llm} />
+	{:else}
 	<h1 class="sr-only">archive — all entries, newest first</h1>
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
 		<div class="mb-8 flex items-baseline justify-between">
@@ -76,12 +80,12 @@
 		{#if totalPages > 1}
 			<nav class="mt-8 flex items-center justify-center gap-3 font-mono text-xs" aria-label="pages">
 				{#if data.page > 1}
-					<a href={href(data.page - 1)}
+					<a href={href(data.page - 1)} onclick={goToPage}
 						class="rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">‹ prev</a>
 				{/if}
 				<span class="text-ink-faint">page {data.page} / {totalPages}</span>
 				{#if data.page < totalPages}
-					<a href={href(data.page + 1)}
+					<a href={href(data.page + 1)} onclick={goToPage}
 						class="rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">next ›</a>
 				{/if}
 			</nav>

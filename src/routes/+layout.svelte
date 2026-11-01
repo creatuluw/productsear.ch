@@ -1,8 +1,34 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/state';
+	import LlmDoc from '$lib/components/LlmDoc.svelte';
 
 	let { children } = $props();
+
+	// llms-view toast: appears when the user switches to ?view=llm
+	let toastVisible = $state(false);
+	let wasLlm = false;
+	let toastTimer: ReturnType<typeof setTimeout> | undefined;
+	$effect(() => {
+		const isLlm = page.url.searchParams.get('view') === 'llm';
+		if (isLlm && !wasLlm) {
+			toastVisible = true;
+			clearTimeout(toastTimer);
+			toastTimer = setTimeout(() => (toastVisible = false), 9000);
+		}
+		if (!isLlm) toastVisible = false;
+		wasLlm = isLlm;
+		return () => clearTimeout(toastTimer);
+	});
+
+	async function copyUrl() {
+		try {
+			await navigator.clipboard.writeText(page.url.href);
+		} catch {
+			/* clipboard unavailable — the URL is in the address bar anyway */
+		}
+		toastVisible = false;
+	}
 
 	const surfaces = [
 		{ href: '/', label: 'search' },
@@ -30,7 +56,7 @@
 		<div
 			class="mx-auto flex h-12 max-w-[1400px] items-center gap-3 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-4 sm:px-10 lg:px-14"
 		>
-			<a href="/" class="shrink-0 font-mono text-[13px] font-semibold tracking-tight text-ink">
+			<a href="/" class="shrink-0 font-mono text-[13px] font-semibold tracking-tight text-accent">
 				productsear.ch
 			</a>
 			<nav class="flex shrink-0 gap-1.5" aria-label="surfaces">
@@ -73,4 +99,22 @@
 	</header>
 
 	{@render children()}
+
+	{#if toastVisible}
+		<div
+			role="status"
+			class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-4 rounded-full bg-ink px-5 py-3 font-mono text-xs text-canvas shadow-lg"
+		>
+			<span>This URL is ready for your LLM — copy &amp; paste it into the chat.</span>
+			<button
+				onclick={copyUrl}
+				class="rounded-full border border-canvas/30 px-3 py-1 transition-colors hover:border-canvas/70"
+			>copy URL</button>
+			<button
+				onclick={() => (toastVisible = false)}
+				aria-label="dismiss"
+				class="text-canvas/60 transition-colors hover:text-canvas"
+			>×</button>
+		</div>
+	{/if}
 </div>

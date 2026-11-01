@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import LlmDoc from '$lib/components/LlmDoc.svelte';
 
 	let { data } = $props();
 
@@ -117,6 +118,7 @@
 		e.preventDefault();
 		pageNum = n;
 		runSearch(true);
+		window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
 	}
 
 	// back/forward: adopt params from history and re-run
@@ -176,12 +178,8 @@
 <svelte:head><title>productsear.ch — semantic tool search</title></svelte:head>
 
 {#if data.llm}
-	<!-- llms view: paste-ready markdown twin -->
-	<main class="mx-auto max-w-[900px] px-6 py-10 sm:px-10">
-		<h1 class="mb-6 font-mono text-sm text-ink-soft">/ — llms view</h1>
-		<pre class="whitespace-pre-wrap font-mono text-[13px] leading-relaxed text-ink">{data.llm}</pre>
-	</main>
-{:else}
+		<LlmDoc md={data.llm} />
+	{:else}
 	<h1 class="sr-only">productsear.ch — semantic tool search</h1>
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
 		<!-- the instrument's primary control -->
@@ -193,8 +191,8 @@
 					placeholder="search the corpus — problem shape, not sentences"
 					autocomplete="off"
 					spellcheck="false"
-					class="w-full border-0 border-b-2 border-ink bg-transparent py-3 pr-10 text-2xl font-medium tracking-[-0.01em] text-ink outline-none transition-colors duration-200 placeholder:text-ink-faint/70 focus:border-signal"
-					style="caret-color: var(--color-signal)"
+					class="w-full border-0 border-b-2 border-ink bg-transparent py-3 pr-10 text-2xl font-medium tracking-[-0.01em] text-ink outline-none transition-colors duration-200 placeholder:text-ink-faint/70 focus:border-accent"
+					style="caret-color: var(--color-accent)"
 				/>
 				{#if query}
 					<button

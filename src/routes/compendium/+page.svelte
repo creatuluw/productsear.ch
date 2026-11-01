@@ -1,15 +1,13 @@
 <script lang="ts">
+	import LlmDoc from '$lib/components/LlmDoc.svelte';
 	let { data } = $props();
 </script>
 
 <svelte:head><title>compendium — productsear.ch</title></svelte:head>
 
 {#if data.llm}
-	<main class="mx-auto max-w-[900px] px-6 py-10 sm:px-10">
-		<h1 class="mb-6 font-mono text-sm text-ink-soft">/compendium — llms view</h1>
-		<pre class="whitespace-pre-wrap font-mono text-[13px] leading-relaxed text-ink">{data.llm}</pre>
-	</main>
-{:else}
+		<LlmDoc md={data.llm} />
+	{:else}
 	<h1 class="sr-only">compendium — the corpus by archetype</h1>
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
 		<div class="mb-8 flex items-baseline justify-between">
