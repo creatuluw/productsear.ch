@@ -25,8 +25,8 @@ label {
 	--color-ink: oklch(0.22 0.012 165);
 	--color-ink-soft: oklch(0.48 0.012 165);
 	--color-ink-faint: oklch(0.7 0.01 165);
-	--color-accent: oklch(0.42 0.09 165);
-	--color-accent-hover: oklch(0.36 0.1 165);
+	--color-accent: oklch(0.468 0.303 264.2); /* #0021FF — site accent */
+	--color-accent-hover: oklch(0.411 0.264 264.2); /* #001BD6 */
 	--color-signal: oklch(0.68 0.14 70);
 	--color-success: oklch(0.55 0.11 165);
 	--color-danger: oklch(0.54 0.16 27);
