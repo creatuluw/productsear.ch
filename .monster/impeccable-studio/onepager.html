@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 80% — pattern one-pager · productsear.ch</title>
+<style>
+  :root{
+    --paper:#faf7f2; --ink:#26241f; --muted:#6f6a5e; --line:#e3ddd0;
+    --accent:#b4552d; --accent-ink:#7c3a1e; --adopt:#2e6b4f; --deviate:#8a4bab;
+    --chip:#f1ece1; --wire:#efe9dc; --wire-line:#c9c1af;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:var(--paper); color:var(--ink);
+    font:16px/1.6 Georgia,'Times New Roman',serif; padding:0 24px 96px}
+  .wrap{max-width:920px; margin:0 auto}
+  .kicker{display:flex; gap:12px; align-items:center; margin:48px 0 20px; color:var(--muted);
+    font:12px/1 ui-monospace,'Cascadia Mono',Menlo,monospace; letter-spacing:.14em; text-transform:uppercase}
+  .kicker .pill{border:1px solid var(--line); border-radius:999px; padding:5px 12px; background:#fff}
+  h1{font-size:clamp(34px,5.4vw,54px); line-height:1.08; font-weight:600; letter-spacing:-.01em; max-width:18ch}
+  h1 em{font-style:italic; color:var(--accent)}
+  .lede{margin:18px 0 8px; font-size:19px; color:var(--muted); max-width:62ch}
+  .meta{margin-top:10px; color:var(--muted); font:13px/1.6 ui-monospace,Menlo,monospace}
+  hr{border:0; border-top:1px solid var(--line); margin:40px 0}
+  h2{font-size:13px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent-ink);
+    font-family:ui-monospace,Menlo,monospace; margin:0 0 18px}
+  /* skeleton */
+  .skeleton{border:1px solid var(--line); background:#fff; border-radius:14px; padding:28px; margin-top:8px}
+  .blk{position:relative; border:1.5px solid var(--wire-line); border-radius:8px; background:var(--wire);
+    padding:14px 16px 14px 58px; margin:0 0 10px; min-height:52px}
+  .blk:last-child{margin-bottom:0}
+  .blk .n{position:absolute; left:14px; top:50%; transform:translateY(-50%); width:30px; height:30px;
+    border-radius:50%; background:var(--ink); color:var(--paper); display:flex; align-items:center;
+    justify-content:center; font:600 13px ui-monospace,Menlo,monospace}
+  .blk b{display:block; font-size:15px}
+  .blk span{font-size:13px; color:var(--muted)}
+  .blk.hero{min-height:110px; display:flex; flex-direction:column; justify-content:center}
+  .blk.p-1-3{opacity:.55; min-height:40px}
+  /* ledger */
+  .ledger{margin-top:8px}
+  .row{display:grid; grid-template-columns:64px 1fr 220px; gap:20px; padding:20px 4px;
+    border-top:1px solid var(--line); align-items:start}
+  .row .idx{font:600 30px/1 Georgia,serif; color:var(--wire-line)}
+  .row:first-child{border-top:0}
+  .row h3{font-size:18px; margin-bottom:4px}
+  .row .what{font-size:14.5px; color:var(--muted); max-width:52ch}
+  .row .facts{font-size:13px; line-height:1.7}
+  .badge{display:inline-block; font:600 11px/1 ui-monospace,Menlo,monospace; letter-spacing:.08em;
+    padding:4px 9px; border-radius:999px; margin-left:10px; vertical-align:2px}
+  .adopt{background:#e7f2ec; color:var(--adopt)} .deviate{background:#f3e9f9; color:var(--deviate)}
+  .prev{color:var(--muted)} .prev b{color:var(--ink)}
+  .chip{display:inline-block; background:var(--chip); border-radius:5px; padding:2px 8px; margin:2px 4px 2px 0;
+    font:12px ui-monospace,Menlo,monospace; color:#57503f}
+  .ex a{color:var(--accent-ink); text-decoration:none; border-bottom:1px solid var(--line)}
+  /* conventions */
+  .conv{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:0; border:1px solid var(--line);
+    border-radius:12px; overflow:hidden; background:#fff; margin-top:8px}
+  .conv>div{padding:18px; border-left:1px solid var(--line)}
+  .conv>div:first-child{border-left:0}
+  .conv h4{font:600 12px ui-monospace,Menlo,monospace; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:8px}
+  .conv p{font-size:14px}
+  /* deviations */
+  .deviations li{margin:10px 0 10px 20px; font-size:15.5px}
+  .deviations .tag{font:600 11px ui-monospace,Menlo,monospace; color:var(--deviate); letter-spacing:.08em}
+  /* gate */
+  .gate{border:1.5px solid var(--ink); border-radius:14px; padding:26px 28px; background:#fff; margin-top:44px}
+  .gate b{font-size:18px}
+  .gate p{color:var(--muted); margin-top:8px; font-size:15px}
+  .gate code{font:13px ui-monospace,Menlo,monospace; background:var(--chip); padding:2px 6px; border-radius:4px}
+  footer{margin-top:36px; color:var(--muted); font:12px ui-monospace,Menlo,monospace}
+  @media (max-width:760px){ .row{grid-template-columns:44px 1fr} .row .facts{grid-column:2}
+    .conv{grid-template-columns:1fr 1fr} .conv>div{border-top:1px solid var(--line)} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">
+    <span class="pill">productsear.ch</span><span class="pill">search/library instrument</span><span>2026-11-01</span>
+  </div>
+  <h1>The 80% — <em>pattern base</em> for the corpus browser redesign</h1>
+  <p class="lede">The common patterns a search/library instrument almost always ships, distilled
+  from 8 exemplars (are.na, mymind, Pinboard, Raindrop, archive.org, NYPL, Baymard research,
+  ui-patterns). What is approved here becomes the structural base of the design brief;
+  deviations are explicit, never accidental.</p>
+  <p class="meta">res · .monster/impeccable-studio/research/archetype-patterns.md &nbsp;·&nbsp; next · DESIGN-BRIEF.md &nbsp;·&nbsp; state · awaiting your approval</p>
+
+  <hr>
+  <h2>The skeleton — one shell, three surfaces</h2>
+  <div class="skeleton">
+    <div class="blk"><span class="n">1</span><b>Shell bar — brand + surface nav + humans|llms tabs</b><span>sticky, thin; search · archive · compendium links; view tab is a plain link — realizes #1, deviation D1</span></div>
+    <div class="blk hero"><span class="n">2</span><b>Search field (home)</b><span>the instrument's primary control; query persists in field; clear control; ⏎ submits — realizes #1</span></div>
+    <div class="blk"><span class="n">3</span><b>Vital-signs strip</b><span>corpus size · last sync · coverage · latency — live readout, our signature — realizes #2</span></div>
+    <div class="blk"><span class="n">4</span><b>Results region (home)</b><span>honest count → strong matches only → 20/page pager — realizes #4, #8, #9</span></div>
+    <div class="blk"><span class="n">5</span><b>Archive surface (/archive)</b><span>all entries, newest first by raindrop_created_at, date headlines, compact rows — realizes #3, #4</span></div>
+    <div class="blk"><span class="n">6</span><b>Compendium surface (/compendium)</b><span>20–30 archetype groups; per entry: what · how · when · who — realizes #5, #6</span></div>
+    <div class="blk"><span class="n">7</span><b>Footer</b><span>counts, /skill.md link, colophon — realizes #2</span></div>
+  </div>
+
+  <hr>
+  <h2>The ten patterns</h2>
+  <div class="ledger">
+    <div class="row">
+      <div class="idx">01</div>
+      <div>
+        <h3>Search-first instrument header<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Persistent prominent search on every surface; query persists in the field; clear control once typing.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>7 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">focal point</span><span class="chip">past experience</span><br>
+        <span class="ex"><a href="https://baymard.com/blog/search-bar-ui">baymard</a> · <a href="https://www.are.na/">are.na</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">02</div>
+      <div>
+        <h3>Corpus vital-signs strip<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Compact live readout of corpus size, freshness, coverage — institutional trust signal.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>5 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">uniform connectedness</span><span class="chip">similarity</span><br>
+        <span class="ex"><a href="https://archive.org/">archive.org</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">03</div>
+      <div>
+        <h3>Chronological archive list<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Newest-first entries partitioned by date headlines; the archive's second reading mode.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>6 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">continuity</span><span class="chip">past experience</span><br>
+        <span class="ex"><a href="https://ui-patterns.com/patterns/Archive">ui-patterns</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">04</div>
+      <div>
+        <h3>Compact text-first rows, full width<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Dense link rows (title + domain + one metadata line), not a thumbnail grid — Pinboard density, not Pinterest vertigo.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>5 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">proximity</span><span class="chip">similarity</span><span class="chip">prägnanz</span><br>
+        <span class="ex"><a href="https://pinboard.in">pinboard</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">05</div>
+      <div>
+        <h3>Taxonomy landing = compendium<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Browse surface grouped by category with name + count per group; answers "what's in here" that search can't.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>6 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">common region</span><span class="chip">similarity</span><br>
+        <span class="ex"><a href="https://archive.org/">archive.org</a> · <a href="https://digitalcollections.nypl.org/">nypl</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">06</div>
+      <div>
+        <h3>Rich entry cards with who/what/how/when<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Every compendium entry exposes purpose (what), how-to-use (how), when-to-use (when), audience (who) from the analysis table.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>4 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">common region</span><span class="chip">proximity</span><span class="chip">closure</span><br>
+        <span class="ex"><a href="https://mymind.com/">mymind</a> · <a href="https://www.are.na/">are.na</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">07</div>
+      <div>
+        <h3>Faceted narrowing inside browse<span class="badge deviate">DEVIATE</span></h3>
+        <p class="what">Skip the filter rail: 3.7k entries + static archetype groups + search cover drill-down; revisit at 10k+ entries.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>5 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">common region</span><span class="chip">similarity</span><br>
+        <span class="ex"><a href="https://baymard.com/blog/search-bar-ui">baymard</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">08</div>
+      <div>
+        <h3>Explicit pagination, 20 per page<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Page-by-page paging with visible counts and URL-addressable page param — position survives back/forward.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>6 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">closure</span><span class="chip">uniform connectedness</span><br>
+        <span class="ex"><a href="https://ui-patterns.com/patterns/Archive">ui-patterns</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">09</div>
+      <div>
+        <h3>Relevance honesty: cutoff + true counts<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Only good matches listed; the count states what survived the cutoff; zero-result states guide, never pad.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>4 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">figure/ground</span><span class="chip">focal point</span><br>
+        <span class="ex"><a href="https://baymard.com/blog/search-bar-ui">baymard</a></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="idx">10</div>
+      <div>
+        <h3>Calm low-chrome materials<span class="badge adopt">ADOPT</span></h3>
+        <p class="what">Quiet ground, one accent, compact headers, minimal purposeful motion — the corpus is the content.</p>
+      </div>
+      <div class="facts">
+        <span class="prev">shipped by <b>6 of 8</b> exemplars</span><br>
+        gestalt <span class="chip">figure/ground</span><span class="chip">prägnanz</span><span class="chip">emergence</span><br>
+        <span class="ex"><a href="https://mymind.com/">mymind</a> · <a href="https://www.are.na/">are.na</a></span>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <h2>Conventions strip — the archetype defaults</h2>
+  <div class="conv">
+    <div><h4>Type</h4><p>Humanist sans for content, mono for data, counts, labels. Corpus tools lean mono-heavy; our system pairs Hanken Grotesk + Martian Mono.</p></div>
+    <div><h4>Color</h4><p>One accent + neutrals on a quiet ground. Ours stays the OKLCH instrument system (ink on paper, signal green, amber accent).</p></div>
+    <div><h4>Space</h4><p>Compact headers; row rhythm dense but regular; group gaps ≥ 2× in-group gaps; full-width rows.</p></div>
+    <div><h4>Motion</h4><p>Minimal: 150–300ms micro-interactions, list rows entering together, reduced-motion respected, nothing decorative.</p></div>
+  </div>
+
+  <hr>
+  <h2>Where we deviate — the distinctive 20%</h2>
+  <ul class="deviations">
+    <li><span class="tag">PROPOSED</span> — <b>humans | llms dual-view on every surface</b>: each page has a paste-ready markdown twin at <code>?view=llm</code> plus <code>/skill.md</code> for agents — no exemplar ships this; it serves the collab-with-LLM workflow decision.</li>
+    <li><span class="tag">PROPOSED</span> — <b>Relevance cutoff instead of full pages</b>: results stop when matches stop being good (rerank-score threshold), count says so — serves the "honest instrument" decision.</li>
+    <li><span class="tag">PROPOSED</span> — <b>Compendium by modern archetype roll-up</b>: 20–30 workforce/business/tool-type archetypes as multi-entry jsonb (app-owned), replacing the unusable 1,320 raw categories — serves the compendium decision.</li>
+    <li><span class="tag">PROPOSED</span> — <b>No facet rail</b> (pattern #7): archetype groups + search cover drill-down at this corpus size — scope decision.</li>
+  </ul>
+
+  <div class="gate">
+    <b>Gate — your approval unlocks the design brief.</b>
+    <p>Approve this base (or correct it) and the next artifact is
+    <code>.monster/impeccable-studio/DESIGN-BRIEF.md</code>: the complete instruction set
+    for the design work, including the Gestalt handover covering all fifteen principles.</p>
+  </div>
+
+  <footer>studio · impeccable plugin · pattern one-pager · generated from live archetype research</footer>
+</div>
+</body>
+</html>

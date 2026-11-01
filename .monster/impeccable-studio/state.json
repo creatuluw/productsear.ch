@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "project": "productsear.ch",
+  "surface": "Redesign: search home + new all-entries card list + compendium page grouped by archetype; remove Ask mode; paginate search 20/page with relevance cutoff + humans|llms dual-view (?view=llm) on all surfaces",
+  "archetype": "other:search/library-instrument (archival corpus browser)",
+  "phase": "p7",
+  "gates": {
+    "scopeConfirmed": true,
+    "onepager": true,
+    "brief": true,
+    "final": true
+  },
+  "round": 1,
+  "grill": {
+    "mode": "inline",
+    "questionsAsked": 5
+  },
+  "decisions": {
+    "audience": "Primary: owner-researcher (daily, desktop, known-goal lookups); secondary: incidental search-engine visitors exploring a tool. Desktop-first density, no onboarding chrome, entries stand alone.",
+    "primaryAction": "",
+    "brandAdjectives": [],
+    "constraints": [
+      "Existing SvelteKit 2 + Svelte 5 + Tailwind v4 app",
+      "Keep instrument-grade OKLCH design system (decision 2026-08-06)",
+      "Keep URL-driven search state (?q=&mode=) minus ask mode",
+      "compendium entries must surface who/what/how/when: purpose, howToUse, relevance, category from bookmark_analysis"
+    ],
+    "references": [
+      {
+        "name": "host0.ai",
+        "why": "terminal-native agent-era aesthetic; interface shows the machine working (deploy logs, version timeline, live app state); protocol-numbered steps; calm one-accent ground; wry confident microcopy"
+      },
+      {
+        "name": "clawrun.sh",
+        "why": "mono-led density; fact strips (1min/100%/24-7/infinity); pipeline diagram as hero (triggers->orchestration->sandbox); dark instrument chrome"
+      }
+    ],
+    "scopeBoundary": "No backend changes beyond removing ask + adding pagination/cutoff params; read-only corpus",
+    "compendiumModel": "20-30 modern archetypes (workforce/business-domain/tool-type lens); stored as multi-entry jsonb on an app-owned table beside bookmark_embeddings; backfill classifier over category+purpose+tags; raw category still shown per entry",
+    "llmView": "humans|llms tabs on every surface, distinct URLs via ?view=llm; llms view = paste-ready dense markdown of the same content (llms.txt style); tab switcher is a plain link",
+    "successLook": "Check in order: (1) known query returns only strong matches, honest count, 20/page paging; (2) all-entries newest-first scan; (3) compendium 20-30 archetype roll-up with who/what/how/when per entry; all in terminal-instrument register; ?view=llm twin on each page.",
+    "llmViewSkill": "llms view embeds compact preamble distilled from E:/skills.te9.dev/productsear.ch/SKILL.md; skill served at /skill.md (host0 pattern); SKILL.md updated at ship time (pagination changes its limits section)"
+  },
+  "overrides": [],
+  "artifacts": {
+    "research": ".monster/impeccable-studio/research/archetype-patterns.md",
+    "onepager": ".monster/impeccable-studio/onepager.html",
+    "brief": ".monster/impeccable-studio/DESIGN-BRIEF.md",
+    "dossier": "",
+    "package": ".monster/impeccable-studio/package/index.html"
+  },
+  "postApprovalAction": "commit + push to main (Railway auto-deploy), user pre-authorized",
+  "updatedAt": "2026-11-01T01:34:36.207Z"
+}

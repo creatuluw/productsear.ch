@@ -1,0 +1,199 @@
+<!doctype html>
+<!-- studio review overlay — visual feedback tool for a design draft.
+     Open this file, paste the draft URL, click the draft to drop pins, describe each,
+     then "Copy feedback" and paste the block into the chat. Fully offline, zero deps. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>studio review — annotate the draft</title>
+<style>
+  :root{ --bg:#14130f; --panel:#1d1b15; --line:#332f24; --ink:#efe9dc; --mut:#9a937f;
+    --acc:#e07a3f; --ok:#7fb996; --danger:#c96a5a; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{background:var(--bg); color:var(--ink); font:14px/1.5 ui-monospace,'Cascadia Mono',Menlo,monospace;
+    display:flex; flex-direction:column}
+  header{display:flex; gap:10px; align-items:center; padding:10px 14px; background:var(--panel);
+    border-bottom:1px solid var(--line); flex-wrap:wrap}
+  header .logo{font-weight:700; letter-spacing:.06em; color:var(--acc)}
+  header input[type=url]{flex:1 1 320px; min-width:220px; background:var(--bg); color:var(--ink);
+    border:1px solid var(--line); border-radius:7px; padding:8px 10px}
+  header input#round{width:90px}
+  button{background:var(--acc); color:#16130d; border:0; border-radius:7px; padding:8px 13px;
+    font:600 13px ui-monospace,Menlo,monospace; cursor:pointer}
+  button.ghost{background:transparent; color:var(--mut); border:1px solid var(--line)}
+  button.ghost:hover{color:var(--ink)}
+  main{flex:1; display:flex; min-height:0}
+  #stage{flex:1; position:relative; background:#0c0b08}
+  #frame{width:100%; height:100%; border:0; background:#fff}
+  #capture{position:absolute; inset:0; cursor:crosshair; display:none}
+  #capture.on{display:block}
+  .pin{position:absolute; width:26px; height:26px; margin:-13px 0 0 -13px; border-radius:50%;
+    background:var(--acc); color:#16130d; font:700 13px/26px ui-monospace,Menlo,monospace;
+    text-align:center; box-shadow:0 2px 10px rgba(0,0,0,.5); transform:translateZ(0)}
+  .pin.sel{outline:3px solid var(--ok)}
+  #pop{position:absolute; display:none; width:280px; background:var(--panel); border:1px solid var(--line);
+    border-radius:10px; padding:12px; box-shadow:0 8px 30px rgba(0,0,0,.55); z-index:5}
+  #pop textarea{width:100%; height:64px; background:var(--bg); color:var(--ink); border:1px solid var(--line);
+    border-radius:7px; padding:8px; resize:vertical; font:13px/1.5 ui-monospace,Menlo,monospace}
+  #pop .acts{display:flex; gap:8px; justify-content:flex-end; margin-top:8px}
+  #pop .coords{color:var(--mut); font-size:11px; margin-bottom:6px}
+  aside{width:340px; background:var(--panel); border-left:1px solid var(--line); display:flex;
+    flex-direction:column; min-height:0}
+  aside h2{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); padding:12px 14px 6px}
+  #list{flex:1; overflow:auto; padding:4px 14px}
+  .item{border:1px solid var(--line); border-radius:9px; padding:10px 12px; margin:8px 0; background:var(--bg)}
+  .item b{color:var(--acc)}
+  .item p{color:var(--ink); font-size:13px; margin-top:4px; white-space:pre-wrap}
+  .item .where{color:var(--mut); font-size:11px; margin-top:4px}
+  .item .del{float:right; background:none; border:0; color:var(--danger); cursor:pointer; font-size:12px}
+  .gwrap{padding:8px 14px 4px}
+  #general{width:100%; height:70px; background:var(--bg); color:var(--ink); border:1px solid var(--line);
+    border-radius:8px; padding:8px; resize:vertical; font:13px/1.5 ui-monospace,Menlo,monospace}
+  .export{display:flex; gap:8px; padding:10px 14px 14px; border-top:1px solid var(--line)}
+  .export button{flex:1}
+  #copied{color:var(--ok); font-size:11px; align-self:center; visibility:hidden}
+  .hint{color:var(--mut); font-size:11px; padding:0 14px 10px; line-height:1.6}
+  .hint code{color:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+  <span class="logo">studio&nbsp;review</span>
+  <input id="url" type="url" placeholder="paste the draft URL (http://localhost:… or file path) and press Load">
+  <button id="load">Load</button>
+  <input id="round" type="text" placeholder="round" value="1">
+</header>
+<main>
+  <div id="stage">
+    <iframe id="frame" title="draft"></iframe>
+    <div id="capture"></div>
+    <div id="pop">
+      <div class="coords" id="coords"></div>
+      <textarea id="note" placeholder="what should change here?"></textarea>
+      <div class="acts"><button class="ghost" id="pcancel">Cancel</button><button id="psave">Save pin</button></div>
+    </div>
+  </div>
+  <aside>
+    <h2>Pins &amp; notes</h2>
+    <div id="list"></div>
+    <div class="gwrap">
+      <textarea id="general" placeholder="general notes (anything not tied to a spot)…"></textarea>
+    </div>
+    <p class="hint">Blank here? If the draft refuses to load in the frame (X-Frame-Options),
+    open the draft in a tab and give your feedback in chat instead — or ask the agent about
+    the deep-pin dev snippet.</p>
+    <div class="export">
+      <button id="copy">Copy feedback</button>
+      <button class="ghost" id="dl">Download .json</button>
+      <button class="ghost" id="clear">Clear</button>
+      <span id="copied">copied ✓ paste it into the chat</span>
+    </div>
+  </aside>
+</main>
+<script>
+(function(){
+  var pins = [], seq = 0, pending = null, selected = null;
+  var $ = function(id){ return document.getElementById(id); };
+  var stage=$('stage'), frame=$('frame'), capture=$('capture'), pop=$('pop');
+
+  $('load').addEventListener('click', function(){
+    var u = $('url').value.trim(); if(!u) return;
+    if(!/^(https?:|file:)/i.test(u)) u = 'http://' + u;
+    frame.src = u; capture.classList.add('on');
+  });
+  $('url').addEventListener('keydown', function(e){ if(e.key==='Enter') $('load').click(); });
+
+  capture.addEventListener('click', function(e){
+    var r = stage.getBoundingClientRect();
+    pending = { x:(e.clientX-r.left)/r.width, y:(e.clientY-r.top)/r.height,
+                vw:Math.round(r.width), vh:Math.round(r.height) };
+    $('coords').textContent = 'x '+Math.round(pending.x*100)+'% · y '+Math.round(pending.y*100)+
+      '% · viewport '+pending.vw+'×'+pending.vh+'  (scroll the draft into place before pinning)';
+    $('note').value=''; pop.style.display='block';
+    var px=e.clientX-r.left, py=e.clientY-r.top;
+    pop.style.left = Math.min(px+14, r.width-300)+'px';
+    pop.style.top  = Math.min(py+14, r.height-160)+'px';
+    $('note').focus();
+  });
+  $('pcancel').addEventListener('click', function(){ pop.style.display='none'; pending=null; });
+  $('psave').addEventListener('click', savePin);
+  $('note').addEventListener('keydown', function(e){
+    if((e.metaKey||e.ctrlKey)&&e.key==='Enter') savePin();
+    if(e.key==='Escape'){ pop.style.display='none'; pending=null; }
+  });
+
+  function savePin(){
+    var t = $('note').value.trim(); if(!pending || !t) { pop.style.display='none'; return; }
+    var p = pending; pending=null; pop.style.display='none';
+    p.n=++seq; p.text=t; pins.push(p); render();
+  }
+
+  function render(){
+    var list=$('list'); list.innerHTML='';
+    pins.forEach(function(p){
+      var d=document.createElement('div'); d.className='item'; d.id='item-'+p.n;
+      d.innerHTML='<button class="del" title="delete">✕</button><b>pin '+p.n+'</b>'+
+        '<p></p><div class="where"></div>';
+      d.querySelector('p').textContent=p.text;
+      d.querySelector('.where').textContent='x '+Math.round(p.x*100)+'% · y '+Math.round(p.y*100)+
+        '% · '+p.vw+'×'+p.vh;
+      d.addEventListener('mouseenter', function(){ mark(p.n,true); });
+      d.addEventListener('mouseleave', function(){ mark(p.n,false); });
+      d.querySelector('.del').addEventListener('click', function(){
+        pins=pins.filter(function(q){return q!==p;}); render();
+      });
+      list.appendChild(d);
+      var dot=document.createElement('div'); dot.className='pin'; dot.id='dot-'+p.n;
+      dot.textContent=p.n;
+      dot.style.left=(p.x*100)+'%'; dot.style.top=(p.y*100)+'%';
+      capture.appendChild(dot);
+    });
+  }
+  function mark(n,on){
+    var dot=$('dot-'+n), item=$('item-'+n);
+    if(dot) dot.classList.toggle('sel',on);
+    if(item) item.style.borderColor = on ? 'var(--ok)' : '';
+  }
+
+  $('copy').addEventListener('click', function(){
+    var md = markdown();
+    var done=function(){ var c=$('copied'); c.style.visibility='visible';
+      setTimeout(function(){ c.style.visibility='hidden'; },2500); };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(md).then(done, function(){ fallback(md); done(); });
+    } else { fallback(md); done(); }
+  });
+  function fallback(t){
+    var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta);
+    ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta);
+  }
+  function round(){ return $('round').value.trim() || '1'; }
+  function when(){ return new Date().toISOString().slice(0,10); }
+  function markdown(){
+    var out=['### studio feedback — round '+round()+' ('+when()+')',''];
+    if(pins.length){ out.push('**Pins:**','');
+      pins.forEach(function(p){ out.push('- pin '+p.n+' [x '+Math.round(p.x*100)+'% | y '+
+        Math.round(p.y*100)+'% | viewport '+p.vw+'×'+p.vh+'] — '+p.text); }); }
+    var g=$('general').value.trim();
+    if(g){ out.push('','**General:**'); g.split('\n').forEach(function(l){ out.push('- '+l); }); }
+    if(!pins.length && !g) out.push('_(empty feedback)_');
+    return out.join('\n');
+  }
+  $('dl').addEventListener('click', function(){
+    var data={ tool:'studio-review-overlay', round:round(), date:new Date().toISOString(),
+      draft:$('url').value.trim(), pins:pins, general:$('general').value.trim() };
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+    a.download='feedback-round-'+round().replace(/[^\w-]/g,'')+'.json'; a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  $('clear').addEventListener('click', function(){
+    if(!pins.length && !$('general').value) return;
+    if(confirm('Clear all pins and notes?')){ pins=[]; seq=0; $('general').value=''; render(); }
+  });
+})();
+</script>
+</body>
+</html>

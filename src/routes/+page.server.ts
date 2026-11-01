@@ -1,13 +1,33 @@
 import { sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
+import { hybridSearch } from '$lib/server/search';
+import { searchLlmView } from '$lib/server/llmview';
 import type { PageServerLoad } from './$types';
 
-// Live corpus state for the homepage hero readout: corpus size + when the
-// external Raindrop sync last touched the table. Cheap scalar queries.
-export const load: PageServerLoad = async () => {
+// Live corpus state for the instrument readout + the ?view=llm twin.
+export const load: PageServerLoad = async ({ url }) => {
 	const c = await db.execute<{ n: number }>(sql`SELECT count(*)::int AS n FROM te9_dev.bookmarks`);
 	const s = await db.execute<{ t: string | null }>(
 		sql`SELECT max(synced_at)::text AS t FROM te9_dev.bookmarks`
 	);
-	return { bookmarkCount: c[0].n, lastSynced: s[0].t };
+	const a = await db.execute<{ n: number }>(
+		sql`SELECT count(*)::int AS n FROM te9_dev.bookmark_analysis`
+	);
+
+	const data = {
+		bookmarkCount: c[0].n,
+		lastSynced: s[0].t,
+		analyzedCount: a[0].n
+	};
+
+	if (url.searchParams.get('view') === 'llm') {
+		const q = url.searchParams.get('q')?.trim() ?? '';
+		const page = Math.max(1, Number(url.searchParams.get('page') ?? 1) || 1);
+		if (q) {
+			const res = await hybridSearch(q, page, 20);
+			return { ...data, llm: searchLlmView(q, res, 0) };
+		}
+		return { ...data, llm: null };
+	}
+	return data;
 };

@@ -56,11 +56,13 @@ timestamp: "2026-07-04T00:00:00.000Z"
 │   │   └── research_report.md [research backing the search/RAG stack decision]
 │   └── wiki/ [OKF knowledge wiki bundle]  (see below)
 ├── scripts/
+│   ├── diagnose-query.ts [trace a query + url-substring target through vec/text/RRF stages]
 │   ├── embed-bookmarks.ts [resumable batched embedding backfill; --dry-run]
 │   ├── migrate.ts [applies a SQL migration file to DATABASE_URL]
 │   ├── migration.sql [enable pgvector, create bookmark_embeddings (384-dim) + HNSW + GIN — original schema]
 │   ├── migration-384.sql [original OpenAI/hf 384-dim variant, superseded by voyage-1024]
-│   └── migration-voyage-1024.sql [Voyage voyage-4-large 1024-dim embedding column + index]
+│   ├── migration-voyage-1024.sql [Voyage voyage-4-large 1024-dim embedding column + index]
+│   └── verify-search.ts [end-to-end check that the conversational video-query returns MotionClone]
 ├── static/
 │   └── favicon.svg
 └── src/

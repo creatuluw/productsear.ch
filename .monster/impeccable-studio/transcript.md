@@ -1,0 +1,11 @@
+- 2026-11-01T00:38:30.331Z — p0 scope confirmed — search/library-instrument archetype; surfaces: home redesign, all-entries list, compendium by archetype; ask mode removed; 20/page + relevance cutoff
+- 2026-11-01T00:39:51.679Z — p1 research written (10 patterns) — 7 exemplars: are.na, mymind/inkling, pinboard, raindrop, archive.org, NYPL, Baymard+ui-patterns refs; 9 adopt / 1 deviate (facets)
+- 2026-11-01T00:42:50.930Z — p2 q1 settled — 20-30 archetypes, multi-entry jsonb, app-owned table
+- 2026-11-01T00:44:42.814Z — p2 q2 settled — audience confirmed + humans|llms dual-view added to scope
+- 2026-11-01T00:46:46.655Z — p2 q3 settled — refs host0.ai + clawrun.sh: terminal-native instrument aesthetic, live state, mono density
+- 2026-11-01T00:48:26.916Z — p2 q4 settled + skill integration — success checklist confirmed; llms view + /skill.md from host0 pattern
+- 2026-11-01T00:50:14.004Z — p3 gate approved — 0 edits
+- 2026-11-01T00:51:23.681Z — p4 brief written — OPERATE mode; 7-block skeleton; 15/15 gestalt handover; execution plan 4 steps
+- 2026-11-01T00:52:28.688Z — p4 gate approved — 0 edits
+- 2026-11-01T01:24:10.154Z — p5 draft shown (round 1) — home/archive/compendium/skill.md built; verify round fixed 5 defects: scrollbar theme, snippet-title dedup, shell bar overflow-x, stats grid 2x2->lg:4, json tag normalization
+- 2026-11-01T01:34:36.271Z — p6 final approved — user approved; original query re-confirmed: MotionClone #21 page 2 score 0.72

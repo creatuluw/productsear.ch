@@ -1,6 +1,76 @@
-<script>
+<script lang="ts">
 	import '../app.css';
+	import { page } from '$app/state';
+
 	let { children } = $props();
+
+	const surfaces = [
+		{ href: '/', label: 'search' },
+		{ href: '/archive', label: 'archive' },
+		{ href: '/compendium', label: 'compendium' }
+	];
+
+	const isActive = (href: string) =>
+		href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);
+
+	const viewHref = (llm: boolean) => {
+		const p = new URLSearchParams(page.url.searchParams);
+		if (llm) p.set('view', 'llm');
+		else p.delete('view');
+		const qs = p.toString();
+		return page.url.pathname + (qs ? `?${qs}` : '');
+	};
+	const isLlm = $derived(page.url.searchParams.get('view') === 'llm');
 </script>
 
-{@render children()}
+<div class="min-h-screen">
+	<header
+		class="sticky top-0 z-20 border-b border-ink/10 bg-canvas/90 backdrop-blur supports-[backdrop-filter]:bg-canvas/75"
+	>
+		<div
+			class="mx-auto flex h-12 max-w-[1400px] items-center gap-3 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-4 sm:px-10 lg:px-14"
+		>
+			<a href="/" class="shrink-0 font-mono text-[13px] font-semibold tracking-tight text-ink">
+				productsear.ch
+			</a>
+			<nav class="flex shrink-0 gap-1.5" aria-label="surfaces">
+				{#each surfaces as s (s.href)}
+					<a
+						href={s.href}
+						class="rounded-full px-3 py-1 font-mono text-xs transition-colors duration-150 {isActive(s.href)
+							? 'bg-ink text-canvas'
+							: 'text-ink-soft hover:bg-ink/5 hover:text-ink'}"
+					>
+						{s.label}
+					</a>
+				{/each}
+			</nav>
+			<div
+				class="ml-auto flex shrink-0 items-center rounded-full border border-ink/15 p-0.5 font-mono text-[11px]"
+				role="tablist"
+				aria-label="view"
+			>
+				<a
+					role="tab" aria-selected={!isLlm}
+					href={viewHref(false)}
+					class="rounded-full px-2.5 py-1 transition-colors duration-150 {isLlm
+						? 'text-ink-soft hover:text-ink'
+						: 'bg-ink text-canvas'}"
+				>
+					humans
+				</a>
+				<a
+					role="tab" aria-selected={isLlm}
+					href={viewHref(true)}
+					class="rounded-full px-2.5 py-1 transition-colors duration-150 {isLlm
+						? 'bg-ink text-canvas'
+						: 'text-ink-soft hover:text-ink'}"
+				>
+					llms
+				</a>
+			</div>
+		</div>
+	</header>
+
+	{@render children()}
+</div>

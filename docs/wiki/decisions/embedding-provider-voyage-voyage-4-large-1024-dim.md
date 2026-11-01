@@ -11,7 +11,7 @@ timestamp: "2026-07-04T09:57:20.862Z"
 # Embedding provider: Voyage voyage-4-large (1024-dim)
 
 ## Context
-The search stack (see [hybrid-semantic-search-stack](../pages/concepts/hybrid-search-via-reciprocal-rank-fusion)) originally specified OpenAI `text-embedding-3-small` (1536-dim). Before this decision it had been reduced to 384-dim. We are now switching to **Voyage AI `voyage-4-large` at 1024 dimensions**.
+The search stack (see [hybrid-semantic-search-stack](../pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md)) originally specified OpenAI `text-embedding-3-small` (1536-dim). Before this decision it had been reduced to 384-dim. We are now switching to **Voyage AI `voyage-4-large` at 1024 dimensions**.
 
 ## Choice
 - Embedding model: **Voyage `voyage-4-large`**, **1024 dimensions**, cosine similarity.

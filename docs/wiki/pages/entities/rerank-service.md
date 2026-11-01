@@ -17,6 +17,7 @@ Re-scores a pool of candidate documents against a query and returns them in rele
 - **Interface**: takes `(query, documents[], topK?)`, calls Voyage rerank, returns reordered docs.
 - **Configuration**: requires `VOYAGE_API_KEY`.
 - **Model**: `rerank-2.5-lite`.
+- **Doc text**: since 2026-11-01 each document is `title · purpose · excerpt · tags · first ~1200 chars of page markdown` — built by `rerankText()` in `src/lib/server/search.ts`, over raw DB rows (not the API payload). See [enrich-reranker-input-with-page-content-show-30-results](../../decisions/enrich-reranker-input-with-page-content-show-30-results.md).
 
 ## Relationships
 - [api-search-endpoint](./api-search-endpoint.md) — consumes rerank via `src/lib/server/search.ts`.
@@ -25,4 +26,5 @@ Re-scores a pool of candidate documents against a query and returns them in rele
 - [embedding-provider-voyage-voyage-4-large-1024-dim](./embedding-provider-voyage-voyage-4-large-1024-dim.md) — sibling Voyage dependency (embeddings).
 
 ## Lifecycle
+- 2026-11-01: rerank input enriched with page content (`rerankText()` now includes first ~1200 chars of `bookmark_content.markdown`); results widened 20 → 30, pool stays 50.
 - First added: 2026-07-04, as the reranking stage of the [adopt-cross-encoder-reranking-voyage-rerank-25-lite-on-top-of-rrf-hybrid-search](./adopt-cross-encoder-reranking-voyage-rerank-25-lite-on-top-o.md) decision.

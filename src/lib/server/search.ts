@@ -19,9 +19,22 @@ export interface SearchResult {
 	snippet: string;
 }
 
-// RRF retrieves this many candidates, then the cross-encoder reranker narrows
-// to `limit`. Pool > limit is what makes reranking meaningful.
+export interface SearchResponse {
+	results: SearchResult[];
+	/** total results that cleared the relevance floor (across all pages) */
+	total: number;
+	page: number;
+	pageSize: number;
+	/** true when the strong-match list ended because the pool was exhausted, not the floor */
+	poolLimited: boolean;
+}
+
+// RRF retrieves this many candidates, then the cross-encoder reranker scores
+// them and the relevance floor decides what is actually a match.
 const RERANK_POOL = 50;
+// rerank-2.5-lite relevance floor: calibrated so entries users call "should be
+// found" (≈0.64+) survive and noise (≤0.45) does not.
+export const RELEVANCE_FLOOR = 0.45;
 
 function rerankText(r: {
 	title: string;
@@ -40,19 +53,17 @@ function rerankText(r: {
 }
 
 /**
- * Hybrid search over the bookmark corpus using Reciprocal Rank Fusion (RRF).
- *
- * We score EVERY row on both signals (2.3k vectors = sub-ms brute-force cosine,
- * so no ANN prefilter is needed — HNSW index is there for future scale). RRF
- * fuses the two rank lists without needing score normalization, which matters
- * because cosine distance and ts_rank live on totally different scales.
+ * Hybrid search over the bookmark corpus using Reciprocal Rank Fusion (RRF),
+ * then cross-encoder rerank with a relevance floor and 20/page pagination.
+ * Only good matches are returned; `total` is the honest count.
  */
-export async function hybridSearch(query: string, limit = 20): Promise<SearchResult[]> {
+export async function hybridSearch(
+	query: string,
+	page = 1,
+	pageSize = 20
+): Promise<SearchResponse> {
+	const poolSize = Math.max(pageSize, RERANK_POOL);
 	const queryVec = await embedQuery(query);
-
-	// Fetch a candidate pool (RERANK_POOL, or `limit` if it's larger) from the
-	// fused rank list, then hand off to the cross-encoder reranker.
-	const poolSize = Math.max(limit, RERANK_POOL);
 
 	const rows = (await db.execute<{
 		bookmark_id: number;
@@ -79,7 +90,7 @@ export async function hybridSearch(query: string, limit = 20): Promise<SearchRes
 			FROM te9_dev.bookmark_embeddings e
 			JOIN te9_dev.bookmarks b ON b.id = e.bookmark_id
 			LEFT JOIN te9_dev.bookmark_analysis a ON a.bookmark_id = e.bookmark_id
-			LEFT JOIN te9_dev.bookmark_content c ON c.bookmark_id = e.bookmark_id
+			LEFT JOIN te9_dev.bookmark_content c ON c.bookmark_id = b.id
 		),
 		ranked AS (
 			SELECT
@@ -118,27 +129,32 @@ export async function hybridSearch(query: string, limit = 20): Promise<SearchRes
 		snippet: r.snippet
 	}));
 
-	if (mapped.length <= limit) return mapped;
+	if (mapped.length === 0) {
+		return { results: [], total: 0, page: 1, pageSize, poolLimited: false };
+	}
 
-	// Cross-encoder rerank over the pool, fall back to RRF order on failure.
-	// Rerank from `rows` (raw, incl. markdown) not `mapped` (API payload).
+	// Cross-encoder scores over the whole pool, floor applied after.
 	try {
-		const docs = rows.map(rerankText);
-		if (process.env.SEARCH_DEBUG) {
-			const ti = rows.findIndex((r) => (r.url as string).toLowerCase().includes(process.env.SEARCH_DEBUG!));
-			console.error('[debug] pool', rows.length, 'target idx', ti, 'doc len', ti >= 0 ? docs[ti].length : '-', 'doc head:', ti >= 0 ? docs[ti].slice(0, 90) : '-');
-		}
-		const order = await rerank(
+		const hits = await rerank(
 			query,
-			docs,
-			limit
+			rows.map(rerankText),
+			rows.length
 		);
-		if (process.env.SEARCH_DEBUG) {
-			console.error('[debug] order len', order.length, 'first 5', order.slice(0, 5));
-		}
-		return order.map((i) => mapped[i]);
+		for (const h of hits) mapped[h.index].rerankScore = h.score;
+
+		const strong = hits.filter((h) => h.score >= RELEVANCE_FLOOR).map((h) => mapped[h.index]);
+		const poolLimited = strong.length === hits.length; // floor never kicked in
+		const start = (page - 1) * pageSize;
+		return {
+			results: strong.slice(start, start + pageSize),
+			total: strong.length,
+			page,
+			pageSize,
+			poolLimited
+		};
 	} catch (e) {
 		console.error('rerank failed, returning RRF order:', e);
-		return mapped.slice(0, limit);
+		const start = (page - 1) * pageSize;
+		return { results: mapped.slice(start, start + pageSize), total: mapped.length, page, pageSize, poolLimited: true };
 	}
 }
