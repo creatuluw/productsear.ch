@@ -8,10 +8,11 @@ okf_version: "0.1"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T13:20:24.996Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T13:33:42.944Z.
 
 ## Recent Decisions
 
+- [Use Plausible for privacy-friendly site analytics, wired in app.html](decisions/use-plausible-for-privacy-friendly-site-analytics-wired-in-a.md) — Context (2026-11-01)
 - [Adopt product-search bookmark-ribbon mascot as the brand character](decisions/adopt-product-search-bookmark-ribbon-mascot-as-the-brand-cha.md) — Context (2026-11-01)
 - [Content-negotiate llms views: raw text/markdown for LLM clients, rendered markdown for browsers](decisions/content-negotiate-llms-views-raw-text-markdown-for-llm-clien.md) — Context (2026-11-01)
 - [Serve the LLM usage guide at /skill.md and distill it into the llms-view preamble](decisions/serve-the-llm-usage-guide-at-skill-md-and-distill-it-into-th.md) — Context (2026-11-01)
@@ -39,6 +40,8 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T13
 
 ## Recent Learnings — development patterns
 
+- [Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing](learnings/extracted-svelte-scoped-css-needs-scope-classes-handled-or-s.md) — When extracting compiled Svelte CSS into a standalone test harness (e.g. a plain HTML file to screenshot), naive selector stripping breaks e… (2026-11-01)
+- [Headless-Chrome screenshots don't advance CSS animations — freeze frames with animation-play-state](learnings/headless-chrome-screenshots-don-t-advance-css-animations-fre.md) — When visually verifying CSS animations via headless-Chrome screenshots, letting the page "run" for a while (or relying on virtual time) does… (2026-11-01)
 - [21st.dev CDN preview pages inline the animation CSS inside the JS bundle, not the HTML](learnings/21st-dev-cdn-preview-pages-inline-the-animation-css-inside-t.md) — When the user shares a component URL like `https://cdn.21st.dev/loading-ui/symmetric-wave/default/bundle.<id>.html`, the HTML page is just a… (2026-11-01)
 - [SvelteKit normalizes event.url for data requests — always early-return on event.isDataRequest in handle hooks](learnings/sveltekit-normalizes-event-url-for-data-requests-always-earl.md) — **The gotcha (found 2026-11-01 while debugging a prod 500 on `/?view=llm`):** in a SvelteKit `handle` hook, `event.url` for a client-router … (2026-11-01)
 - [Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89-1-aa-safe.md) — The site-wide accent (set 2026-11-01) is `#0021FF`, expressed in the OKLCH token system as: (2026-11-01)
@@ -57,8 +60,6 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T13
 - [Raindrop→DB sync runs outside this repo; published page count sums all collections](learnings/raindrop-db-sync-runs-outside-this-repo-published-page-count.md) — **Architecture:** The `te9_dev.bookmarks` table (and `bookmark_content`, `bookmark_analysis`) is a **read-only mirror populated by an EXTERN… (2026-08-06)
 - [bookmarks table is a read-only mirror — the Raindrop→DB sync lives outside this repo](learnings/bookmarks-table-is-a-read-only-mirror-the-raindrop-db-sync-l.md) — The gotcha (2026-08-06)
 - [Driving html-video (nexu-io) headlessly to render a product video](learnings/driving-html-video-nexu-io-headlessly-to-render-a-product-vi.md) — When using **html-video** (https://github.com/nexu-io/html-video) to render a video about this app: (2026-07-07)
-- [Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors](learnings/skill-skill-md-description-must-quote-colons-to-avoid-yaml-n.md) — In `.agents/skills/*/SKILL.md`, a plain-scalar `description:` value containing `: ` (colon-space — e.g. from embedded text like `Triggers:` … (2026-07-04)
-- [Railpack (Railway build driver) requires a start command](learnings/railpack-railway-build-driver-requires-a-start-command.md) — Railpack is Railway's default build driver (v0.30.0 at time of writing). It infers the start command for a Node app by checking, in order: (2026-07-04)
 
 ## Architecture
 
