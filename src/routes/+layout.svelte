@@ -103,7 +103,7 @@
 	</div>
 
 	{#if !isLlm}
-		<footer class="border-t border-ink/10">
+		<footer>
 			<div
 				class="mx-auto flex max-w-[1400px] items-end justify-between gap-6 px-6 sm:px-10 lg:px-14"
 			>
