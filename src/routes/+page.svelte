@@ -111,7 +111,7 @@
 		loading = true;
 		error_ = '';
 		try {
-			const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&limit=20`);
+			const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&limit=30`);
 			if (!res.ok) throw new Error(await res.text());
 			const data = (await res.json()) as { results: SearchResult[]; tookMs: number };
 			results = data.results;

@@ -1,0 +1,12 @@
+import { config as loadEnv } from "dotenv";
+import { hybridSearch } from "../src/lib/server/search.js";
+loadEnv();
+const query = "i am looking for a tool that lets me process videos and edit them after";
+const t0 = performance.now();
+const results = await hybridSearch(query, 30);
+console.log(`took: ${Math.round(performance.now() - t0)}ms, results: ${results.length}`);
+const pos = results.findIndex((r) => r.url.toLowerCase().includes("motionclone"));
+console.log("MotionClone:", pos === -1 ? "STILL MISSING" : `#${pos + 1}`);
+results.slice(0, 8).forEach((r, i) => console.log(`  #${i + 1} ${r.title.slice(0, 68)}`));
+if (pos >= 8) console.log(`  #${pos + 1} ${results[pos].title.slice(0, 68)}  <<<< TARGET`);
+process.exit(0);
