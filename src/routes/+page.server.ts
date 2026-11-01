@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { hybridSearch } from '$lib/server/search';
 import { searchLlmView } from '$lib/server/llmview';
+	import { corpusOverviewMd } from '$lib/server/llms';
 import type { PageServerLoad } from './$types';
 
 // Live corpus state for the instrument readout + the ?view=llm twin.
@@ -27,7 +28,7 @@ export const load: PageServerLoad = async ({ url }) => {
 			const res = await hybridSearch(q, page, 20);
 			return { ...data, llm: searchLlmView(q, res, 0) };
 		}
-		return { ...data, llm: null };
+		return { ...data, llm: await corpusOverviewMd() };
 	}
 	return data;
 };
