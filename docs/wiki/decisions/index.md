@@ -11,3 +11,5 @@ _Major decisions and direction shifts (ADRs) will be listed here._
 - [Dual-view surfaces: humans | llms tabs with ?view=llm on every route](./dual-view-surfaces-humans-llms-tabs-with-view-llm-on-every-r.md) - Context
 - [Remove Ask mode — productsear.ch becomes search-only](./remove-ask-mode-productsear-ch-becomes-search-only.md) - Context
 - [Serve the LLM usage guide at /skill.md and distill it into the llms-view preamble](./serve-the-llm-usage-guide-at-skill-md-and-distill-it-into-th.md) - Context
+- [Content-negotiate llms views: raw text/markdown for LLM clients, rendered markdown for browsers](./content-negotiate-llms-views-raw-text-markdown-for-llm-clien.md) - Context
+- [Adopt product-search bookmark-ribbon mascot as the brand character](./adopt-product-search-bookmark-ribbon-mascot-as-the-brand-cha.md) - Context

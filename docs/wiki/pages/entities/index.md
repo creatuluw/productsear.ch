@@ -8,3 +8,5 @@ fill-script.md) - What is it?
 - [API ask endpoint](./api-ask-endpoint.md) - What is it?
 - [Bookmark archetype system](./bookmark-archetype-system.md) - The bookmark archetype system classifies every bookmark in the corpus into a curated set of **30 canonical archetypes** (AI Coding Agent, RAG & Search, Open Sou
 - [Compendium pages](./compendium-pages.md) - `/compendium` (index) and `/compendium/[slug]` (group) — the archetype roll-up surface. The index lists all **30 canonical archetypes** with live counts; each g
+- [LlmDoc component](./llmdoc-component.md) - `src/lib/components/LlmDoc.svelte` — the browser-facing renderer for llms views. Receives the server-built markdown string and renders it as styled GFM, replaci
+- [product-search mascot (illo character pack)](./product-search-mascot-illo-character-pack.md) - The official brand mascot for productsear.ch: **product-search**, a bookmark-ribbon character in the illo plugin's **riso** look — the ribbon that has already f

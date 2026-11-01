@@ -8,10 +8,12 @@ okf_version: "0.1"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T01:27:44.102Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T13:20:24.996Z.
 
 ## Recent Decisions
 
+- [Adopt product-search bookmark-ribbon mascot as the brand character](decisions/adopt-product-search-bookmark-ribbon-mascot-as-the-brand-cha.md) — Context (2026-11-01)
+- [Content-negotiate llms views: raw text/markdown for LLM clients, rendered markdown for browsers](decisions/content-negotiate-llms-views-raw-text-markdown-for-llm-clien.md) — Context (2026-11-01)
 - [Serve the LLM usage guide at /skill.md and distill it into the llms-view preamble](decisions/serve-the-llm-usage-guide-at-skill-md-and-distill-it-into-th.md) — Context (2026-11-01)
 - [Remove Ask mode — productsear.ch becomes search-only](decisions/remove-ask-mode-productsear-ch-becomes-search-only.md) — Context (2026-11-01)
 - [Dual-view surfaces: humans | llms tabs with ?view=llm on every route](decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm-on-every-r.md) — Context (2026-11-01)
@@ -25,6 +27,9 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T01
 
 ## Active Rules
 
+- [Reverse-engineer hosted component bundles into plain CSS, never add the dependency](rules/reverse-engineer-hosted-component-bundles-into-plain-css-nev.md) — **Guideline:** When a design reference is a hosted component bundle (21st.dev CDN, React component previews, similar), do **not** add the Re… (2026-11-01)
+- [Every ?view=llm branch must render an LLM document — including no-parameter fallbacks](rules/every-view-llm-branch-must-render-an-llm-document-including-.md) — **Guideline:** On any route honoring `?view=llm`, *every* code path — including the fallback branch where search params are absent — must re… (2026-11-01)
+- [Rewrite delimiter-dense code blocks wholesale via the write path](rules/rewrite-delimiter-dense-code-blocks-wholesale-via-the-write-.md) — Guideline (2026-11-01)
 - [Guard min-content width on wrapping-sensitive text](rules/guard-min-content-width-on-wrapping-sensitive-text.md) — **Guideline**: wide monospace faces (Martian Mono is ~15px/char at 18px) and unbreakable tokens (repo-style titles like `owner/deepseek_ocr_… (2026-11-01)
 - [Diagnose search misses stage-by-stage before tuning](rules/diagnose-search-misses-stage-by-stage-before-tuning.md) — Guideline (2026-11-01)
 - [Instrument-grade design principles; avoid banned tells](rules/instrument-grade-design-principles-avoid-banned-tells.md) — Guideline (2026-08-06)
@@ -34,6 +39,9 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T01
 
 ## Recent Learnings — development patterns
 
+- [21st.dev CDN preview pages inline the animation CSS inside the JS bundle, not the HTML](learnings/21st-dev-cdn-preview-pages-inline-the-animation-css-inside-t.md) — When the user shares a component URL like `https://cdn.21st.dev/loading-ui/symmetric-wave/default/bundle.<id>.html`, the HTML page is just a… (2026-11-01)
+- [SvelteKit normalizes event.url for data requests — always early-return on event.isDataRequest in handle hooks](learnings/sveltekit-normalizes-event-url-for-data-requests-always-earl.md) — **The gotcha (found 2026-11-01 while debugging a prod 500 on `/?view=llm`):** in a SvelteKit `handle` hook, `event.url` for a client-router … (2026-11-01)
+- [Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89-1-aa-safe.md) — The site-wide accent (set 2026-11-01) is `#0021FF`, expressed in the OKLCH token system as: (2026-11-01)
 - [SvelteKit blocks $lib/server imports in client components — even for pure-data modules](learnings/sveltekit-blocks-lib-server-imports-in-client-components-eve.md) — SvelteKit refuses `$lib/server/*` imports from client-side code (`+page.svelte`) at dev/build time — **even when the module contains no serv… (2026-11-01)
 - [Headless Chrome clamps window width (~500px) — "390px" screenshots are crops, not reflows](learnings/headless-chrome-clamps-window-width-500px-390px-screenshots-.md) — When doing responsive visual QA via headless-Chrome screenshots: (2026-11-01)
 - [postgres-js double-encodes plain strings sent to jsonb — use sql.json()](learnings/postgres-js-double-encodes-plain-strings-sent-to-jsonb-use-s.md) — When writing to a `jsonb` column through Drizzle's postgres-js driver using a raw `sql` template, passing a plain JS string makes postgres-j… (2026-11-01)
@@ -51,9 +59,6 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T01
 - [Driving html-video (nexu-io) headlessly to render a product video](learnings/driving-html-video-nexu-io-headlessly-to-render-a-product-vi.md) — When using **html-video** (https://github.com/nexu-io/html-video) to render a video about this app: (2026-07-07)
 - [Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors](learnings/skill-skill-md-description-must-quote-colons-to-avoid-yaml-n.md) — In `.agents/skills/*/SKILL.md`, a plain-scalar `description:` value containing `: ` (colon-space — e.g. from embedded text like `Triggers:` … (2026-07-04)
 - [Railpack (Railway build driver) requires a start command](learnings/railpack-railway-build-driver-requires-a-start-command.md) — Railpack is Railway's default build driver (v0.30.0 at time of writing). It infers the start command for a Node app by checking, in order: (2026-07-04)
-- [adapter-node requires ORIGIN env var for CSRF protection](learnings/adapter-node-requires-origin-env-var-for-csrf-protection.md) — When deploying SvelteKit with `@sveltejs/adapter-node`, requests with a mismatched `Host`/`Origin` header are rejected unless the `ORIGIN` e… (2026-07-04)
-- [GitHub requires `workflow` scope on the token to push commits touching `.github/workflows/`](learnings/github-requires-workflow-scope-on-the-token-to-push-commits-.md) — A token with only `repo` (and `gist`, `read:org`) scopes cannot push a commit that modifies any file under `.github/workflows/`. GitHub reje… (2026-07-04)
-- [Postgres FTS "word too long" NOTICE for >2047-char tokens is harmless](learnings/postgres-fts-word-too-long-notice-for-2047-char-tokens-is-ha.md) — When populating a `tsvector` / `search_tsv` column, Postgres may emit a NOTICE like: (2026-07-04)
 
 ## Architecture
 
@@ -61,6 +66,7 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-01T01
 
 ## Global Patterns
 
+- [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it? (2026-11-01)
 - [URL-driven search state](pages/concepts/url-driven-search-state.md) — What is it? (2026-08-25)
 - [Hybrid search via Reciprocal Rank Fusion](pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md) — What is it? (2026-07-03)
 

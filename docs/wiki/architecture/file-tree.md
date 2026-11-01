@@ -69,22 +69,31 @@ timestamp: "2026-07-04T00:00:00.000Z"
     ├── app.css [Tailwind 4 import]
     ├── app.d.ts [SvelteKit app typings]
     ├── app.html [root HTML shell]
+    ├── hooks.server.ts [content negotiation: ?view=llm from non-browser clients → raw text/markdown via lib/server/llms.ts]
     ├── lib/
     │   └── server/
     │       ├── bookmark-text.ts [builds the one searchable text blob per bookmark]
     │       ├── db/
     │       │   └── index.ts [Drizzle/postgres-js client; reads process.env]
     │       ├── embeddings.ts [Voyage AI embedding client; default voyage-4-large 1024-dim; raw fetch, no SDK]
+    │       ├── llms.ts [?view=llm core: wantsRawMarkdown(), corpusOverviewMd(), llmMarkdown() route router, mdResponse()]
+    │       ├── llmview.ts [per-surface ?view=llm markdown builders (search / archive / compendium) + usage preamble]
     │       ├── rerank.ts [Voyage rerank-2.5-lite cross-encoder re-scoring client; shares VOYAGE_API_KEY]
-    │       ├── rag.ts [retrieval + prompt + streaming answer via AI SDK streamText]
-    │       └── search.ts [single hybrid RRF SQL query: cosine + ts_rank]
+    │       ├── search.ts [single hybrid RRF SQL query: cosine + ts_rank]
+    │       └── skill-doc.ts [SKILL_MD — LLM usage guide served at /skill.md; kept in sync with E:\skills.te9.dev\productsear.ch\SKILL.md]
     └── routes/
         ├── +layout.svelte
-        ├── +page.server.ts [load: SELECT count(*) FROM te9_dev.bookmarks → live homepage bookmark count]
-        ├── +page.svelte [search UI + Ask mode; hero renders live data.bookmarkCount]
+        ├── +page.server.ts [load: homepage search results; ?view=llm → markdown surfaces, corpus overview when no q]
+        ├── +page.svelte [search UI; humans | llms dual-view tabs]
+        ├── archive/
+        │   ├── +page.server.ts [archive browser load + ?view=llm markdown]
+        │   └── +page.svelte [chronological corpus browser]
+        ├── compendium/
+        │   ├── +page.server.ts [compendium load + ?view=llm markdown]
+        │   └── +page.svelte [browse the corpus by archetype]
+        ├── skill.md/
+        │   └── +server.ts [GET /skill.md — raw LLM usage guide (SKILL_MD)]
         └── api/
-            ├── ask/
-            │   └── +server.ts [GET /api/ask — streaming RAG]
             └── search/
                 └── +server.ts [GET /api/search — hybrid RRF search + Voyage rerank]
 └── .github/

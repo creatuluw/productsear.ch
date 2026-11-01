@@ -1,3 +1,4 @@
-# Last wiki sync
-
-2026-11-01T00:34:10.262Z
+---
+synced_at: "2026-11-01T13:14:37.873Z"
+note: auto-marked synced by wiki-recap after decision/rule/learning/page writes
+---
