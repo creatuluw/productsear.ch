@@ -119,7 +119,8 @@
 		e.preventDefault();
 		pageNum = n;
 		runSearch(true);
-		window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+		// jump straight to the top so the latency gauge (wave loader) is in view while the page loads
+		window.scrollTo({ top: 0, behavior: 'auto' });
 	}
 
 	// back/forward: adopt params from history and re-run
