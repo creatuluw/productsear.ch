@@ -7,6 +7,7 @@
 	import { goto } from '$app/navigation';
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
 	import WaveLoader from '$lib/components/WaveLoader.svelte';
+	import InfoTip from '$lib/components/InfoTip.svelte';
 
 	let { data } = $props();
 
@@ -210,30 +211,42 @@
 				{/if}
 			</div>
 			<div class="mt-2 font-mono text-[11px] text-ink-faint">
-				semantic + full-text · cross-encoder reranked · relevance-floored
+				<InfoTip text="Hybrid retrieval: vector similarity over Voyage embeddings fused with Postgres full-text match — reciprocal rank fusion merges both rankings." align="left">semantic + full-text</InfoTip>
+				<span class="mx-1.5">·</span>
+				<InfoTip text="Top candidates are re-scored against your query by a cross-encoder (Voyage rerank-2.5-lite) for the final ordering.">cross-encoder reranked</InfoTip>
+				<span class="mx-1.5">·</span>
+				<InfoTip text="Results below a calibrated relevance floor (0.45) are dropped as noise — counts are honest, never padded.">relevance-floored</InfoTip>
 			</div>
 		</form>
 
 		<!-- vital signs: one bounded panel, internal hairlines -->
-		<dl class="mb-8 grid grid-cols-2 overflow-hidden rounded-[var(--radius)] border border-ink/10 lg:grid-cols-4">
+		<dl class="mb-8 grid grid-cols-2 rounded-[var(--radius)] border border-ink/10 lg:grid-cols-4">
 			<div class="border-b border-r border-ink/10 px-4 py-3 lg:border-b-0">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">listings</dt>
+				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+					<InfoTip text="Total searchable entries — every saved page with title, URL, and purpose/how/when metadata." align="left">listings</InfoTip>
+				</dt>
 				<dd class="mt-1.5 flex items-center gap-2 font-mono text-base text-ink sm:text-lg">
 					<span class="status-dot" aria-hidden="true"></span>{data.bookmarkCount.toLocaleString()}
 				</dd>
 			</div>
 			<div class="border-b border-ink/10 px-4 py-3 lg:border-b-0">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">synced</dt>
+				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+					<InfoTip text="When the collection was last synced into the search database.">synced</InfoTip>
+				</dt>
 				<dd class="mt-1.5 font-mono text-base text-ink sm:text-lg">{fmtSynced(data.lastSynced)}</dd>
 			</div>
 			<div class="border-r border-ink/10 px-4 py-3">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">analyzed</dt>
+				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+					<InfoTip text="Share of entries enriched with purpose / how / when metadata by the analysis pass.">analyzed</InfoTip>
+				</dt>
 				<dd class="mt-1.5 font-mono text-base text-ink sm:text-lg">
 					{Math.round((data.analyzedCount / Math.max(1, data.bookmarkCount)) * 100)}<span class="text-ink-faint">%</span>
 				</dd>
 			</div>
 			<div class="min-w-0 px-4 py-3">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">latency</dt>
+				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+					<InfoTip text="Round-trip search time for your last query — retrieval, fusion, and rerank combined." align="right">latency</InfoTip>
+				</dt>
 				<dd class="mt-1.5 flex min-w-0 items-center font-mono text-base text-ink sm:text-lg">
 					{#if loading}
 						<WaveLoader />
