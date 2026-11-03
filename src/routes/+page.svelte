@@ -190,7 +190,7 @@
 				<input
 					bind:value={query}
 					oninput={onInput}
-					placeholder="search the corpus — problem shape, not sentences"
+					placeholder="search the listings — problem shape, not sentences"
 					autocomplete="off"
 					spellcheck="false"
 					class="w-full border-0 border-b-2 border-ink bg-transparent py-3 pr-10 text-2xl font-medium tracking-[-0.01em] text-ink outline-none transition-colors duration-200 placeholder:text-ink-faint/70 focus:border-accent"
@@ -217,7 +217,7 @@
 		<!-- vital signs: one bounded panel, internal hairlines -->
 		<dl class="mb-8 grid grid-cols-2 overflow-hidden rounded-[var(--radius)] border border-ink/10 lg:grid-cols-4">
 			<div class="border-b border-r border-ink/10 px-4 py-3 lg:border-b-0">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">corpus</dt>
+				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">listings</dt>
 				<dd class="mt-1.5 flex items-center gap-2 font-mono text-base text-ink sm:text-lg">
 					<span class="status-dot" aria-hidden="true"></span>{data.bookmarkCount.toLocaleString()}
 				</dd>

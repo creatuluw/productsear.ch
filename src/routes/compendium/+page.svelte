@@ -8,7 +8,7 @@
 {#if data.llm}
 		<LlmDoc md={data.llm} />
 	{:else}
-	<h1 class="sr-only">compendium — the corpus by archetype</h1>
+	<h1 class="sr-only">compendium — the listings by archetype</h1>
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
 		<div class="mb-8 flex items-baseline justify-between">
 			<h2 class="text-[2rem] font-semibold leading-none tracking-[-0.025em] text-ink">compendium</h2>
