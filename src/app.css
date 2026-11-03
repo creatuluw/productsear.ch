@@ -179,6 +179,108 @@ kbd {
 	background: oklch(0.22 0.012 165 / 0.04);
 }
 
+/* ---- Machine-readout layer for ?view=llm documents (LlmDoc) ----
+   Same grammar as .md but in full mono with terminal-grade rhythm:
+   the document is a console readout, not prose. */
+.md-machine {
+	font-family: var(--font-mono);
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.85;
+	overflow-wrap: anywhere;
+}
+.md-machine p {
+	margin: 0.85em 0;
+}
+.md-machine h1,
+.md-machine h2,
+.md-machine h3,
+.md-machine h4 {
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	line-height: 1.3;
+	margin: 1.6em 0 0.55em;
+}
+.md-machine h1 {
+	font-size: 1.15em;
+	padding-bottom: 0.35em;
+	border-bottom: 1px solid oklch(0.22 0.012 165 / 0.14);
+}
+.md-machine h2 {
+	font-size: 1.02em;
+}
+.md-machine h2::before,
+.md-machine h3::before {
+	content: '# ';
+	color: var(--color-success);
+}
+.md-machine a {
+	color: var(--color-accent);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+}
+.md-machine a:hover {
+	color: var(--color-accent-hover);
+}
+.md-machine ul,
+.md-machine ol {
+	margin: 0.85em 0;
+	padding-left: 1.3em;
+}
+.md-machine li {
+	margin: 0.3em 0;
+}
+.md-machine li::marker {
+	color: var(--color-success);
+}
+.md-machine code {
+	font-size: 0.9em;
+	background: oklch(0.22 0.012 165 / 0.07);
+	border: 1px solid oklch(0.22 0.012 165 / 0.1);
+	border-radius: 4px;
+	padding: 0.08em 0.35em;
+}
+.md-machine pre {
+	margin: 1em 0;
+	padding: 0.85em 1em;
+	border-radius: var(--radius);
+	background: oklch(0.22 0.012 165 / 0.96);
+	overflow-x: auto;
+}
+.md-machine pre code {
+	background: none;
+	border: none;
+	padding: 0;
+	font-size: 0.85em;
+	line-height: 1.7;
+}
+.md-machine hr {
+	border: none;
+	border-top: 1px solid oklch(0.22 0.012 165 / 0.14);
+	margin: 1.4em 0;
+}
+.md-machine table {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	overflow-x: auto;
+	border-collapse: collapse;
+	margin: 1em 0;
+	font-size: 0.92em;
+}
+.md-machine th,
+.md-machine td {
+	border: 1px solid oklch(0.22 0.012 165 / 0.12);
+	padding: 0.4em 0.65em;
+	text-align: left;
+	white-space: nowrap;
+}
+.md-machine th {
+	font-weight: 600;
+	background: oklch(0.22 0.012 165 / 0.05);
+}
+
 /* browser chrome carries the design too: thin paper-toned scrollbars */
 * {
 	scrollbar-width: thin;
