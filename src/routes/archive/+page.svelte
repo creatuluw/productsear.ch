@@ -27,15 +27,15 @@
 	const href = (p: number) => `/archive${p > 1 ? `?page=${p}` : ''}`;
 </script>
 
-<svelte:head><title>archive — productsear.ch</title></svelte:head>
+<svelte:head><title>listings — productsear.ch</title></svelte:head>
 
 {#if data.llm}
 		<LlmDoc md={data.llm} />
 	{:else}
-	<h1 class="sr-only">archive — all entries, newest first</h1>
+	<h1 class="sr-only">listings — all entries, newest first</h1>
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
 		<div class="mb-8 flex items-baseline justify-between">
-			<h2 class="text-[2rem] font-semibold leading-none tracking-[-0.025em] text-ink">archive</h2>
+			<h2 class="text-[2rem] font-semibold leading-none tracking-[-0.025em] text-ink">listings</h2>
 			<p class="font-mono text-[11px] text-ink-soft">
 				{data.total.toLocaleString()} entries · newest first
 			</p>
