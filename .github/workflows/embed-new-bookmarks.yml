@@ -1,12 +1,15 @@
-# Embed new bookmarks daily. The backfill script is resumable — it builds the
-# set of already-embedded bookmark_ids and only processes the rest — so a daily
-# run picks up anything the Raindrop sync added since the last run.
+# Full corpus enrichment chain, daily. Each stage is idempotent and self-limited
+# (~100 rows/run), so a nightly run catches up with whatever the Raindrop sync
+# (or manual ingestion) added: crawl new entries → LLM-analyze them → classify
+# archetypes → embed for search.
 #
 # Secrets required (Settings → Secrets and variables → Actions):
-#   DATABASE_URL   — Railway Postgres connection string
-#   VOYAGE_API_KEY — Voyage AI API key (embeddings)
+#   DATABASE_URL        — Railway Postgres connection string
+#   VOYAGE_API_KEY      — Voyage AI API key (embeddings)
+#   ZAI_API_KEY         — optional; z.ai GLM-5 for analysis (falls back to the
+#                         Railway LLM gateway if unset)
 
-name: Embed new bookmarks
+name: Bookmark enrichment (crawl → analyze → embed)
 
 on:
   schedule:
@@ -24,9 +27,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  embed:
+  enrich:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       VOYAGE_API_KEY: ${{ secrets.VOYAGE_API_KEY }}
@@ -49,11 +52,22 @@ jobs:
           test -n "$DATABASE_URL"  || { echo "::error::DATABASE_URL secret is not set"; exit 1; }
           test -n "$VOYAGE_API_KEY" || { echo "::error::VOYAGE_API_KEY secret is not set"; exit 1; }
 
+      - name: Crawl new bookmarks (→ bookmark_content)
+        run: npm run crawl
+
+      - name: Analyze new bookmarks (→ bookmark_analysis, LLM)
+        run: npm run analyze
+        env:
+          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+
+      - name: Classify archetypes (→ bookmark_archetypes)
+        run: npx tsx scripts/backfill-archetypes.ts --missing
+
       - name: Embed new bookmarks
         run: npm run embed
 
       - name: Summary
         if: always()
         run: |
-          echo "### Embed run: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "See the log above for the 'Already embedded' vs 'To embed' counts." >> "$GITHUB_STEP_SUMMARY"
+          echo "### Enrichment run: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Crawl + analyze are capped at ~100 rows/run; embed catches up everything missing." >> "$GITHUB_STEP_SUMMARY"
