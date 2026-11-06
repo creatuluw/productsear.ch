@@ -21,8 +21,8 @@ Hybrid search needs pre-computed embeddings for the corpus. This script is the o
 - **Configuration**: requires `OPENAI_API_KEY` in `.env` (gitignored).
 
 ## Relationships
-- [hybrid-semantic-search-stack-pgvector-tsvector-with-rrf-fusi](./hybrid-semantic-search-stack-pgvector-tsvector-with-rrf-fusi.md) — produces the vectors the search stack queries.
-- [env-dynamic-private-breaks-under-plain-tsx-use-process-env-i](./env-dynamic-private-breaks-under-plain-tsx-use-process-env-i.md) — reason server modules use `process.env` not `$env/dynamic/private`.
+- [hybrid-semantic-search-stack-pgvector-tsvector](../../decisions/hybrid-semantic-search-stack-pgvector-tsvector.md) — produces the vectors the search stack queries.
+- [env-dynamic-private-breaks-under-plain-tsx-use](../../learnings/env-dynamic-private-breaks-under-plain-tsx-use.md) — reason server modules use `process.env` not `$env/dynamic/private`.
 
 ## Lifecycle
 - First added: 2026-07-03 (initial project scaffold).

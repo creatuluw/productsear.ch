@@ -20,8 +20,8 @@ Semantic and keyword signals catch different queries. Normalizing cosine distanc
 - Both rankers must cover comparable content ground — here both operate on one shared searchable text blob.
 
 ## Relationships
-- [hybrid-semantic-search-stack-pgvector-tsvector-with-rrf-fusi](./hybrid-semantic-search-stack-pgvector-tsvector-with-rrf-fusi.md) — the decision that chose RRF.
-- [api-search-endpoint](./api-search-endpoint.md) — implements RRF over pgvector cosine + `ts_rank`.
+- [hybrid-semantic-search-stack-pgvector-tsvector](../../decisions/hybrid-semantic-search-stack-pgvector-tsvector.md) — the decision that chose RRF.
+- [api-search-endpoint](../entities/api-search-endpoint.md) — implements RRF over pgvector cosine + `ts_rank`.
 
 ## Source
 - `src/lib/server/search.ts` — the single fused SQL query

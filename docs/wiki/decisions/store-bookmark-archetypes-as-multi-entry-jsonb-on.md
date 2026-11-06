@@ -22,7 +22,7 @@ During the compendium-page design interview (Q1), we settled how bookmark archet
 ## Alternatives considered
 
 - **Compute archetypes at render time** (the earlier sketch) — rejected: adds per-request work and hides the taxonomy from queries; a materialized field is queryable and groupable.
-- **Write archetypes onto the source tables** (`te9_dev.bookmarks` etc.) — impossible: they are **read-only mirrors** that the external Raindrop→DB sync rewrites every pass (see [the mirror learning](../learnings/bookmarks-table-is-a-read-only-mirror-the-raindrop-db-sync-l.md)). The app owns only `bookmark_embeddings`; derived data must live in app-owned tables beside it.
+- **Write archetypes onto the source tables** (`te9_dev.bookmarks` etc.) — impossible: they are **read-only mirrors** that the external Raindrop→DB sync rewrites every pass (see [the mirror learning](../learnings/bookmarks-table-is-a-read-only-mirror-the-raindrop.md)). The app owns only `bookmark_embeddings`; derived data must live in app-owned tables beside it.
 - **A fixed enum / single-value column** — rejected in favor of JSONB: the user explicitly wants multi-entry and combinations, and the taxonomy may evolve.
 
 ## Consequences
@@ -30,4 +30,4 @@ During the compendium-page design interview (Q1), we settled how bookmark archet
 - New app-owned table/column to create and backfill (a deterministic classifier script over category/purpose/tags, akin to the embed backfill).
 - The compendium page **groups bookmarks by archetype**; entries can appear in multiple groups.
 - Archetype taxonomy is now versioned data, not code — updating the classifier means re-running the backfill.
-- Related schema homework: [corpus schema facts](../learnings/corpus-schema-facts-raindrop-created-at-analysis-who-what-ho.md).
+- Related schema homework: [corpus schema facts](../learnings/corpus-schema-facts-raindrop-created-at-analysis.md).

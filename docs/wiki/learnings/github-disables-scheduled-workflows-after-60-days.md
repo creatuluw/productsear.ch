@@ -21,4 +21,4 @@ Observed on 2026-10-14: the [[daily-embed-new-bookmarks-workflow]] (`Embed new b
 
 This **recurs**. Pushing a commit today does not permanently fix it — if the repo goes another 60+ days without commits, the workflow is disabled again. Mitigations: any periodic commit counts (even a README touch or an automated date-bump commit), or accept that re-enabling is a two-command fix when GitHub's email arrives.
 
-Related: [[github-requires-workflow-scope-on-the-token-to-push-commits-]] (same workflow token gotcha family).
+Related: [[github-requires-workflow-scope-on-the-token-to]] (same workflow token gotcha family).

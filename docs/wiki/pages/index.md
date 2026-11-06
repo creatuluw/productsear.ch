@@ -22,3 +22,9 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [LlmDoc component](./entities/llmdoc-component.md) — `src/lib/components/LlmDoc.svelte` — the browser-facing renderer for llms views. Receives the server-built markdown string and renders it as styled GFM, replaci
 - [product-search mascot (illo character pack)](./entities/product-search-mascot-illo-character-pack.md) — The official brand mascot for productsear.ch: **product-search**, a bookmark-ribbon character in the illo plugin's **riso** look — the ribbon that has already f
 - [WaveLoader component](./entities/waveloader-component.md) — A CSS-only animated loading indicator shown in the latency gauge box while a search runs; it swaps to the `{tookMs}ms` latency readout when the search completes
+- [repo-scan pipeline](./entities/repo-scan-pipeline.md) — repo-scan pipeline
+- [digital-products-repo index](./artifacts/digital-products-repo-index.md) — digital-products-repo index
+- [digital-products-repos-missing CSV](./artifacts/digital-products-repos-missing-csv.md) — What is it?
+- [digital-products-repos activity split CSVs](./artifacts/digital-products-repos-activity-split-csvs.md) — What is it?
+- [insert-missing-repos-active-30d.sql](./artifacts/insert-missing-repos-active-30d-sql.md) — What is it?
+- [Corpus enrichment pipeline (sync/crawl/analyze)](./entities/corpus-enrichment-pipeline-sync-crawl-analyze.md) — What is it?

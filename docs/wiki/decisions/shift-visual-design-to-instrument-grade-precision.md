@@ -51,4 +51,4 @@ The brief's users are a power-user operator doing quick mid-task lookups where s
 - `app.html` Google Fonts load → Hanken Grotesk + Martian Mono.
 - `+page.svelte` redesigned end-to-end: instrument readout header, lowercase mono mode pills, hero search field (bottom-border + gold signal caret), numbered result rows with `fly` transition + `prefers-reduced-motion` guard, danger-tinted error state, mono result-count line.
 - `+page.server.ts` now also returns `lastSynced` (`max(synced_at)::text`) to feed the readout.
-- Source design brief lives at `.impeccable.md`; see also the [[instrument-grade-design-principles-avoid-banned-tells]] rule.
+- Source design brief lives at `.impeccable.md`; see also the [[instrument-grade-design-principles-avoid-banned]] rule.

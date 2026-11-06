@@ -14,4 +14,4 @@ Discovered 2026-10-31 while answering "has the repo/db been updating lately?":
 
 **2. The sync touches ALL rows on every pass.** Each sync run rewrites `synced_at` for the whole table, so queries like `count(*) WHERE synced_at > now() - interval '30 days'` match ~100% of rows and are useless for finding new bookmarks. The right signal for "freshly added, not yet processed" is **missing embeddings**: e.g. 2026-10-31 check showed 3,764 bookmarks vs 3,760 embeddings → 4 new bookmarks awaiting the (re-enabled) daily embed cron.
 
-Related: [[raindrop-db-sync-runs-outside-this-repo-published-page-count]], [[bookmarks-table-is-a-read-only-mirror-the-raindrop-db-sync-l]], [[daily-embed-new-bookmarks-workflow]], [[github-disables-scheduled-workflows-after-60-days-without-co]].
+Related: [[raindrop-db-sync-runs-outside-this-repo-published]], [[bookmarks-table-is-a-read-only-mirror-the-raindrop]], [[daily-embed-new-bookmarks-workflow]], [[github-disables-scheduled-workflows-after-60-days]].

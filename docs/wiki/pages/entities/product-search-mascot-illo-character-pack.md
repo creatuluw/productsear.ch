@@ -21,8 +21,11 @@ The official brand mascot for productsear.ch: **product-search**, a bookmark-rib
 
 Invoke via the illo plugin: "use product-search" (or an alias) in any illo request. Scene renders must pass the pack's `reference.png` as `--ref` — that conditioning is what keeps it on-model. The **banana character tier** (`--model banana`) holds this design; the cheaper FLUX render tier drifts on the stubby limbs. Banana only supports 1:1 (the engine's 16:9 dims `1344x768` are rejected — its supported landscape sizes never match the engine's 64-snap).
 
+**In-repo asset:** the transparent web cutout lives at `static/mascot-product-search.png` (163×256, 68 KB, alpha keyed + despilled, trimmed flush to the feet so it stands on the page's bottom edge).
+
 ## Lifecycle
 
-- First added: 2026-11-01 — character-builder flow, riso look, palette derived from [site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](./site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89-1-aa-safe.md).
+- First added: 2026-11-01 — character-builder flow, riso look, palette derived from [site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](../../learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md).
 - Gallery of the build: `E:\tmp\illo\20261101-135715-e42f\index.html` (temp dir — copy finals before reuse).
 - 2026-11-01: user swapped the canonical sheet to the rounder variant (blue back layer, droplet arms); `character.md` re-locked to match, proof scene re-verified on the banana tier.
+- 2026-11-01: deployed site-wide — the cutout stands bottom-right in the slim `src/routes/+layout.svelte` footer (hairline top border + deadpan mono tagline "product-search — it has already read everything you saved."), hidden on `?view=llm` per [keep ?view=llm surfaces free of human UI chrome](../../rules/keep-view-llm-surfaces-free-of-human-ui-chrome.md). Commit 3eb5879.

@@ -8,13 +8,13 @@ timestamp: "2026-07-07T10:56:35.608Z"
 
 # productsear.ch promo video
 
-An animated ~6-scene promo MP4 that introduces productsear.ch: semantic bookmark search via hybrid retrieval ([hybrid-search-via-reciprocal-rank-fusion](./hybrid-search-via-reciprocal-rank-fusion.md)) plus a streaming RAG "Ask" mode. The primary visual deliverable used to explain the app at a glance.
+An animated ~6-scene promo MP4 that introduces productsear.ch: semantic bookmark search via hybrid retrieval ([hybrid-search-via-reciprocal-rank-fusion](../concepts/hybrid-search-via-reciprocal-rank-fusion.md)) plus a streaming RAG "Ask" mode. The primary visual deliverable used to explain the app at a glance.
 
 ## What it documents
 
 - The app itself — what productsear.ch does (search + ask), shown in the on-brand visual language.
-- [api-search-endpoint](./api-search-endpoint.md) and [api-ask-endpoint](./api-ask-endpoint.md) — the two core flows the video dramatizes.
-- [adopt-agentos-sdk-dev-visual-design-system](./adopt-agentos-sdk-dev-visual-design-system.md) — the video is built from productsear.ch's real design tokens (paper `#EFEFEF`, cream, ink `#1B1916`, orange `#FF6A00`, Manrope / JetBrains Mono / Gloria Hallelujah), so it is visually consistent with the site, not a generic mockup.
+- [api-search-endpoint](../entities/api-search-endpoint.md) and [api-ask-endpoint](../entities/api-ask-endpoint.md) — the two core flows the video dramatizes.
+- [adopt-agentos-sdk-dev-visual-design-system](../../decisions/adopt-agentos-sdk-dev-visual-design-system.md) — the video is built from productsear.ch's real design tokens (paper `#EFEFEF`, cream, ink `#1B1916`, orange `#FF6A00`, Manrope / JetBrains Mono / Gloria Hallelujah), so it is visually consistent with the site, not a generic mockup.
 
 ## Details
 
@@ -26,4 +26,4 @@ An animated ~6-scene promo MP4 that introduces productsear.ch: semantic bookmark
 
 ## Source
 
-- [driving-html-video-nexu-io-headlessly-to-render-a-product-vi](./driving-html-video-nexu-io-headlessly-to-render-a-product-vi.md) — the full how-to and the gotchas (prereqs, why the Studio was skipped, the freeze/unfreeze breakage, the multi-frame fix).
+- [driving-html-video-nexu-io-headlessly-to-render-a](../../learnings/driving-html-video-nexu-io-headlessly-to-render-a.md) — the full how-to and the gotchas (prereqs, why the Studio was skipped, the freeze/unfreeze breakage, the multi-frame fix).

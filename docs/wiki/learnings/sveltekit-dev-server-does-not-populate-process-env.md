@@ -10,7 +10,7 @@ timestamp: "2026-07-03T15:56:27.887Z"
 
 SvelteKit's Vite dev server does **not** populate `process.env` from your `.env` file. That is what the `$env/*` virtual modules are for. If your server modules (`src/lib/server/*`) read `process.env.DATABASE_URL` directly, the value is **undefined under `vite dev`**, even though the file exists and `.env.example` documents it.
 
-This is the converse of [[env-dynamic-private-breaks-under-plain-tsx-use-process-env-i]] — you can't use `$env/dynamic/private` (breaks under plain `tsx` scripts) *or* bare `process.env` (empty under Vite dev) without help.
+This is the converse of [[env-dynamic-private-breaks-under-plain-tsx-use]] — you can't use `$env/dynamic/private` (breaks under plain `tsx` scripts) *or* bare `process.env` (empty under Vite dev) without help.
 
 ## Symptom
 With `postgres()` and no connection string passed, the driver falls back to `localhost:5432`. `localhost` resolves to both `127.0.0.1` and `::1`; with nothing listening, both are refused. Node surfaces this as:

@@ -16,4 +16,4 @@ timestamp: "2026-11-01T01:27:44.055Z"
 - Use 2×2 stat-panel grids until `lg`; go 4-col only at wide breakpoints — 4 narrow mono cells wrap dates mid-token ("2026-10-" / "31").
 - Keep horizontal chrome bars (wordmark + nav + tabs) `overflow-x-auto` scrollable instead of letting them push page width.
 
-**Evidence**: 3 of the 5 defects found in the P5 verify round (2026-11-01) were min-content-width issues — shell-bar overflow, stats-grid date wrapping, unbreakable repo tokens. See [[instrument-grade-design-principles-avoid-banned-tells]] for the overarching design system this belongs to.
+**Evidence**: 3 of the 5 defects found in the P5 verify round (2026-11-01) were min-content-width issues — shell-bar overflow, stats-grid date wrapping, unbreakable repo tokens. See [[instrument-grade-design-principles-avoid-banned]] for the overarching design system this belongs to.

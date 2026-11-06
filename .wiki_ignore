@@ -77,3 +77,9 @@ scripts/backfill-block-slugs-retry.mjs
 docs/tests/
 docs/svg-illustrations/
 docs/tubemap-options.html
+
+# Archived repo-scan scratch (one-off pipeline working files: scripts, logs, state, generated HTML/CSV; documented as an entity page; contains .ghtoken — never commit)
+.archive/
+
+# Standalone dev demo harness for the WaveLoader (not imported anywhere)
+src/lib/components/wave-loader-demo.html

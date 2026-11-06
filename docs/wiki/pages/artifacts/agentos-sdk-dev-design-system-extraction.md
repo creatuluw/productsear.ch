@@ -11,7 +11,7 @@ timestamp: "2026-07-03T16:10:06.899Z"
 Reference design system reverse-engineered from https://agentos-sdk.dev/, to be replicated on productsear.ch. Captures exact color tokens, typography, signature elements, and structural patterns so the restyle is faithful rather than approximate.
 
 ## What it documents
-- [adopt-agentos-sdk-dev-visual-design-system](./adopt-agentos-sdk-dev-visual-design-system.md) — the decision to adopt this system.
+- [adopt-agentos-sdk-dev-visual-design-system](../../decisions/adopt-agentos-sdk-dev-visual-design-system.md) — the decision to adopt this system.
 
 ## Details
 - **Format**: extracted HTML + CSS, exact RGB/HSL values, Tailwind class patterns
@@ -22,4 +22,4 @@ Reference design system reverse-engineered from https://agentos-sdk.dev/, to be 
 - **Texture**: paper-grain via inline SVG `feTurbulence` (baseFrequency 0.9, opacity 0.045)
 
 ## Caution
-The site's `:root` contains unused shadcn dark HSL vars — see [agentos-sdk-dev-is-a-light-warm-paper-theme-not-dark](./agentos-sdk-dev-is-a-light-warm-paper-theme-not-dark.md). The real theme is light/paper.
+The site's `:root` contains unused shadcn dark HSL vars — see [agentos-sdk-dev-is-a-light-warm-paper-theme-not](../../learnings/agentos-sdk-dev-is-a-light-warm-paper-theme-not.md). The real theme is light/paper.

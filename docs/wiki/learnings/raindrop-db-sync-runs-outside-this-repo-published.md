@@ -8,6 +8,8 @@ timestamp: "2026-08-06T08:55:24.700Z"
 
 # Raindrop→DB sync runs outside this repo; published page count sums all collections
 
+> **Update 2026-11-06:** `scripts/sync-raindrop.js` (`npm run sync`) now lives in THIS repo too — imported from `E:\te9.dev` (upsert-only, never deletes; te9.dev's copy still runs). The "sync runs outside this repo / no Raindrop code here" statement below is historical. See the [self-containment ADR](../decisions/product-search-corpus-pipeline-is-self-contained-in-products.md) and [[corpus-enrichment-pipeline-sync-crawl-analyze]]. The published-page count-scope analysis below remains accurate.
+
 **Architecture:** The `te9_dev.bookmarks` table (and `bookmark_content`, `bookmark_analysis`) is a **read-only mirror populated by an EXTERNAL Raindrop-sync process that does NOT live in this repository.** `src/lib/server/db/index.ts:28` literally calls them "read-only mirrors of the existing Raindrop-synced schema." This app only **reads** them and **adds** embeddings (`bookmark_embeddings`). There is no Raindrop fetch/sync code here — `rg -i raindrop` matches only `README.md` and the db schema column names (`raindrop_id`, `raindrop_created_at`, `raindrop_updated_at`, `synced_at`).
 
 **The sync IS healthy and current.** Live check (2026-08-06): `max(synced_at) = 2026-08-06 06:33 UTC` — it re-synced 2,442 rows that same day. The daily `Embed new bookmarks` GitHub Action is also green daily (25–48s runs = nothing new to embed, since DB stays fully embedded; embedding gap = 0).

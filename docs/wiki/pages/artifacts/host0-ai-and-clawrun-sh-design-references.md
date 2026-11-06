@@ -8,7 +8,7 @@ timestamp: "2026-11-01T00:48:00.398Z"
 
 # host0.ai and clawrun.sh design references
 
-Two live sites the user endorsed ("i like") as aesthetic north stars for the upcoming site redesign: https://host0.ai/ and https://clawrun.sh/. Both were fetched and analyzed in-session; they agree with each other strongly and — notably — **validate and sharpen the existing [shift-visual-design-to-instrument-grade-precision-tool-syste](./shift-visual-design-to-instrument-grade-precision-tool-syste.md) rather than replacing it**. The working direction extracted from them: *lean harder into the mono/terminal register, show live state, number things like a protocol.*
+Two live sites the user endorsed ("i like") as aesthetic north stars for the upcoming site redesign: https://host0.ai/ and https://clawrun.sh/. Both were fetched and analyzed in-session; they agree with each other strongly and — notably — **validate and sharpen the existing [shift-visual-design-to-instrument-grade-precision](../../decisions/shift-visual-design-to-instrument-grade-precision.md) rather than replacing it**. The working direction extracted from them: *lean harder into the mono/terminal register, show live state, number things like a protocol.*
 
 ## What it documents
 
@@ -23,7 +23,7 @@ The shared **terminal-native, agent-era aesthetic vocabulary** of both sites:
 
 ## Mapping to productsear.ch
 
-Confirms the instrument-grade system was the right call and pushes it further: more mono, more visible live state, protocol numbering for flows. Keep the OKLCH tokens, Hanken Grotesk + Martian Mono, and the [instrument-grade-design-principles-avoid-banned-tells](./instrument-grade-design-principles-avoid-banned-tells.md) rule; the references guide *emphasis*, not a new palette.
+Confirms the instrument-grade system was the right call and pushes it further: more mono, more visible live state, protocol numbering for flows. Keep the OKLCH tokens, Hanken Grotesk + Martian Mono, and the [instrument-grade-design-principles-avoid-banned](../../rules/instrument-grade-design-principles-avoid-banned.md) rule; the references guide *emphasis*, not a new palette.
 
 ## Redesign scope signal (from the design interview, Q4 of 4)
 
@@ -33,7 +33,7 @@ Proposed success checklist — pending user confirmation at time of writing:
 - All-entries list, newest-first
 - Compendium: sensible 20–30 archetype roll-up with who/what/how/when on every entry
 - All pages in the host0/clawrun terminal-instrument register
-- Working `?view=llm` paste-ready twin on each page (see [dual-view-surfaces-humans-llms-tabs-with-view-llm-on-every-r](./dual-view-surfaces-humans-llms-tabs-with-view-llm-on-every-r.md))
+- Working `?view=llm` paste-ready twin on each page (see [dual-view-surfaces-humans-llms-tabs-with-view-llm](../../decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm.md))
 
 ## Details
 

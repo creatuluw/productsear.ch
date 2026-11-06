@@ -22,4 +22,4 @@ Worse, the isolation test "worked": the hand-rolled diagnostic query happened to
 ## Source
 
 - `src/lib/server/search.ts` — final SELECT now includes `markdown`; comment at `rerankText()` documents the enrichment.
-- Found while shipping [[enrich-reranker-input-with-page-content-show-30-results]].
+- Found while shipping [[enrich-reranker-input-with-page-content-show-30]].

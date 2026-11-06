@@ -11,7 +11,7 @@ timestamp: "2026-11-01T01:49:55.401Z"
 
 ## Context
 
-The [[dual-view-surfaces-humans-llms-tabs-with-view-llm-on-every-r]] decision gave every route a `humans | llms` tab at `?view=llm`, but the llms view initially rendered raw markdown in a `<pre>` for everyone. The user refined the requirement (2026-11-01): the same URL must be **fast for an LLM to digest** (raw markdown when fetched programmatically) and **perfectly formatted for a human** (rendered markdown in the browser), and each llms document must carry explicit next-step instructions.
+The [[dual-view-surfaces-humans-llms-tabs-with-view-llm]] decision gave every route a `humans | llms` tab at `?view=llm`, but the llms view initially rendered raw markdown in a `<pre>` for everyone. The user refined the requirement (2026-11-01): the same URL must be **fast for an LLM to digest** (raw markdown when fetched programmatically) and **perfectly formatted for a human** (rendered markdown in the browser), and each llms document must carry explicit next-step instructions.
 
 ## Decision
 

@@ -29,8 +29,8 @@ The homepage search input is not component state — it is **derived from URL pa
 
 ## Relationships
 
-- [api-search-endpoint](./api-search-endpoint.md) — the fetch target when `mode=search`
-- [api-ask-endpoint](./api-ask-endpoint.md) — the fetch target when `mode=ask`
+- [api-search-endpoint](../entities/api-search-endpoint.md) — the fetch target when `mode=search`
+- [api-ask-endpoint](../entities/api-ask-endpoint.md) — the fetch target when `mode=ask`
 - [hybrid-search-via-reciprocal-rank-fusion](./hybrid-search-via-reciprocal-rank-fusion.md) — what `q` feeds underneath
 
 ## Source

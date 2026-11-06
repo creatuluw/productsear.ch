@@ -14,7 +14,7 @@ When adding a cross-encoder (e.g. Voyage `rerank-2.5-lite`) on top of a cheap fi
 
 - **Fetch a candidate pool** larger than the final limit (we use **50 → top `limit`**). Reranking is wasted on docs the retriever never surfaced; give the cross-encoder enough candidates to reorder.
 - **Cap the pool** to bound rerank latency/cost — 50 is our working ceiling.
-- **Mirror the embedder's input.** Feed the cross-encoder the same enriched text the embedder sees — title + purpose + excerpt + tags + page content (first ~1200 chars of `bookmark_content.markdown`). Metadata-only rerank text systematically under-scores docs whose relevance signal lives in the body (decision: enrich-reranker-input-with-page-content-show-30-results).
+- **Mirror the embedder's input.** Feed the cross-encoder the same enriched text the embedder sees — title + purpose + excerpt + tags + page content (first ~1200 chars of `bookmark_content.markdown`). Metadata-only rerank text systematically under-scores docs whose relevance signal lives in the body (decision: enrich-reranker-input-with-page-content-show-30).
 - **Treat the reranker as non-critical.** Wrap it so that if the rerank API errors/times out, you fall back to first-pass order and still return results. Search degrades to RRF, never breaks.
 
 ## When it applies

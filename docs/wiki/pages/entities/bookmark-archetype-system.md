@@ -23,7 +23,7 @@ The raw corpus carries **1,320 messy free-form analysis categories**. Archetypes
 
 ## Relationships
 
-- [store-bookmark-archetypes-as-multi-entry-jsonb-on-an-app-own](./store-bookmark-archetypes-as-multi-entry-jsonb-on-an-app-own.md) — the data-model decision this implements (multi-entry JSONB, app-owned table)
+- [store-bookmark-archetypes-as-multi-entry-jsonb-on](../../decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md) — the data-model decision this implements (multi-entry JSONB, app-owned table)
 - [api-search-endpoint](./api-search-endpoint.md) — adjacent pipeline; archetypes are display/grouping metadata, **not** a ranking signal
 - Source tables (`te9_dev.bookmarks`, `bookmark_analysis`) — read-only mirrors; this table is the one place the app owns its own data
 

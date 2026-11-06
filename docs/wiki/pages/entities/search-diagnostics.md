@@ -18,12 +18,12 @@ Search-quality diagnostic tooling shipped with the 2026-11-01 rerank fix: a trac
 
 ## Why it matters
 
-Makes "why didn't search find X" a 2-minute answer instead of an archaeology dig. See [diagnose-search-misses-stage-by-step-before-tuning](../../rules/diagnose-search-misses-stage-by-step-before-tuning.md) for the workflow.
+Makes "why didn't search find X" a 2-minute answer instead of an archaeology dig. See [diagnose-search-misses-stage-by-step-before-tuning](../../rules/diagnose-search-misses-stage-by-stage-before.md) for the workflow.
 
 ## Relationships
 
 - [api-search-endpoint](./api-search-endpoint.md) — the endpoint these tools debug.
-- [enrich-reranker-input-with-page-content-show-30-results](../../decisions/enrich-reranker-input-with-page-content-show-30-results.md) — the fix that produced them.
+- [enrich-reranker-input-with-page-content-show-30](../../decisions/enrich-reranker-input-with-page-content-show-30.md) — the fix that produced them.
 - [rerank-service](./rerank-service.md) — the stage `SEARCH_DEBUG` traces.
 
 ## Lifecycle

@@ -4,7 +4,7 @@ title: "Embedding provider: Voyage voyage-4-large (1024-dim)"
 description: Context
 tags: [search, embeddings, voyage, architecture]
 status: accepted
-supersedes: "["decisions/hybrid-semantic-search-stack-pgvector-tsvector-with-rrf-fusi"]"
+supersedes: "["decisions/hybrid-semantic-search-stack-pgvector-tsvector"]"
 timestamp: "2026-07-04T09:57:20.862Z"
 ---
 
@@ -32,7 +32,7 @@ Voyage `voyage-4-large` gives stronger retrieval quality at 1024-dim; the embed 
 ## Consequences
 - Dimension is now a hard-coded contract (1024) across the migration, Drizzle schema, and `embeddings.ts`. Changing it again requires a coordinated drop+recreate + full re-embed.
 - The corpus must be fully re-embedded (~2,270 rows, ~700K tokens) before live search returns results.
-- See [voyage-free-tier-rate-limit](../learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks-bulk-backfi.md) — the backfill is blocked until a Voyage billing method is added or the script self-throttles.
+- See [voyage-free-tier-rate-limit](../learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md) — the backfill is blocked until a Voyage billing method is added or the script self-throttles.
 
 ## Source
 - `scripts/migration-voyage-1024.sql` — drop+recreate at 1024-dim

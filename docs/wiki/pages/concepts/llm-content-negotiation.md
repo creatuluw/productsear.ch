@@ -28,8 +28,8 @@ LLM collaboration is first-class on this site: a URL pasted into a chat and the 
 ## Relationships
 
 - [url-driven-search-state](./url-driven-search-state.md) — the view/state stays in the URL; only the representation is negotiated
-- [llmdoc-component](./llmdoc-component.md) — the browser-side renderer of the same markdown
-- [compendium-pages](./compendium-pages.md) — archetype pages ship both faces under this contract
+- [llmdoc-component](../entities/llmdoc-component.md) — the browser-side renderer of the same markdown
+- [compendium-pages](../entities/compendium-pages.md) — archetype pages ship both faces under this contract
 - Decision: "Dual-view surfaces: humans | llms tabs with ?view=llm on every route" — this mechanism implements and extends that decision
 
 ## Source

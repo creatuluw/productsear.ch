@@ -8,7 +8,7 @@ okf_version: "0.1"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12:33:34.254Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12:58:48.395Z.
 
 ## Recent Decisions
 
@@ -30,6 +30,7 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12
 
 ## Active Rules
 
+- [Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes](rules/check-the-index-before-committing-use-pathspec-scoped-commit.md) — **Guideline:** Before running `git commit` in any repo — especially auxiliary/external repos like `E:\skills.te9.dev` whose indexes accumula… (2026-11-06)
 - [Prepare and dry-run the rollback script before generating derived rows](rules/prepare-and-dry-run-the-rollback-script-before-generating-de.md) — **Guideline:** When a bulk data mutation against `te9_dev` is committed for real (no rollback wrapper), write and dry-run-verify the undo sc… (2026-11-06)
 - [Validate generated SQL inserts with a rollback-wrapped dry run against the live DB](rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r.md) — **Guideline:** Before declaring a generated/hand-written INSERT or migration SQL file ready to run, execute it against the real database ins… (2026-11-06)
 - [Corroborate product→repo matches with multi-signal checks; stars never validate homepage/npm links](rules/corroborate-product-repo-matches-with-multi-signal.md) — Guideline (2026-11-03)
@@ -47,6 +48,10 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12
 
 ## Recent Learnings — development patterns
 
+- [Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed](learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md) — Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule): (2026-11-06)
+- [Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first](learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md) — Discovered 2026-11-06 while verifying the new "last 30 days" homepage tile on a local production build: (2026-11-06)
+- [Analyzed metric 100%: analyzer fallback patch + what the metric actually counts](learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md) — Discovered 2026-11-06 while driving the homepage `analyzed` vital sign to 100%. (2026-11-06)
+- [llmview.ts / skill-doc.ts template literals contain escaped backticks; multi-hunk edit calls are atomic](learnings/llmview-ts-skill-doc-ts-template-literals-contain-escaped-ba.md) — Discovered 2026-11-06 while renaming compendium → collections across the LLM-view surfaces. (2026-11-06)
 - [External crawler/analyzer lives at E:\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first](learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md) — Discovered 2026-11-06 while answering "where is the sync/analysis pipeline?" (user's best guess: `E:\te9.dev` — confirmed correct). (2026-11-06)
 - [Homepage "analyzed" vital sign = analyzed/total ratio — bulk inserts regress it until the external analysis pass runs](learnings/homepage-analyzed-vital-sign-analyzed-total-ratio-bulk-inser.md) — Discovered 2026-11-06 while diagnosing why https://productsear.ch/ showed `analyzed` = 81% (user reported the drop). (2026-11-06)
 - [Bookmark ingestion chain is gap-catching; archetypes classifier lives at src/lib/archetypes.ts](learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md) — Discovered 2026-11-06 while processing the 522 synthetic repo rows end-to-end. (2026-11-06)
@@ -63,10 +68,6 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12
 - [21st.dev CDN preview pages inline the animation CSS inside the JS bundle, not the HTML](learnings/21st-dev-cdn-preview-pages-inline-the-animation.md) — When the user shares a component URL like `https://cdn.21st.dev/loading-ui/symmetric-wave/default/bundle.<id>.html`, the HTML page is just a… (2026-11-01)
 - [SvelteKit normalizes event.url for data requests — always early-return on event.isDataRequest in handle hooks](learnings/sveltekit-normalizes-event-url-for-data-requests.md) — **The gotcha (found 2026-11-01 while debugging a prod 500 on `/?view=llm`):** in a SvelteKit `handle` hook, `event.url` for a client-router … (2026-11-01)
 - [Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md) — The site-wide accent (set 2026-11-01) is `#0021FF`, expressed in the OKLCH token system as: (2026-11-01)
-- [SvelteKit blocks $lib/server imports in client components — even for pure-data modules](learnings/sveltekit-blocks-lib-server-imports-in-client.md) — SvelteKit refuses `$lib/server/*` imports from client-side code (`+page.svelte`) at dev/build time — **even when the module contains no serv… (2026-11-01)
-- [Headless Chrome clamps window width (~500px) — "390px" screenshots are crops, not reflows](learnings/headless-chrome-clamps-window-width-500px-390px.md) — When doing responsive visual QA via headless-Chrome screenshots: (2026-11-01)
-- [postgres-js double-encodes plain strings sent to jsonb — use sql.json()](learnings/postgres-js-double-encodes-plain-strings-sent-to.md) — When writing to a `jsonb` column through Drizzle's postgres-js driver using a raw `sql` template, passing a plain JS string makes postgres-j… (2026-11-01)
-- [Svelte 5: values captured in plain consts go stale across param navigation — use $derived](learnings/svelte-5-values-captured-in-plain-consts-go-stale.md) — A Svelte 5 component instance **persists across navigation** to the same route with different params (e.g. `/archive/page/2` → `/archive/pag… (2026-11-01)
 
 ## Architecture
 

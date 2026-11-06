@@ -19,4 +19,4 @@ Also: run-to-run shuffles also mean "minor top-5 reordering" on control queries 
 - Never conclude ranking changed (or regressed) from a **single** rerank run — run 3–4× and look at the stable band.
 - When a fix lands a target *exactly at the cut* (e.g. #20 with limit 20), that's a coin-flip result — widen the visible band or improve the signal rather than shipping.
 
-Related: the fix context in [[enrich-reranker-input-with-page-content-show-30-results]]; methodology in [[diagnose-search-misses-stage-by-step-before-tuning]].
+Related: the fix context in [[enrich-reranker-input-with-page-content-show-30]]; methodology in [[diagnose-search-misses-stage-by-step-before-tuning]].

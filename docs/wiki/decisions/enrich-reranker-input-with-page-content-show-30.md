@@ -36,5 +36,5 @@ Measured: MotionClone moved rerank #32 → **#20-21**, stable across 4 runs (~1s
 - Reranker and embedder now see the same evidence, at least up to 1200 chars.
 - A corpus genuinely dense in a topic (20+ strong video tools) can still push any single item to the edge — the wider 30-result band absorbs that.
 - Rerank scores cluster tightly; expect ±2 rank variance run-to-run ([[voyage-rerank-2-5-lite-has-run-to-run-rank-variance]]).
-- Extends (does not replace) [[adopt-cross-encoder-reranking-voyage-rerank-2-5-lite-on-top-]]; the pool-then-rerank-fallback shape is unchanged ([[pool-then-rerank-with-graceful-fallback-for-retrieval]]).
+- Extends (does not replace) [[adopt-cross-encoder-reranking-voyage-rerank-2-5]]; the pool-then-rerank-fallback shape is unchanged ([[pool-then-rerank-with-graceful-fallback-for]]).
 - Committed as `decb723`.

@@ -12,7 +12,7 @@ Discovered 2026-11-01 during the compendium-page design (facts homework before P
 
 ## What the corpus actually contains
 
-The `te9_dev.bookmarks` table has a **`raindrop_created_at`** column — the true "date of addition" for an ordered list, rather than inferring from `synced_at` (which is skewed ~4 days ahead and rewritten every sync pass; see [[synced-at-runs-4-days-ahead-of-wall-clock-sync-rewrites-all-]]).
+The `te9_dev.bookmarks` table has a **`raindrop_created_at`** column — the true "date of addition" for an ordered list, rather than inferring from `synced_at` (which is skewed ~4 days ahead and rewritten every sync pass; see [[synced-at-runs-4-days-ahead-of-wall-clock-sync]]).
 
 The `bookmark_analysis` table carries explicit **who/what/how/when** fields:
 
@@ -36,4 +36,4 @@ So the compendium's "who, what, how, when" per entry is direct data, not somethi
 
 - Any future "sort by date added" or chronological view should use `raindrop_created_at`, never `synced_at`.
 - Any per-entry metadata UI (compendium, detail views) can pull purpose/how_to_use/when_to_use directly from `bookmark_analysis`.
-- Any grouping/faceting by category must roll up the 1,320 near-duplicate labels — raw grouping doesn't work. See [[bookmarks-table-is-a-read-only-mirror-the-raindrop-db-sync-l]] for why these tables can't be rewritten to fix it.
+- Any grouping/faceting by category must roll up the 1,320 near-duplicate labels — raw grouping doesn't work. See [[bookmarks-table-is-a-read-only-mirror-the-raindrop]] for why these tables can't be rewritten to fix it.

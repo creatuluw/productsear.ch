@@ -22,7 +22,7 @@ When adding or restyling UI on productsear.ch, follow the **instrument-grade pre
 Glassmorphism, decorative chrome borders, cyan-on-black / purple→blue gradients, gradient text, sparkline decoration, card-soup layouts, generic AI dark dashboards, side-stripe blockquote borders.
 
 ## When it applies
-All user-facing UI work on this app. Neutrals are tinted toward the brand hue (green ~165); gold/signal is active-state only and must still pass contrast for any text use (see [[gold-accent-fails-wcag-aa-contrast-when-used-for-chip-tag-te]]).
+All user-facing UI work on this app. Neutrals are tinted toward the brand hue (green ~165); gold/signal is active-state only and must still pass contrast for any text use (see [[gold-accent-fails-wcag-aa-contrast-when-used-for]]).
 
 ## Rationale / evidence
 - `.impeccable.md` — design brief (users, job-to-be-done, brand personality, principles, target tokens, signature element).

@@ -15,5 +15,5 @@ _Concrete named things will be listed here._
 - [Rerank service](./rerank-service.md) - `src/lib/server/rerank.ts` — a thin client for the Voyage `rerank-2.5-lite` cross-encoder rerank API.
 - [API search endpoint](./api-search-endpoint.md) - What is it?
 - [Embed-bookmarks backfill script](./embed-bookmarks-backfill-script.md) - What is it?
-- [Corpus enrichment pipeline (sync/crawl/analyze)](./corpus-enrichment-pipeline-sync-crawl-analyze.md) - What is it?
 - [Daily embed-new-bookmarks workflow](./daily-embed-new-bookmarks-workflow.md) - `.github/workflows/embed-new-bookmarks.yml` — a GitHub Actions scheduled workflow that keeps the corpus enriched nightly. **Since 2026-11-06 it runs the full en
+- [Corpus enrichment pipeline (sync/crawl/analyze)](./corpus-enrichment-pipeline-sync-crawl-analyze.md) - What is it?

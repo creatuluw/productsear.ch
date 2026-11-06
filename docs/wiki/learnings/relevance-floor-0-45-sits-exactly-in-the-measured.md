@@ -16,4 +16,4 @@ timestamp: "2026-11-01T01:12:01.418Z"
 
 **Calibration method**: run one good-match query and one nonsense query through the reranker, compare max scores, place the floor between the two populations.
 
-**Related**: rerank scores have run-to-run variance (±2 rank positions) — see [[voyage-rerank-2-5-lite-has-run-to-run-rank-variance-2-positi]]. Re-calibrate with `scripts/calibrate-floor.ts` if the corpus or rerank model changes.
+**Related**: rerank scores have run-to-run variance (±2 rank positions) — see [[voyage-rerank-2-5-lite-has-run-to-run-rank]]. Re-calibrate with `scripts/calibrate-floor.ts` if the corpus or rerank model changes.

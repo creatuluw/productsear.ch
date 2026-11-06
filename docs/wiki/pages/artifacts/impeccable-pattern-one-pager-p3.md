@@ -32,10 +32,10 @@ The **pattern one-pager** is the P3 gate deliverable of the impeccable design-st
 ## Relationships
 
 - [decisions/remove-ask-mode-productsear-ch-becomes-search-only](../../decisions/remove-ask-mode-productsear-ch-becomes-search-only.md) — the search-only scope this skeleton lays out (no Ask surface anywhere in it)
-- [decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm-on-every-r](../../decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm-on-every-r.md) — deviation 1 (dual-view + /skill.md)
-- [decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on-an-app-own](../../decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on-an-app-own.md) — deviation 3 (compendium archetypes)
-- [decisions/serve-the-llm-usage-guide-at-skill-md-and-distill-it-into-th](../../decisions/serve-the-llm-usage-guide-at-skill-md-and-distill-it-into-th.md) — the `/skill.md` surface linked from the shell/footer
-- [rules/instrument-grade-design-principles-avoid-banned-tells](../../rules/instrument-grade-design-principles-avoid-banned-tells.md) — visual constraints the eventual build must respect
+- [decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm](../../decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm.md) — deviation 1 (dual-view + /skill.md)
+- [decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on](../../decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md) — deviation 3 (compendium archetypes)
+- [decisions/serve-the-llm-usage-guide-at-skill-md-and-distill](../../decisions/serve-the-llm-usage-guide-at-skill-md-and-distill.md) — the `/skill.md` surface linked from the shell/footer
+- [rules/instrument-grade-design-principles-avoid-banned](../../rules/instrument-grade-design-principles-avoid-banned.md) — visual constraints the eventual build must respect
 - [pages/artifacts/agentos-sdk-dev-design-system-extraction](./agentos-sdk-dev-design-system-extraction.md) — earlier visual reference, superseded by the instrument-grade shift
 
 ## Source

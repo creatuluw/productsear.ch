@@ -7,7 +7,7 @@ okf_version: "0.1"
 <!-- wiki-nav:start -->
 ## Navigation map
 
-Auto-generated detailed index of every docs/wiki/ concept — the map the LLM uses to locate information. 105 concept(s). Regenerated on init and on wiki_mark_synced. Generated 2026-11-06T12:33:34.159Z.
+Auto-generated detailed index of every docs/wiki/ concept — the map the LLM uses to locate information. 108 concept(s). Regenerated on init and on wiki_mark_synced. Generated 2026-11-06T12:56:59.146Z.
 
 Each entry: [title](concept-id.md) — description. Links are clickable in /wiki; pass the concept-id (link target minus .md) to wiki_get.
 
@@ -74,6 +74,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 
 ### Rules
 
+- [Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes](rules/check-the-index-before-committing-use-pathspec-scoped-commit.md) — **Guideline:** Before running `git commit` in any repo — especially auxiliary/external repos like `E:\skills.te9.dev` whose indexes accumulate unrelated pre-sta
 - [Corroborate product→repo matches with multi-signal checks; stars never validate homepage/npm links](rules/corroborate-product-repo-matches-with-multi-signal.md) — Guideline
 - [Diagnose search misses stage-by-stage before tuning](rules/diagnose-search-misses-stage-by-stage-before.md) — Guideline
 - [Every ?view=llm branch must render an LLM document — including no-parameter fallbacks](rules/every-view-llm-branch-must-render-an-llm-document.md) — **Guideline:** On any route honoring `?view=llm`, *every* code path — including the fallback branch where search params are absent — must return the LLM markdow
@@ -94,6 +95,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [21st.dev CDN preview pages inline the animation CSS inside the JS bundle, not the HTML](learnings/21st-dev-cdn-preview-pages-inline-the-animation.md) — When the user shares a component URL like `https://cdn.21st.dev/loading-ui/symmetric-wave/default/bundle.<id>.html`, the HTML page is just a **React bundle shel
 - [adapter-node requires ORIGIN env var for CSRF protection](learnings/adapter-node-requires-origin-env-var-for-csrf.md) — When deploying SvelteKit with `@sveltejs/adapter-node`, requests with a mismatched `Host`/`Origin` header are rejected unless the `ORIGIN` environment variable
 - [agentos-sdk.dev is a light warm-paper theme, not dark](learnings/agentos-sdk-dev-is-a-light-warm-paper-theme-not.md) — When extracting the design system from https://agentos-sdk.dev/, the `:root` CSS contains leftover shadcn dark-mode HSL variables (e.g. `--background: 240 10% 3
+- [Analyzed metric 100%: analyzer fallback patch + what the metric actually counts](learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md) — Discovered 2026-11-06 while driving the homepage `analyzed` vital sign to 100%.
 - [Await dotenv imports; anchor .env path](learnings/await-dotenv-imports-anchor-env-path.md) — Two failures when `missing-repos.js` (a plain Node script in `.archive/repo-scan/`) loaded `DATABASE_URL`, discovered 2026-11-06:
 - [Bookmark ingestion chain is gap-catching; archetypes classifier lives at src/lib/archetypes.ts](learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md) — Discovered 2026-11-06 while processing the 522 synthetic repo rows end-to-end.
 - [bookmarks table is a read-only mirror — the Raindrop→DB sync lives outside this repo](learnings/bookmarks-table-is-a-read-only-mirror-the-raindrop.md) — The gotcha
@@ -112,6 +114,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Headless-Chrome screenshots don't advance CSS animations — freeze frames with animation-play-state](learnings/headless-chrome-screenshots-don-t-advance-css.md) — When visually verifying CSS animations via headless-Chrome screenshots, letting the page "run" for a while (or relying on virtual time) does not reliably advanc
 - [Homepage "analyzed" vital sign = analyzed/total ratio — bulk inserts regress it until the external analysis pass runs](learnings/homepage-analyzed-vital-sign-analyzed-total-ratio-bulk-inser.md) — Discovered 2026-11-06 while diagnosing why https://productsear.ch/ showed `analyzed` = 81% (user reported the drop).
 - [LLM usage skill lives outside the repo (E:\skills.te9.dev\productsear.ch\SKILL.md) and must stay in sync](learnings/llm-usage-skill-lives-outside-the-repo-e-skills.md) — The fact
+- [llmview.ts / skill-doc.ts template literals contain escaped backticks; multi-hunk edit calls are atomic](learnings/llmview-ts-skill-doc-ts-template-literals-contain-escaped-ba.md) — Discovered 2026-11-06 while renaming compendium → collections across the LLM-view surfaces.
 - [MCP server names in .pi/mcp.json forbid dots — name them with letters/digits/_/- only](learnings/mcp-server-names-no-dots.md) — The dot gotcha (found 2026-11-05): pi rejects MCP server names containing characters outside `[A-Za-z0-9_-]`. The project's `.pi/mcp.json` named its database se
 - [Negative synthetic ids for manual bookmarks-table inserts (never collide with the external sync)](learnings/negative-synthetic-ids-for-manual-bookmarks-table-inserts-ne.md) — **The convention (set 2026-11-06):** when manually inserting rows into `te9_dev.bookmarks` (normally an external-sync mirror), use **negative synthetic ids**: `
 - [pi reads project MCP config from .pi/mcp.json — root .mcp.json is ignored](learnings/pi-project-mcp-config-location.md) — The gotcha (found 2026-11-06 while debugging why `/mcp` showed no servers):
