@@ -32,6 +32,33 @@
 		const text = `${item.body.headline}\n\n${url}`;
 		return `https://bsky.app/intent/compose?text=${encodeURIComponent(text)}`;
 	}
+
+	// digest opt-in (spec slice E) — public endpoint, inline feedback
+	let digestEmail = $state('');
+	let digestState = $state<'idle' | 'sending' | 'done' | 'error'>('idle');
+	let digestError = $state('');
+	async function subscribeDigest(e: SubmitEvent) {
+		e.preventDefault();
+		if (digestState === 'sending') return;
+		digestState = 'sending';
+		digestError = '';
+		try {
+			const res = await fetch('/api/digest/subscribe', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ email: digestEmail })
+			});
+			if (!res.ok) {
+				const body = (await res.json().catch(() => ({}))) as { error?: string };
+				throw new Error(body.error || `HTTP ${res.status}`);
+			}
+			digestState = 'done';
+			digestEmail = '';
+		} catch (err) {
+			digestState = 'error';
+			digestError = err instanceof Error ? err.message : String(err);
+		}
+	}
 </script>
 
 <svelte:head><title>the drum · productsear.ch</title></svelte:head>
@@ -54,6 +81,29 @@
 					how this drum works
 				</a>
 			</div>
+
+			<form onsubmit={subscribeDigest} class="mt-4 flex max-w-md items-center gap-2">
+				{#if digestState === 'done'}
+					<p class="font-mono text-[11px] text-success">You're in — the next digest has your name on it.</p>
+				{:else}
+					<input
+						type="email"
+						bind:value={digestEmail}
+						placeholder="you@ elsewhere — get the digest by email"
+						class="min-w-0 flex-1 rounded-full border border-ink/15 bg-canvas px-3 py-1.5 font-mono text-[12px] text-ink outline-none transition-colors placeholder:text-ink-faint/70 focus:border-accent"
+					/>
+					<button
+						type="submit"
+						disabled={digestState === 'sending' || !digestEmail.trim()}
+						class="shrink-0 rounded-full bg-ink px-3 py-1.5 font-mono text-[11px] font-semibold text-canvas transition-colors hover:bg-ink/80 disabled:opacity-40"
+					>
+						{digestState === 'sending' ? '…' : 'get the digest'}
+					</button>
+				{/if}
+			</form>
+			{#if digestState === 'error'}
+				<p class="mt-1 font-mono text-[11px] text-danger">{digestError}</p>
+			{/if}
 		</header>
 
 		{#if items.length === 0}

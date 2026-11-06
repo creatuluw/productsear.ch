@@ -1,0 +1,52 @@
+# The Digest — weekly email edition of The Drum via utobo Email.
+# Sends only when feed_settings.digest_enabled is on (admin-toggled, dark by
+# default) and there is something new since the last send. Requires:
+#   DATABASE_URL            — Railway Postgres connection string
+#   UTOBO_EMAIL_API_KEY     — utobo Email API key (ut_live_…, send-only for prod)
+#   DIGEST_FROM_EMAIL       — optional, default "The Drum <drum@productsear.ch>"
+
+name: The Digest (drum email)
+
+on:
+  schedule:
+    # Mondays 10:07 UTC — off the top of the hour to dodge GitHub's cron rush.
+    - cron: '7 10 * * 1'
+  workflow_dispatch: # manual "Run workflow" button
+
+permissions:
+  contents: read
+
+concurrency:
+  group: digest-send
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      UTOBO_EMAIL_API_KEY: ${{ secrets.UTOBO_EMAIL_API_KEY }}
+      DB_SCHEMA: te9_dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Sanity check secrets present
+        run: |
+          test -n "$DATABASE_URL" || { echo "::error::DATABASE_URL secret is not set"; exit 1; }
+          test -n "$UTOBO_EMAIL_API_KEY" || { echo "::warning::UTOBO_EMAIL_API_KEY not set — digest will not send"; }
+
+      - name: Send the digest
+        run: npx tsx scripts/digest-send.ts --send
+
+      - name: Summary
+        if: always()
+        run: echo "### Digest run: ${{ job.status }} — gated by digest_enabled + new-items window" >> "$GITHUB_STEP_SUMMARY"

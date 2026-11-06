@@ -14,9 +14,11 @@
 
 	let editingId = $state<string | null>(null);
 	let lastDrawn = $state<string | null>(null);
+	let lastDigestMsg = $state<string | null>(null);
 
 	$effect(() => {
 		if (form?.drawn) lastDrawn = form.drawn;
+		if (form?.digestSent) lastDigestMsg = form.digestSent;
 	});
 
 	function fmtDate(iso: string | null): string {
@@ -41,6 +43,34 @@
 	{#if lastDrawn}
 		<p class="mt-2 font-mono text-[11px] text-success">drew: {lastDrawn}</p>
 	{/if}
+	{#if lastDigestMsg}
+		<p class="mt-1 font-mono text-[11px] text-success">digest: {lastDigestMsg}</p>
+	{/if}
+
+	<!-- digest block -->
+	<div class="mt-5 rounded-lg border border-ink/10 bg-surface p-4">
+		<div class="flex flex-wrap items-center gap-3">
+			<span class="font-mono text-[10px] uppercase tracking-wide text-ink-faint">the digest (email via utobo)</span>
+			{#if data.digest.enabled}
+				<span class="rounded-full bg-success/15 px-2 py-0.5 font-mono text-[10px] text-success">on</span>
+			{:else}
+				<span class="rounded-full bg-ink/5 px-2 py-0.5 font-mono text-[10px] text-ink-faint">dark — toggle it in settings below</span>
+			{/if}
+			<span class="font-mono text-[11px] text-ink-soft">{data.digest.subscribers} subscriber{data.digest.subscribers === 1 ? '' : 's'}</span>
+			<span class="font-mono text-[11px] text-ink-faint">last sent: {data.digest.lastDigestSentAt ? data.digest.lastDigestSentAt.slice(0, 16).replace('T', ' ') : 'never'}</span>
+			<form method="POST" action="?/sendDigestNow" use:enhance class="ml-auto">
+				<button
+					type="submit"
+					class={chipBtn}
+					onclick={(e) => {
+						if (!confirm(`Send the digest to ${data.digest.subscribers} subscriber(s) now?`)) e.preventDefault();
+					}}
+				>
+					send digest now
+				</button>
+			</form>
+		</div>
+	</div>
 </header>
 
 {#if form?.error}

@@ -10,6 +10,7 @@ import {
 	updateFeedSettings
 } from '$lib/server/feed/queries';
 import { drawNext, nextDueInfo } from '$lib/server/feed/rotation';
+import { getDigestState, sendDigest, subscriberCount } from '$lib/server/feed/digest';
 import { DEFAULT_TYPE_ORDER, FEED_TYPES, FEED_TYPE_BY_SLUG, type FeedItemBody, type FeedType } from '$lib/server/feed/types';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -17,9 +18,10 @@ export const load: PageServerLoad = async () => {
 	const rows = await listAllItems(200);
 	const settings = await getFeedSettings();
 	const due = await nextDueInfo();
+	const digest = await getDigestState();
 	// display names resolved here — admin svelte must not import $lib/server
 	const items = rows.map((i) => ({ ...i, typeName: FEED_TYPE_BY_SLUG.get(i.type)?.name ?? i.type }));
-	return { items, settings, due, types: FEED_TYPES, defaultOrder: DEFAULT_TYPE_ORDER };
+	return { items, settings, due, digest, types: FEED_TYPES, defaultOrder: DEFAULT_TYPE_ORDER };
 };
 
 export const actions: Actions = {
@@ -85,6 +87,14 @@ export const actions: Actions = {
 		const item = await drawNext(true);
 		if (!item) return fail(400, { error: 'Nothing to draw — every generator came up empty.' });
 		return { ok: true, drawn: `${item.type}: ${item.body.headline}` };
+	},
+
+	/** Send the digest right now — real emails to real subscribers, admin-explicit. */
+	sendDigestNow: async ({ request }) => {
+		await requireAdmin(request.headers);
+		const result = await sendDigest({ force: true });
+		if (!result.sent) return fail(400, { error: `Digest not sent — ${result.reason}` });
+		return { ok: true, digestSent: `${result.subject} — ${result.reason}` };
 	},
 
 	/** Cadence + digest toggle + round-robin order (slug per line, validated). */
