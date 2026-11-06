@@ -33,7 +33,7 @@
 	const surfaces = [
 		{ href: '/', label: 'search' },
 		{ href: '/archive', label: 'listings' },
-		{ href: '/compendium', label: 'compendium' }
+		{ href: '/collections', label: 'collections' }
 	];
 
 	const isActive = (href: string) =>

@@ -18,7 +18,7 @@ This document is paste-ready reference data plus instructions.
 3. Search deeper at any time: \`GET https://productsear.ch/api/search?q=<problem-shape>\`
    — 2–4 word noun phrases ("url to markdown", "ocr pdf"), never full sentences.
    \`total\` is the honest count of strong matches; there is no padding.
-4. Browse by archetype: \`/compendium/<slug>\` (e.g. /compendium/rag-search) lists
+4. Browse by archetype: \`/collections/<slug>\` (e.g. /collections/rag-search) lists
    what/how/when per entry. Append \`?view=llm\` to any page for this markdown form.
 5. Decide per candidate: name, what it does, why (not) a fit — one line each.
 `;
@@ -72,18 +72,18 @@ export function archiveLlmView(
 	return [...head, ...body].join('\n');
 }
 
-export function compendiumIndexLlmView(groups: { slug: string; name: string; n: number }[]): string {
+export function collectionsIndexLlmView(groups: { slug: string; name: string; n: number }[]): string {
 	const head = [
-		llmPreamble('/compendium'),
+		llmPreamble('/collections'),
 		'',
-		'# compendium — the corpus by archetype',
+		'# collections — the corpus by archetype',
 		''
 	];
-	const body = groups.map((g) => `- ${g.name} (${g.n}) — /compendium/${g.slug}`);
+	const body = groups.map((g) => `- ${g.name} (${g.n}) — /collections/${g.slug}`);
 	return [...head, ...body].join('\n');
 }
 
-export function compendiumGroupLlmView(
+export function collectionsGroupLlmView(
 	group: { slug: string; name: string; n: number },
 	entries: {
 		title: string;
@@ -96,9 +96,9 @@ export function compendiumGroupLlmView(
 	}[]
 ): string {
 	const head = [
-		llmPreamble(`/compendium/${group.slug}`),
+		llmPreamble(`/collections/${group.slug}`),
 		'',
-		`# compendium · ${group.name}`,
+		`# collections · ${group.name}`,
 		'',
 		`${group.n} entries`,
 		''

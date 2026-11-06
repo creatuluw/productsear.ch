@@ -12,18 +12,18 @@
 		window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 	}
 
-	const href = (p: number) => `/compendium/${data.group.slug}${p > 1 ? `?page=${p}` : ''}`;
+	const href = (p: number) => `/collections/${data.group.slug}${p > 1 ? `?page=${p}` : ''}`;
 </script>
 
-<svelte:head><title>{data.group.name} — compendium — productsear.ch</title></svelte:head>
+<svelte:head><title>{data.group.name} — collections — productsear.ch</title></svelte:head>
 
 {#if data.llm}
 		<LlmDoc md={data.llm} />
 	{:else}
-	<h1 class="sr-only">{data.group.name} — compendium group</h1>
+	<h1 class="sr-only">{data.group.name} — collections group</h1>
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
 		<div class="mb-8">
-			<a href="/compendium" class="font-mono text-[11px] text-ink-soft transition-colors hover:text-accent">← compendium</a>
+			<a href="/collections" class="font-mono text-[11px] text-ink-soft transition-colors hover:text-accent">← collections</a>
 			<div class="mt-2 flex items-baseline justify-between">
 				<h2 class="text-[2rem] font-semibold leading-none tracking-[-0.025em] text-ink">
 					{data.group.name}

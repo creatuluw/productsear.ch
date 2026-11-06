@@ -7,8 +7,8 @@ import { ARCHETYPES, ARCHETYPE_BY_SLUG } from '$lib/archetypes';
 import { hybridSearch } from '$lib/server/search';
 import {
 	archiveLlmView,
-	compendiumGroupLlmView,
-	compendiumIndexLlmView,
+	collectionsGroupLlmView,
+	collectionsIndexLlmView,
 	llmPreamble,
 	searchLlmView
 } from '$lib/server/llmview';
@@ -51,7 +51,7 @@ export async function corpusOverviewMd(): Promise<string> {
 		'- Browse by archetype: ' +
 			groups
 				.slice(0, 10)
-				.map((g) => `/compendium/${g.archetype} (${g.n})`)
+				.map((g) => `/collections/${g.archetype} (${g.n})`)
 				.join(', '),
 		'- Every entry links out — verify it is alive/maintained before adopting'
 	];
@@ -102,7 +102,7 @@ export async function llmMarkdown(url: URL): Promise<Response | null> {
 		return mdResponse(archiveLlmView(entries, page, total, PAGE_SIZE));
 	}
 
-	if (pathname === '/compendium') {
+	if (pathname === '/collections') {
 		const groups = await db.execute<{ archetype: string; n: number }>(sql`
 			SELECT t.archetype, count(*)::int AS n
 			FROM te9_dev.bookmark_archetypes x, jsonb_array_elements_text(x.archetypes) AS t(archetype)
@@ -111,10 +111,10 @@ export async function llmMarkdown(url: URL): Promise<Response | null> {
 		const list = ARCHETYPES.map((a) => ({ slug: a.slug, name: a.name, n: counts.get(a.slug) ?? 0 }))
 			.filter((g) => g.n > 0)
 			.sort((a, b) => b.n - a.n);
-		return mdResponse(compendiumIndexLlmView(list));
+		return mdResponse(collectionsIndexLlmView(list));
 	}
 
-	const groupMatch = pathname.match(/^\/compendium\/([a-z0-9-]+)$/);
+	const groupMatch = pathname.match(/^\/collections\/([a-z0-9-]+)$/);
 	if (groupMatch) {
 		const archetype = ARCHETYPE_BY_SLUG.get(groupMatch[1]);
 		if (!archetype)
@@ -158,7 +158,7 @@ export async function llmMarkdown(url: URL): Promise<Response | null> {
 			whenToUse: r.when_to_use
 		}));
 		return mdResponse(
-			compendiumGroupLlmView({ slug: archetype.slug, name: archetype.name, n }, entries)
+			collectionsGroupLlmView({ slug: archetype.slug, name: archetype.name, n }, entries)
 		);
 	}
 

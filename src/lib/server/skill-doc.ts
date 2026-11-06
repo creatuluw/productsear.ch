@@ -54,7 +54,7 @@ Verification is mandatory — snippets regularly describe abandoned projects.
 ## Other surfaces
 
 - \`/archive?page=N\` — every entry, newest first (JSON or ?view=llm markdown)
-- \`/compendium\` — the corpus grouped by ~30 archetypes (AI agent frameworks,
+- \`/collections\` — the corpus grouped by ~30 archetypes (AI agent frameworks,
   RAG & search, web scraping, video & motion, …), each entry with what it
   does, how to use it, and when to use it
 - Append \`?view=llm\` to any page for paste-ready markdown of its content
