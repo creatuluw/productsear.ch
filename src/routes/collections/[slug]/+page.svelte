@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
+	import { fly, slide } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
 
@@ -13,6 +13,17 @@
 	}
 
 	const href = (p: number) => `/collections/${data.group.slug}${p > 1 ? `?page=${p}` : ''}`;
+
+	// card accordion: visible = title + what + first tag + date; details expand on demand
+	const tagList = (tags: string | null) =>
+		tags ? tags.split(',').map((t) => t.trim()).filter(Boolean) : [];
+	let openIds = $state<Set<number>>(new Set());
+	const toggle = (id: number) => {
+		const next = new Set(openIds);
+		if (next.has(id)) next.delete(id);
+		else next.add(id);
+		openIds = next;
+	};
 </script>
 
 <svelte:head><title>{data.group.name} — collections — productsear.ch</title></svelte:head>
@@ -46,37 +57,58 @@
 							{e.title}
 						</h3>
 					</a>
-					<dl class="mt-3 space-y-1.5 text-[13.5px] leading-relaxed">
-						{#if e.purpose}
+					{#if e.purpose}
+						<dl class="mt-3 text-[13.5px] leading-relaxed">
 							<div class="flex gap-3">
 								<dt class="w-12 shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint pt-1">what</dt>
 								<dd class="break-words text-ink-soft">{e.purpose}</dd>
 							</div>
-						{/if}
-						{#if e.howToUse}
-							<div class="flex gap-3">
-								<dt class="w-12 shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint pt-1">how</dt>
-								<dd class="break-words text-ink-soft">{e.howToUse}</dd>
-							</div>
-						{/if}
-						{#if e.whenToUse}
-							<div class="flex gap-3">
-								<dt class="w-12 shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint pt-1">when</dt>
-								<dd class="break-words text-ink-soft">{e.whenToUse}</dd>
-							</div>
-						{/if}
-					</dl>
+						</dl>
+					{/if}
+					{#if openIds.has(e.id)}
+						<div id={`details-${e.id}`} transition:slide={{ duration: 180, easing: cubicOut }} class="mt-3">
+							<dl class="space-y-1.5 text-[13.5px] leading-relaxed">
+								{#if e.howToUse}
+									<div class="flex gap-3">
+										<dt class="w-12 shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint pt-1">how</dt>
+										<dd class="break-words text-ink-soft">{e.howToUse}</dd>
+									</div>
+								{/if}
+								{#if e.whenToUse}
+									<div class="flex gap-3">
+										<dt class="w-12 shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint pt-1">when</dt>
+										<dd class="break-words text-ink-soft">{e.whenToUse}</dd>
+									</div>
+								{/if}
+							</dl>
+							{#if tagList(e.tags).length > 1}
+								<div class="mt-3 flex flex-wrap gap-1.5">
+									{#each tagList(e.tags).slice(1) as tag, ti (tag + ti)}
+										<span class="rounded border border-ink/10 px-1.5 py-0.5 font-mono text-[10.5px] text-ink-faint">{tag}</span>
+									{/each}
+								</div>
+							{/if}
+						</div>
+					{/if}
 					<div class="mt-3 flex items-center justify-between gap-4">
-						{#if e.tags}
-							<div class="flex flex-wrap gap-1.5">
-								{#each e.tags.split(',').map((t) => t.trim()).filter(Boolean).slice(0, 4) as tag, ti (tag + ti)}
-									<span class="rounded border border-ink/10 px-1.5 py-0.5 font-mono text-[10.5px] text-ink-faint">{tag}</span>
-								{/each}
-							</div>
+						{#if tagList(e.tags)[0]}
+							<span class="rounded border border-ink/10 px-1.5 py-0.5 font-mono text-[10.5px] text-ink-faint">{tagList(e.tags)[0]}</span>
 						{/if}
 						<span class="ml-auto shrink-0 font-mono text-[10.5px] text-ink-faint">
 							{e.created ? e.created.slice(0, 10) : ''}
 						</span>
+						{#if e.howToUse || e.whenToUse || tagList(e.tags).length > 1}
+							<button
+								type="button"
+								class="flex shrink-0 items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.06em] text-ink-soft transition-colors duration-150 hover:text-accent"
+								aria-expanded={openIds.has(e.id)}
+								aria-controls={openIds.has(e.id) ? `details-${e.id}` : undefined}
+								onclick={() => toggle(e.id)}
+							>
+								details
+								<span class="inline-block transition-transform duration-150" class:rotate-180={openIds.has(e.id)}>▾</span>
+							</button>
+						{/if}
 					</div>
 				</li>
 			{/each}
