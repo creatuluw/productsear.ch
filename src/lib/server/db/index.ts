@@ -91,15 +91,33 @@ export type Bookmark = typeof bookmarks.$inferSelect;
 export type BookmarkAnalysis = typeof bookmarkAnalysis.$inferSelect;
 export type BookmarkContent = typeof bookmarkContent.$inferSelect;
 
+// --- Admin panel tables (extensions · agents · settings · features) + better-auth ---
+
+export * from './admin-schema';
+export * from './auth-schema';
+
+import { adminExtensions, adminAgents, adminSettings, adminFeatures } from './admin-schema';
+
 export const schema = {
 	bookmarks,
 	bookmarkContent,
 	bookmarkAnalysis,
-	bookmarkEmbeddings
+	bookmarkEmbeddings,
+	adminExtensions,
+	adminAgents,
+	adminSettings,
+	adminFeatures
 };
 
 // ponytail: single shared client. SMB scale, single instance — no pool tuning needed yet.
-const queryClient = postgres(process.env.DATABASE_URL!, { max: 10, prepare: false });
+// search_path pins the schema so drizzle's unqualified table names (bookmarks,
+// auth_*, admin_*) — and any raw SQL that relies on unqualified names — resolve
+// inside te9_dev instead of the client default (public).
+const queryClient = postgres(process.env.DATABASE_URL!, {
+	max: 10,
+	prepare: false,
+	connection: { search_path: `${schemaName},public` }
+});
 
 export const db = drizzle(queryClient, { schema, casing: 'snake_case' });
 

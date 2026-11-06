@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { page } from '$app/state';
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
+	import ShieldCogCorner from '$lib/components/icons/ShieldCogCorner.svelte';
 
 	let { children } = $props();
 
@@ -71,11 +72,20 @@
 					</a>
 				{/each}
 			</nav>
-			<div
-				class="ml-auto flex shrink-0 items-center rounded-full border border-ink/15 p-0.5 font-mono text-[11px]"
-				role="tablist"
-				aria-label="view"
-			>
+			<div class="ml-auto flex shrink-0 items-center gap-3">
+				<a
+					href="/admin"
+					class="flex shrink-0 items-center text-ink-soft transition-colors hover:text-accent"
+					aria-label="platform console"
+					title="platform console"
+				>
+					<ShieldCogCorner size={15} />
+				</a>
+				<div
+					class="flex shrink-0 items-center rounded-full border border-ink/15 p-0.5 font-mono text-[11px]"
+					role="tablist"
+					aria-label="view"
+				>
 				<a
 					role="tab" aria-selected={!isLlm}
 					href={viewHref(false)}
@@ -92,8 +102,9 @@
 						? 'bg-ink text-canvas'
 						: 'text-ink-soft hover:text-ink'}"
 				>
-					llms
-				</a>
+						llms
+					</a>
+				</div>
 			</div>
 		</div>
 	</header>
