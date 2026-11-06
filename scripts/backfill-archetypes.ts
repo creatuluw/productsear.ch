@@ -3,7 +3,7 @@
 //   npx tsx scripts/backfill-archetypes.ts --missing  # only rows not yet classified
 import postgres from 'postgres';
 import { config as loadEnv } from 'dotenv';
-import { classifyBookmark } from '../src/lib/server/archetypes.js';
+import { classifyBookmark } from '../src/lib/archetypes.js';
 
 loadEnv();
 
