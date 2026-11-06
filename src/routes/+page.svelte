@@ -391,17 +391,17 @@
 	}
 	@keyframes ps-pulse {
 		0% {
-			box-shadow: 0 0 0 0 oklch(0.55 0.11 165 / 0.45);
+			box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-success) 45%, transparent);
 		}
 		70% {
-			box-shadow: 0 0 0 7px oklch(0.55 0.11 165 / 0);
+			box-shadow: 0 0 0 7px transparent;
 		}
 		100% {
-			box-shadow: 0 0 0 0 oklch(0.55 0.11 165 / 0);
+			box-shadow: 0 0 0 0 transparent;
 		}
 	}
 	.snippet :global(mark) {
-		background: oklch(0.68 0.14 70 / 0.22);
+		background: color-mix(in oklab, var(--color-signal) 22%, transparent);
 		color: var(--color-ink);
 		border-radius: 2px;
 		padding: 0 1px;

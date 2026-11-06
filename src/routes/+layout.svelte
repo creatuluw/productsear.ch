@@ -48,6 +48,25 @@
 		return page.url.pathname + (qs ? `?${qs}` : '');
 	};
 	const isLlm = $derived(page.url.searchParams.get('view') === 'llm');
+
+	// theme: mirrors the class set pre-paint by the inline script in app.html
+	let dark = $state(false);
+	$effect(() => {
+		dark = document.documentElement.classList.contains('dark');
+	});
+
+	function toggleTheme() {
+		dark = !dark;
+		document.documentElement.classList.toggle('dark', dark);
+		try {
+			localStorage.setItem('theme', dark ? 'dark' : 'light');
+		} catch {
+			/* storage unavailable — theme still applies for this session */
+		}
+		document
+			.querySelector('meta[name="theme-color"]')
+			?.setAttribute('content', dark ? '#1A2221' : '#F9FBFA');
+	}
 </script>
 
 <div class="flex min-h-screen flex-col">
@@ -73,6 +92,46 @@
 				{/each}
 			</nav>
 			<div class="ml-auto flex shrink-0 items-center gap-3">
+				<button
+					type="button"
+					onclick={toggleTheme}
+					class="flex shrink-0 items-center text-ink-soft transition-colors hover:text-accent"
+					aria-label={dark ? 'switch to light theme' : 'switch to dark theme'}
+					aria-pressed={dark}
+					title={dark ? 'switch to light theme' : 'switch to dark theme'}
+				>
+					{#if dark}
+						<svg
+							width="15"
+							height="15"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.8"
+							stroke-linecap="round"
+							aria-hidden="true"
+						>
+							<circle cx="12" cy="12" r="4.2" />
+							<path
+								d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"
+							/>
+						</svg>
+					{:else}
+						<svg
+							width="15"
+							height="15"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.8"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />
+						</svg>
+					{/if}
+				</button>
 				<a
 					href="/admin"
 					class="flex shrink-0 items-center text-ink-soft transition-colors hover:text-accent"

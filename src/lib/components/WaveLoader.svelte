@@ -6,7 +6,8 @@
   animation-delays — cell peaks [0, .125, .25, .375, .5, .5, .375, .25, .125, 0] of the
   cycle give delay = (peak − 0.5) × duration, so pulses travel edge→center and back,
   symmetrically. Color ramps gray → accent (#0021FF) toward the center; each char is a
-  vertical gradient (lighter top) with a soft glow that fades in/out with the pulse.
+  vertically gradient (toward the canvas at the top) with a soft glow that fades in/out with the
+  pulse. The ramp mixes accent into the canvas token, so it adapts to both themes automatically.
 -->
 <span class="wave-loader" role="status" aria-label="loading">
 	{#each Array(10) as _}<i>░</i>{/each}
@@ -43,7 +44,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: linear-gradient(180deg, color-mix(in oklch, var(--c) 45%, white), var(--c));
+		background: linear-gradient(180deg, color-mix(in oklch, var(--c) 45%, var(--color-canvas)), var(--c));
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
@@ -51,22 +52,22 @@
 		opacity: 0;
 		animation: wave-pulse var(--wave-duration) linear infinite;
 	}
-	/* gray → accent ramp, mirrored from both edges to the center */
+	/* accent → canvas ramp, mirrored from both edges to the center (theme-adaptive) */
 	.wave-loader i:nth-child(1)::before,
 	.wave-loader i:nth-child(10)::before {
-		--c: oklch(0.8 0.012 264);
+		--c: color-mix(in oklch, var(--color-accent) 25%, var(--color-canvas));
 	}
 	.wave-loader i:nth-child(2)::before,
 	.wave-loader i:nth-child(9)::before {
-		--c: oklch(0.7 0.04 264);
+		--c: color-mix(in oklch, var(--color-accent) 45%, var(--color-canvas));
 	}
 	.wave-loader i:nth-child(3)::before,
 	.wave-loader i:nth-child(8)::before {
-		--c: oklch(0.6 0.1 264);
+		--c: color-mix(in oklch, var(--color-accent) 65%, var(--color-canvas));
 	}
 	.wave-loader i:nth-child(4)::before,
 	.wave-loader i:nth-child(7)::before {
-		--c: oklch(0.52 0.2 264);
+		--c: color-mix(in oklch, var(--color-accent) 85%, var(--color-canvas));
 	}
 	.wave-loader i:nth-child(5)::before,
 	.wave-loader i:nth-child(6)::before {

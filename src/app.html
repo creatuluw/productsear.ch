@@ -10,6 +10,23 @@
 			rel="stylesheet"
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#F9FBFA" />
+		<script>
+			// pre-paint theme: stored preference wins, else OS preference — runs before first paint
+			(() => {
+				let t = null;
+				try {
+					t = localStorage.getItem('theme');
+				} catch {
+					/* storage unavailable */
+				}
+				const dark = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+				document.documentElement.classList.toggle('dark', dark);
+				document
+					.querySelector('meta[name="theme-color"]')
+					?.setAttribute('content', dark ? '#1A2221' : '#F9FBFA');
+			})();
+		</script>
 		<title>productsear.ch</title>
 		<!-- Privacy-friendly analytics by Plausible -->
 		<script async src="https://plausible.io/js/pa-wy3y_Tr88wMGSxJ0WPXrO.js"></script>

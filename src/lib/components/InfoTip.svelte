@@ -51,7 +51,7 @@
 		text-transform: none;
 		text-decoration: none;
 		white-space: normal;
-		box-shadow: 0 6px 20px oklch(0.22 0.012 165 / 0.28);
+		box-shadow: 0 6px 20px color-mix(in oklab, var(--ink) 28%, transparent);
 		opacity: 0;
 		pointer-events: none;
 		transition: opacity 150ms ease;

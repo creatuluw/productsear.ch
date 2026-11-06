@@ -43,7 +43,7 @@
 		></textarea>
 		<button
 			type="submit"
-			class="inline-flex items-center gap-1.5 rounded-md bg-accent px-4 py-2 font-mono text-xs font-semibold text-white transition-colors hover:bg-accent-hover"
+			class="inline-flex items-center gap-1.5 rounded-md bg-accent px-4 py-2 font-mono text-xs font-semibold text-canvas transition-colors hover:bg-accent-hover"
 		>
 			<Plus size={14} /> create agent
 		</button>

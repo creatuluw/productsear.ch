@@ -34,7 +34,7 @@
 		<input name="description" placeholder="what it does (optional)" class="{inputClass} flex-1" />
 		<button
 			type="submit"
-			class="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md bg-accent px-4 py-2 font-mono text-xs font-semibold text-white transition-colors hover:bg-accent-hover"
+			class="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md bg-accent px-4 py-2 font-mono text-xs font-semibold text-canvas transition-colors hover:bg-accent-hover"
 		>
 			<Plus size={14} /> create
 		</button>

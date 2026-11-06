@@ -128,7 +128,7 @@
 			<button
 				type="submit"
 				disabled={busy}
-				class="w-full rounded-md bg-accent px-3 py-2 font-mono text-xs font-semibold text-white transition-colors hover:bg-accent-hover disabled:opacity-60"
+				class="w-full rounded-md bg-accent px-3 py-2 font-mono text-xs font-semibold text-canvas transition-colors hover:bg-accent-hover disabled:opacity-60"
 			>
 				{busy ? 'working…' : mode === 'signin' ? 'sign in' : 'create admin account'}
 			</button>
