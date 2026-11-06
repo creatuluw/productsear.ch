@@ -27,7 +27,27 @@ function mdResponse(md: string): Response {
 export function wantsRawMarkdown(url: URL, request: Request): boolean {
 	if (url.searchParams.get('view') !== 'llm') return false;
 	if (url.searchParams.get('raw') === '1') return true;
+	if (isMarkdownUserAgent(request)) return true;
 	return !request.headers.get('accept')?.includes('text/html');
+}
+
+// Clients that get raw markdown for ?view=llm INSTANTLY — even when they send
+// Accept: text/html (many LLM fetchers mimic browsers): known LLM/agent user
+// agents plus common non-browser HTTP clients (curl, scripts, SDKs). Real
+// browser UAs never match, so the humans|llms tab switch stays untouched.
+const MARKDOWN_USER_AGENTS: RegExp[] = [
+	// AI assistants & their crawlers/fetchers
+	/gpt|chatgpt|oai-|openai|claude|anthropic|perplexity|mistral|cohere-ai|youbot|deepseek|qwen|grok|xai/i,
+	/meta-externalagent|bytespider|diffbot|google-extended|applebot-extended|imagesift|amazonbot/i,
+	/\bllm\b|ai-?agent|ai-?crawler|ai-?search|webscraper|web-?fetcher/i,
+	// CLI tools, scripts, SDKs, agent frameworks (anchored: UA starts with them)
+	/^(curl|wget|httpie|python-requests|python-urllib|httpx|aiohttp|axios|node-fetch|undici|go-http-client|okhttp|java-|apache-httpclient|libwww|scrapy|postmanruntime|insomnia|powershell|dart|websocket)/i,
+	/langchain|llama-?index|autogen|crewai|mcp-/i
+];
+
+function isMarkdownUserAgent(request: Request): boolean {
+	const ua = request.headers.get('user-agent') ?? '';
+	return ua.length > 0 && MARKDOWN_USER_AGENTS.some((re) => re.test(ua));
 }
 
 /** Overview markdown for `/` with no query — shared by hooks + page load. */
@@ -47,8 +67,9 @@ export async function corpusOverviewMd(): Promise<string> {
 		'',
 		'## Next steps',
 		'',
-		'- Search: `GET /api/search?q=<problem-shape>&page=N` — short noun phrases, 2–4 words',
+		'- Search: `GET https://productsear.ch/api/search?q=<problem-shape>&page=N` — JSON; add `&format=md` for markdown output',
 		'- This page with a query: append `&q=<query>` to get rendered results',
+		'- Full usage guide: https://productsear.ch/skill.md',
 		'- Browse by archetype: ' +
 			groups
 				.slice(0, 10)
