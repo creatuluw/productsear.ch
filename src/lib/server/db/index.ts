@@ -121,4 +121,9 @@ const queryClient = postgres(process.env.DATABASE_URL!, {
 
 export const db = drizzle(queryClient, { schema, casing: 'snake_case' });
 
+/** Close the shared pool — for standalone scripts (the server process never calls this). */
+export function closeDb(): Promise<void> {
+	return queryClient.end();
+}
+
 export { schemaName };

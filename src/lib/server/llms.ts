@@ -12,6 +12,7 @@ import {
 	feedLlmView,
 	listingStackLlmView,
 	llmPreamble,
+	methodologyLlmView,
 	searchLlmView
 } from '$lib/server/llmview';
 import { listPublished } from '$lib/server/feed/queries';
@@ -198,6 +199,10 @@ export async function llmMarkdown(url: URL): Promise<Response | null> {
 		const items = await listPublished(50);
 		const due = await nextDueInfo();
 		return mdResponse(feedLlmView(items, due));
+	}
+
+	if (pathname === '/feed/methodology') {
+		return mdResponse(methodologyLlmView());
 	}
 
 	const listingMatch = pathname.match(/^\/listings\/(\d+)$/);

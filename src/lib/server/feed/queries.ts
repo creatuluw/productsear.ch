@@ -113,6 +113,43 @@ export interface InsertFeedItemInput {
 	requiresApproval?: boolean;
 }
 
+/** Every item regardless of status — the admin queue, newest first. */
+export async function listAllItems(limit = 200): Promise<FeedItem[]> {
+	const rows = await db.execute<Parameters<typeof mapItem>[0]>(
+		sql`${ITEM_SELECT} ORDER BY created_at DESC LIMIT ${limit}`
+	);
+	return rows.map(mapItem);
+}
+
+export async function setItemApproval(id: string, requiresApproval: boolean): Promise<void> {
+	await db.execute(sql`UPDATE te9_dev.feed_items SET requires_approval = ${requiresApproval} WHERE id = ${id}`);
+}
+
+/** status transition; publishing stamps published_at, retracting clears it. */
+export async function setItemStatus(id: string, status: 'draft' | 'published'): Promise<void> {
+	await db.execute(sql`
+		UPDATE te9_dev.feed_items
+		SET status = ${status}, published_at = ${status === 'published' ? sql`now()` : null}
+		WHERE id = ${id}`);
+}
+
+export async function deleteItem(id: string): Promise<void> {
+	await db.execute(sql`DELETE FROM te9_dev.feed_items WHERE id = ${id}`);
+}
+
+/** Patch editable body fields in place (jsonb_set chain — untouched keys survive). */
+export async function patchItemBody(
+	id: string,
+	patch: { headline?: string; standfirst?: string; paragraphs?: string[]; question?: string }
+): Promise<void> {
+	let body = sql`body`;
+	if (patch.headline !== undefined) body = sql`jsonb_set(${body}, '{headline}', ${JSON.stringify(patch.headline)}::jsonb)`;
+	if (patch.standfirst !== undefined) body = sql`jsonb_set(${body}, '{standfirst}', ${JSON.stringify(patch.standfirst)}::jsonb)`;
+	if (patch.paragraphs !== undefined) body = sql`jsonb_set(${body}, '{paragraphs}', ${JSON.stringify(patch.paragraphs)}::jsonb)`;
+	if (patch.question !== undefined) body = sql`jsonb_set(${body}, '{question}', ${JSON.stringify(patch.question)}::jsonb)`;
+	await db.execute(sql`UPDATE te9_dev.feed_items SET body = ${body} WHERE id = ${id}`);
+}
+
 export async function insertFeedItem(input: InsertFeedItemInput): Promise<FeedItem> {
 	const requiresApproval = input.requiresApproval ?? false;
 	const status = requiresApproval ? 'draft' : 'published';

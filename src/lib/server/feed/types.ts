@@ -25,16 +25,16 @@ export interface FeedTypeDef {
 }
 
 export const FEED_TYPES: FeedTypeDef[] = [
-	{ slug: 'one-save', name: 'One Save', blurb: 'one listing, one paragraph, one question to the reader', implemented: false },
-	{ slug: 'target-user-pitch', name: 'Target-User Pitch', blurb: 'who this is for, in the voice of the people it helps', implemented: false },
-	{ slug: 'two-futures', name: 'Two Futures', blurb: 'your Tuesday without it vs. with it', implemented: false },
-	{ slug: 'ambition-path', name: 'Ambition Path', blurb: 'several listings chained into a route toward one ambition', implemented: false },
+	{ slug: 'one-save', name: 'One Save', blurb: 'one listing, one paragraph, one question to the reader', implemented: true },
+	{ slug: 'target-user-pitch', name: 'Target-User Pitch', blurb: 'who this is for, in the voice of the people it helps', implemented: true },
+	{ slug: 'two-futures', name: 'Two Futures', blurb: 'your Tuesday without it vs. with it', implemented: true },
+	{ slug: 'ambition-path', name: 'Ambition Path', blurb: 'several listings chained into a route toward one ambition', implemented: true },
 	{ slug: 'pulse', name: 'The Pulse', blurb: 'what the corpus says this month — drift, obituaries, rising domains', implemented: true },
 	{ slug: 'resurrections', name: 'Resurrections', blurb: 'a save untouched for months gets a second life', implemented: true },
-	{ slug: 'walk', name: 'The Walk', blurb: 'a trail of listings connected by embedding hops', implemented: false },
+	{ slug: 'walk', name: 'The Walk', blurb: 'a trail of listings connected by embedding hops', implemented: true },
 	{ slug: 'tombola', name: 'The Tombola', blurb: 'drawn from the last 10 saves, picked by corpus signals', implemented: true },
 	{ slug: 'floor', name: 'The Floor', blurb: 'what searchers wanted and the corpus cannot describe yet — themes only', implemented: true },
-	{ slug: 'impress-the-boss', name: 'Impress the Boss', blurb: 'the artifact a listing produces for the role that benefits', implemented: false }
+	{ slug: 'impress-the-boss', name: 'Impress the Boss', blurb: 'the artifact a listing produces for the role that benefits', implemented: true }
 ];
 
 export const FEED_TYPE_BY_SLUG = new Map(FEED_TYPES.map((t) => [t.slug, t]));

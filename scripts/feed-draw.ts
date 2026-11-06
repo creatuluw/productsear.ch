@@ -31,6 +31,8 @@ console.log(
 if (status) process.exit(0);
 
 const item = await drawNext(force);
+const { closeDb } = await import('../src/lib/server/db/index.js');
+await closeDb();
 if (!item) {
 	console.log(force ? '[drum] nothing to draw — all generators came up empty' : '[drum] not due, skipping');
 	process.exit(0);
@@ -40,7 +42,3 @@ console.log(
 	`[drum] drew: ${FEED_TYPE_BY_SLUG.get(item.type)?.name ?? item.type} — "${item.body.headline}" ` +
 		`(${item.status}${item.listingId ? `, listing ${item.listingId}` : ''})`
 );
-// The shared $lib/server/db client keeps its postgres pool open — without an
-// explicit exit the tsx process would hang forever after a successful draw.
-// Every write is a committed autocommit statement by the time we get here.
-process.exit(0);

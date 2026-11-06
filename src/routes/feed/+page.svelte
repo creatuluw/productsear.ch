@@ -41,6 +41,9 @@
 				<span>next draw: <span class="text-ink-soft">{nextDrawLabel}</span></span>
 				<span>last draw: <span class="text-ink-soft">{fmtDate(due.lastDrawAt)} {fmtTime(due.lastDrawAt)}</span></span>
 				<span>next type: <span class="text-ink-soft">{due.nextTypeName ?? '—'}</span></span>
+				<a href="/feed/methodology" class="text-ink-faint underline decoration-ink/20 underline-offset-2 transition-colors hover:text-accent">
+					how this drum works
+				</a>
 			</div>
 		</header>
 

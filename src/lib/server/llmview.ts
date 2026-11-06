@@ -274,3 +274,43 @@ export function listingStackLlmView(stack: {
 		: [];
 	return [...head, ...onDrum, ...walk].join('\n');
 }
+
+/** Markdown for /feed/methodology — the drum's trust surface ("how this drum works"). */
+export function methodologyLlmView(): string {
+	const typeLines = [
+		'- **One Save** — one listing, one paragraph, one question to the reader',
+		'- **Target-User Pitch** — who a listing is for, voiced by a synthetic persona drafted from corpus analysis',
+		'- **Two Futures** — your Tuesday without it vs. with it',
+		'- **Ambition Path** — several listings chained into a route toward one ambition',
+		'- **The Pulse** — archetype drift and rising domains from the save stream (the data section)',
+		'- **Resurrections** — a save untouched for months gets a second life',
+		'- **The Walk** — a trail of listings connected by raw embedding hops, no rerank',
+		'- **The Tombola** — drawn from the last 10 saves, picked by corpus signals',
+		'- **The Floor** — aggregated zero-result search themes; raw queries are never published',
+		'- **Impress the Boss** — the artifact a listing produces for the role that benefits'
+	];
+	return [
+		llmPreamble('/feed/methodology'),
+		'',
+		'# how this drum works',
+		'',
+		'The drum is the corpus narrating itself. Every card is machine-drafted from',
+		'the saved corpus — embeddings, archetype classifications, analysis metadata,',
+		'timestamps, and search-miss signals. No human writes the first version; a',
+		'human curator can edit, gate, retract, or delete any card before or after it',
+		'goes out.',
+		'',
+		'## Editorial honesty',
+		'',
+		'- Every card carries its **type tag** — the angle it takes on the corpus.',
+		'- Pitch voices are **synthetic personas** drafted from analysis data, not human testimonials.',
+		'- Impress-the-Boss artifacts carry an **origin tag** — described-from-analysis until real captures exist.',
+		'- The Floor publishes **aggregated themes only**, never raw queries.',
+		'- Draws run on a fixed round-robin, one card every 48h (admin-configurable), gated by the cadence clock.',
+		'',
+		'## The ten card types',
+		'',
+		...typeLines,
+		''
+	].join('\n');
+}
