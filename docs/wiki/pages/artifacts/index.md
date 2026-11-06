@@ -11,3 +11,4 @@ _Documents, diagrams, and deliverables will be listed here._
 - [digital-products-repos-missing CSV](./digital-products-repos-missing-csv.md) - What is it?
 - [digital-products-repos activity split CSVs](./digital-products-repos-activity-split-csvs.md) - What is it?
 - [insert-missing-repos-active-30d.sql](./insert-missing-repos-active-30d-sql.md) - What is it?
+- [The Drum feed spec](./the-drum-feed-spec.md) - **The Drum feed spec** — the formal, converged specification for [[entities/the-drum-feed]], committed at `docs/specs/the-drum.md` after the 15-turn diverge/con

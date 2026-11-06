@@ -480,6 +480,7 @@ _Major decisions and direction shifts (ADRs) will be listed here._
 - [Hybrid semantic search stack: pgvector + tsvector with RRF fusion](./hybrid-semantic-search-stack-pgvector-tsvector.md) - Context
 - [Product-search corpus pipeline is self-contained in productsear.ch](./product-search-corpus-pipeline-is-self-contained-in-products.md) - Context
 - [Rename compendium to collections (routes moved, 308 redirects)](./rename-compendium-to-collections-routes-moved-308-redirects.md) - Context
+- [Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)](./set-up-utobo-as-transactional-email-sender-for-productsear-c.md) - Context
 `,
   "decisions/machine-readout-console-identity-for-view-llm.md": `---
 type: Decision
@@ -700,6 +701,46 @@ Agents increasingly fetch a well-known \`/skill.md\` (host0.ai pattern). Serving
 - \`/skill.md\` becomes a public route mirroring the SKILL.md content.
 - SKILL.md is now dual-homed: source of truth stays in \`skills.te9.dev\`, but it must be updated whenever shipped behavior changes — e.g. its "20 results per page; there is no pagination" line goes stale once the redesign ships pagination. Updating SKILL.md is part of the shipping checklist.
 `,
+  "decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md": `---
+type: Decision
+title: Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)
+description: Context
+tags: [email, dns, dmarc, utobo, godaddy, infrastructure]
+status: accepted
+timestamp: "2026-11-06T13:37:08.760Z"
+---
+
+# Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)
+
+## Context
+
+productsear.ch needs to send email from its own domain (verification/delivery mail) via **utobo** (utobo.com). Utobo's sending-domain setup required four DNS records at GoDaddy. Inspection of the zone before writing revealed the domain already carried a **strict DMARC policy** — \`v=DMARC1; p=reject\` (a GoDaddy/SecureServer default) — which would have broken third-party sending during setup.
+
+## The choice
+
+- productsear.ch is now a **verified sending domain on utobo**. The four records, all live on GoDaddy (verified via authoritative NS poll on 2026-11-06):
+  - \`TXT utobozgb9pzudt3k1._domainkey\` — DKIM public key (234 chars, single TXT string, under GoDaddy's 255-char/string limit)
+  - \`CNAME send\` → \`send.utobo.com\`
+  - \`TXT _dmarc\` → \`v=DMARC1; p=none; rua=mailto:dmarc@productsear.ch\`
+  - \`MX @\` → \`mx.inbound.utobo.com\`, priority 10 (zone previously had **no MX records** — nothing was clobbered)
+- **DMARC was deliberately downgraded from \`p=reject\` to \`p=none\`** per utobo's setup requirements: third-party sends must pass alignment before the domain can verify, and strict DMARC rejects them.
+- Website DNS (A \`@\`, \`www\` → Railway) untouched.
+
+## Alternatives considered
+
+- Keeping \`p=reject\` and delegating mail to a subdomain instead — rejected: utobo's flow verifies the apex domain and its instructions specify the apex \`_dmarc\` record.
+- Using a different mail provider — rejected: utobo is the service the user chose (plan with 50 sending domains, 4 in use).
+
+## Rationale
+
+\`p=none\` is required by utobo's onboarding contract; refusing it means the domain never verifies and no mail can be sent. The downgrade is understood to be temporary — \`p=none\` only monitors (reports to \`rua=mailto:dmarc@productsear.ch\`), it does not protect against spoofing.
+
+## Consequences
+
+- **Follow-up owed**: once utobo sending is proven healthy, move DMARC back toward enforcement (\`p=quarantine\`, then \`p=reject\`) — otherwise the domain is spoofable again.
+- The \`send\` CNAME, DKIM TXT, and inbound MX must stay in place or utobo sending/receiving breaks.
+- Any future "why is DMARC p=none on this domain?" answer lives here, not in the zone.
+`,
   "decisions/shift-visual-design-to-instrument-grade-precision.md": `---
 type: Decision
 title: Shift visual design to instrument-grade precision-tool system (OKLCH)
@@ -905,7 +946,7 @@ okf_version: "0.1"
 <!-- wiki-nav:start -->
 ## Navigation map
 
-Auto-generated detailed index of every docs/wiki/ concept — the map the LLM uses to locate information. 108 concept(s). Regenerated on init and on wiki_mark_synced. Generated 2026-11-06T12:37:34.646Z.
+Auto-generated detailed index of every docs/wiki/ concept — the map the LLM uses to locate information. 122 concept(s). Regenerated on init and on wiki_mark_synced. Generated 2026-11-06T14:28:28.542Z.
 
 Each entry: [title](concept-id.md) — description. Links are clickable in /wiki; pass the concept-id (link target minus .md) to wiki_get.
 
@@ -932,6 +973,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Hybrid search via Reciprocal Rank Fusion](pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md) — What is it?
 - [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it?
 - [URL-driven search state](pages/concepts/url-driven-search-state.md) — What is it?
+- [Admin console (/admin)](pages/entities/admin-console-admin.md) — What it is
 - [API ask endpoint](pages/entities/api-ask-endpoint.md) — What is it?
 - [API search endpoint](pages/entities/api-search-endpoint.md) — What is it?
 - [Archive page](pages/entities/archive-page.md) — \`/archive\` — the chronological all-entries surface of productsear.ch, displayed as **"listings"** (URLs stay /archive). Newest-first by raindrop_created_at, paginated 20/page.
@@ -946,6 +988,9 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [repo-scan pipeline](pages/entities/repo-scan-pipeline.md) — One-off checkpointed Node pipeline (\`.archive/repo-scan/\`) that matched all 4,224 bookmarks against open-source GitHub repos — provenance for the digital-products repo index
 - [Rerank service](pages/entities/rerank-service.md) — \`src/lib/server/rerank.ts\` — a thin client for the Voyage \`rerank-2.5-lite\` cross-encoder rerank API.
 - [Search diagnostics](pages/entities/search-diagnostics.md) — Search-quality diagnostic tooling shipped with the 2026-11-01 rerank fix: a trace script for the retrieval stages, a debug env flag for the rerank stage, and a 
+- [utobo email platform](pages/entities/utobo-email-platform.md) — utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
+- [utobo Email (transactional email service)](pages/entities/utobo-email-transactional-email-service.md) — **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS
+- [Utobo sending-domain DNS records](pages/entities/utobo-sending-domain-dns-records.md) — The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Wri
 - [WaveLoader component](pages/entities/waveloader-component.md) — A CSS-only animated loading indicator shown in the latency gauge box while a search runs; it swaps to the \`{tookMs}ms\` latency readout when the search completes
 - [Page Templates](pages/TEMPLATES.md) — Reference templates for Concept, Entity, and Artifact pages. Follow these when using wiki_note_page.
 
@@ -965,6 +1010,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Rename compendium to collections (routes moved, 308 redirects)](decisions/rename-compendium-to-collections-routes-moved-308-redirects.md) — Context
 - [Repo-scan pipeline: cheapest-first phases; npm/PyPI registry lookups replace GitHub slug-guessing](decisions/repo-scan-pipeline-cheapest-first-phases-npm-pypi.md) — Context
 - [Serve the LLM usage guide at /skill.md and distill it into the llms-view preamble](decisions/serve-the-llm-usage-guide-at-skill-md-and-distill.md) — Context
+- [Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)](decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — Context
 - [Shift visual design to instrument-grade precision-tool system (OKLCH)](decisions/shift-visual-design-to-instrument-grade-precision.md) — Context
 - [Store bookmark archetypes as multi-entry JSONB on an app-owned table](decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md) — Context
 - [Use Plausible for privacy-friendly site analytics, wired in app.html](decisions/use-plausible-for-privacy-friendly-site-analytics.md) — Context
@@ -972,6 +1018,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 
 ### Rules
 
+- [Attribute build failures before fixing; never touch a concurrent session's in-progress work](rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md) — **Guideline:** When a whole-project check (\`npm run build\`, typecheck) fails in this repo, attribute the errors **before** treating your own work as broken — an
 - [Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes](rules/check-the-index-before-committing-use-pathspec-scoped-commit.md) — **Guideline:** Before running \`git commit\` in any repo — especially auxiliary/external repos like \`E:\\skills.te9.dev\` whose indexes accumulate unrelated pre-sta
 - [Corroborate product→repo matches with multi-signal checks; stars never validate homepage/npm links](rules/corroborate-product-repo-matches-with-multi-signal.md) — Guideline
 - [Diagnose search misses stage-by-stage before tuning](rules/diagnose-search-misses-stage-by-stage-before.md) — Guideline
@@ -987,6 +1034,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Skip HTML sanitizer for server-owned LLM output; add one if untrusted input flows in](rules/skip-html-sanitizer-for-server-owned-llm-output.md) — When rendering model output as HTML on the client (e.g. ask-mode answers parsed
 - [Sweep every render path when renaming display vocabulary](rules/sweep-every-render-path-when-renaming-display.md) — **Guideline:** When renaming display vocabulary on a SvelteKit surface, sweep **every render path**, not just visible body copy: \`<svelte:head><title>\`, sr-only
 - [Validate generated SQL inserts with a rollback-wrapped dry run against the live DB](rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r.md) — **Guideline:** Before declaring a generated/hand-written INSERT or migration SQL file ready to run, execute it against the real database inside a single \`BEGIN;
+- [Verify the serving process on a test port before trusting smoke tests](rules/verify-the-serving-process-on-a-test-port-before-trusting-sm.md) — **Guideline:** After any restart of a local \`node build\` preview server, verify what actually serves the test port \`netstat -ano | findstr :<port>\` (and, when a
 
 ### Learnings
 
@@ -995,16 +1043,19 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [agentos-sdk.dev is a light warm-paper theme, not dark](learnings/agentos-sdk-dev-is-a-light-warm-paper-theme-not.md) — When extracting the design system from https://agentos-sdk.dev/, the \`:root\` CSS contains leftover shadcn dark-mode HSL variables (e.g. \`--background: 240 10% 3
 - [Analyzed metric 100%: analyzer fallback patch + what the metric actually counts](learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md) — Discovered 2026-11-06 while driving the homepage \`analyzed\` vital sign to 100%.
 - [Await dotenv imports; anchor .env path](learnings/await-dotenv-imports-anchor-env-path.md) — Two failures when \`missing-repos.js\` (a plain Node script in \`.archive/repo-scan/\`) loaded \`DATABASE_URL\`, discovered 2026-11-06:
+- [better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed](learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md) — Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06):
 - [Bookmark ingestion chain is gap-catching; archetypes classifier lives at src/lib/archetypes.ts](learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md) — Discovered 2026-11-06 while processing the 522 synthetic repo rows end-to-end.
 - [bookmarks table is a read-only mirror — the Raindrop→DB sync lives outside this repo](learnings/bookmarks-table-is-a-read-only-mirror-the-raindrop.md) — The gotcha
 - [BrowserClaw owns IPv4 :9222; harness Chrome lands on IPv6 — discover CDP WS URL via curl, not undici fetch](learnings/browserclaw-owns-ipv4-9222-harness-chrome-lands-on.md) — Discovered 2026-11-03 while doing CDP-based visual QA of \`.archive/digital-products-repos.html\`:
 - [check-active.js: "active" is user-defined as pushed within 30 days; --resplit re-splits cached data without API calls](learnings/check-active-js-active-is-user-defined-as-pushed-within-30-d.md) — **The fact (set 2026-11-06, user-defined):** for the digital-products-repos activity split, the user explicitly redefined **ACTIVE = last push within the last 3
 - [Corpus schema facts: raindrop_created_at, analysis who/what/how/when fields, 1,320 messy categories](learnings/corpus-schema-facts-raindrop-created-at-analysis.md) — Discovered 2026-11-01 during the compendium-page design (facts homework before P2 interview).
+- [Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only](learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md) — Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1ac2b8e..bbd94b1\`).
 - [Driving html-video (nexu-io) headlessly to render a product video](learnings/driving-html-video-nexu-io-headlessly-to-render-a.md) — When using **html-video** (https://github.com/nexu-io/html-video) to render a video about this app:
 - [$env/dynamic/private breaks under plain tsx — use process.env in shared server modules](learnings/env-dynamic-private-breaks-under-plain-tsx-use.md) — SvelteKit's \`$env/dynamic/private\` is a **virtual module resolved only by the SvelteKit Vite pipeline**. Importing it from a standalone script run via \`tsx\` (e.
 - [Explicit outer SELECT silently drops columns carried by CTE \`scored.*\`](learnings/explicit-outer-select-silently-drops-columns.md) — The gotcha
 - [External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first](learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md) — Discovered 2026-11-06 while answering "where is the sync/analysis pipeline?" (user's best guess: \`E:\\te9.dev\` — confirmed correct).
 - [Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing](learnings/extracted-svelte-scoped-css-needs-scope-classes.md) — When extracting compiled Svelte CSS into a standalone test harness (e.g. a plain HTML file to screenshot), naive selector stripping breaks everything silently: 
+- [Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed](learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md) — Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule):
 - [GitHub disables scheduled workflows after 60 days without commits — cron runs don't count](learnings/github-disables-scheduled-workflows-after-60-days.md) — GitHub automatically disables scheduled workflows after **60 days with no commits** to the repository. Scheduled (cron) runs do **not** count as activity — only
 - [GitHub requires \`workflow\` scope on the token to push commits touching \`.github/workflows/\`](learnings/github-requires-workflow-scope-on-the-token-to.md) — A token with only \`repo\` (and \`gist\`, \`read:org\`) scopes cannot push a commit that modifies any file under \`.github/workflows/\`. GitHub rejects the push with a 
 - [Gold accent fails WCAG AA contrast when used for chip/tag text](learnings/gold-accent-fails-wcag-aa-contrast-when-used-for.md) — Gotcha
@@ -1025,6 +1076,8 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Relevance floor 0.45 sits exactly in the measured gap between noise and matches](learnings/relevance-floor-0-45-sits-exactly-in-the-measured.md) — \`RELEVANCE_FLOOR = 0.45\` in \`src/lib/server/search.ts\` is not a guess — it was calibrated (2026-11-01) against real rerank-2.5-lite score distributions using \`s
 - [Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md) — The site-wide accent (set 2026-11-01) is \`#0021FF\`, expressed in the OKLCH token system as:
 - [Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors](learnings/skill-skill-md-description-must-quote-colons-to.md) — In \`.agents/skills/*/SKILL.md\`, a plain-scalar \`description:\` value containing \`: \` (colon-space — e.g. from embedded text like \`Triggers:\` or \`Use when:\`) caus
+- [Splitting npm dependency versions: direct dep for the new, pinned deps nest auto](learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md) — When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct dependency — packag
+- [Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first](learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md) — Discovered 2026-11-06 while verifying the new "last 30 days" homepage tile on a local production build:
 - [Svelte 5: values captured in plain consts go stale across param navigation — use $derived](learnings/svelte-5-values-captured-in-plain-consts-go-stale.md) — A Svelte 5 component instance **persists across navigation** to the same route with different params (e.g. \`/archive/page/2\` → \`/archive/page/3\`). A plain \`cons
 - [SvelteKit blocks $lib/server imports in client components — even for pure-data modules](learnings/sveltekit-blocks-lib-server-imports-in-client.md) — SvelteKit refuses \`$lib/server/*\` imports from client-side code (\`+page.svelte\`) at dev/build time — **even when the module contains no server dependencies at a
 - [SvelteKit dev server does not populate process.env from .env — load dotenv yourself](learnings/sveltekit-dev-server-does-not-populate-process-env.md) — SvelteKit's Vite dev server does **not** populate \`process.env\` from your \`.env\` file. That is what the \`$env/*\` virtual modules are for. If your server modules
@@ -1032,8 +1085,10 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [synced_at runs ~4 days ahead of wall clock; sync rewrites all rows every pass](learnings/synced-at-runs-4-days-ahead-of-wall-clock-sync.md) — Discovered 2026-10-31 while answering "has the repo/db been updating lately?":
 - [Transparent-cutout QA: previews don't honor alpha — verify the alpha channel programmatically](learnings/transparent-cutout-qa-previews-don-t-honor-alpha.md) — When producing a transparent cutout of the [[product-search-mascot-illo-character-pack]] (or any character) for web use, the cutout engine warns of possible **m
 - [Vercel AI SDK v4 streamText exposes async textStream, not toReadableStream()](learnings/vercel-ai-sdk-v4-streamtext-exposes-async.md) — In AI SDK v4, \`streamText(...)\` exposes a **\`textStream\`** property (an async iterable of string chunks), not a \`toReadableStream()\` method. To stream a respons
+- [Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly](learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API:
 - [Voyage free-tier rate limit (3 RPM / 10K TPM) blocks bulk backfill without a payment method](learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md) — Gotcha
 - [Voyage rerank-2.5-lite has run-to-run rank variance (±2 positions)](learnings/voyage-rerank-2-5-lite-has-run-to-run-rank.md) — The gotcha
+- [wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs](learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md) — Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-domain ADR in \`docs/w
 <!-- wiki-nav:end -->
 
 An [OKF](https://github.com/earendil-works/okf) bundle documenting this project.
@@ -1139,6 +1194,24 @@ Two failures when \`missing-repos.js\` (a plain Node script in \`.archive/repo-s
 2. **chdir breaks discovery**: \`process.chdir('repo-scan')\` before \`dotenv.config()\` makes dotenv look for \`.env\` in the new cwd, where there is none. Anchor the path explicitly: \`dotenv.config({ path: path.resolve(import.meta.dirname, '../../.env') })\`.
 
 Related but distinct: [[env-dynamic-private-breaks-under-plain-tsx-use]] covers \`$env/dynamic/private\` vs \`process.env\`; this covers dotenv *loading* in scripts that change cwd.
+`,
+  "learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md": `---
+type: Learning
+title: "better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed"
+description: "Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06):"
+tags: [better-auth, zod, otel, adapter-node, build]
+timestamp: "2026-11-06T14:18:49.894Z"
+---
+
+# better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed
+
+Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06):
+
+1. **\`sessionSchema.loose is not a function\`** during the build's postbuild analyse — the bundle mixed the hoisted zod 3.25.76 (no \`.loose()\`) with better-auth's nested zod 4.6.7 (\`z.looseObject\` resolved from v4 while \`sessionSchema\`'s zod import resolved to v3). Fix: add \`zod@^4\` as a DIRECT dependency so the two versions settle into non-conflicting positions (top-level v4 for better-auth, nested 3.25.76 for packages pinning v3). As a bonus this surfaced that \`ai\`/\`@ai-sdk/openai\` v4 (peer zod ^3) had zero imports in the codebase since Ask mode was removed — removed them instead of fighting the peer conflict.
+
+2. **\`Cannot read properties of undefined (reading 'getTracer')\` / \`reading 'ERROR'\`** at runtime — better-auth's instrumentation does a lazy \`await import("@opentelemetry/api")\` with a noop fallback, but with @opentelemetry/api absent and better-auth bundled into a server chunk, the fallback is defeated. Fix: install \`@opentelemetry/api\` (it's a soft peer) so the dynamic import succeeds. Alternative would be \`experimental.instrumentation.enabled = false\` in betterAuth options.
+
+Also relevant: adapter-node form-action CSRF rejects POSTs when \`ORIGIN\` env isn't set (url.origin defaults to https).
 `,
   "learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md": `---
 type: Learning
@@ -1275,6 +1348,27 @@ So the compendium's "who, what, how, when" per entry is direct data, not somethi
 - Any per-entry metadata UI (compendium, detail views) can pull purpose/how_to_use/when_to_use directly from \`bookmark_analysis\`.
 - Any grouping/faceting by category must roll up the 1,320 near-duplicate labels — raw grouping doesn't work. See [[bookmarks-table-is-a-read-only-mirror-the-raindrop]] for why these tables can't be rewritten to fix it.
 `,
+  "learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md": `---
+type: Learning
+title: "Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only"
+description: Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1ac2b8e..bbd94b1\`).
+tags: [git, security, repo-hygiene, untracked-files]
+timestamp: "2026-11-06T13:13:32.925Z"
+---
+
+# Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only
+
+Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1ac2b8e..bbd94b1\`).
+
+**\`.archive/\` is gitignored on purpose.** It contains \`.ghtoken\` — a GitHub credential used by the repo-scan scripts documented in [[repo-scan-pipeline]]. Gitignoring the whole directory means the token can never leak through a careless \`git add .\` or pathspec slip. Consequence: changes under \`.archive/\` never show in \`git status\` and are **not version-controlled** — the repo-scan pipeline files exist only on this machine.
+
+**Deliberately untracked by design (do not "clean up" into a commit):**
+
+- \`wave-loader-demo.html\` — local-only dev harness for the WaveLoader component
+- \`.monster/\` session transcripts
+
+When doing a final-commit sweep of the repo, these paths are expected leftovers, not missed files. Never move \`.ghtoken\` (or copies of it) into tracked paths.
+`,
   "learnings/driving-html-video-nexu-io-headlessly-to-render-a.md": `---
 type: Learning
 title: Driving html-video (nexu-io) headlessly to render a product video
@@ -1383,6 +1477,28 @@ A crude strip of the hash (\`.izzyoe\`) leaves \`:where(.svelte-izzyoe)\` behind
 - Or replicate the scope class on the test markup (add \`class="svelte-izzyoe"\` to each element).
 
 The real app is unaffected — its markup carries the scope classes; only extracted-CSS test harnesses hit this. Related QA technique: freeze animations with \`animation-play-state: paused\` before screenshotting.
+`,
+  "learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md": `---
+type: Learning
+title: Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed
+description: "Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule):"
+tags: [windows, git-bash, processes, tooling]
+timestamp: "2026-11-06T12:58:48.342Z"
+---
+
+# Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed
+
+Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule):
+
+In Git Bash on Windows, \`taskkill /PID 7924 /T /F\` **silently fails to kill the process** — Git Bash path-mangles the \`/PID\`-style flags into paths, so taskkill receives garbage arguments and the target keeps running (the command may even appear to succeed).
+
+**The fix:** escape flags with double slashes in Git Bash:
+
+\`\`\`
+taskkill //PID <pid> //T //F
+\`\`\`
+
+**Always verify the kill took effect** — re-run \`netstat -ano | findstr :<port>\` (or check the PID is gone) before trusting that the port is free. The escaped-flags lesson generalizes to any Windows CLI invoked from Git Bash with \`/FLAG\`-style arguments.
 `,
   "learnings/github-disables-scheduled-workflows-after-60-days.md": `---
 type: Learning
@@ -1531,54 +1647,13 @@ count(bookmarks joined to a bookmark_analysis row) / count(bookmarks)
 `,
   "learnings/index.md": `# Learnings
 
-_Captured learnings will be listed here._
-
-- [BrowserClaw owns IPv4 :9222; harness Chrome lands on IPv6 — discover CDP WS URL via curl, not undici fetch](./browserclaw-owns-ipv4-9222-harness-chrome-lands-on.md) - Discovered 2026-11-03 while doing CDP-based visual QA of \`.archive/digital-products-repos.html\`:
-- [Transparent-cutout QA: previews don't honor alpha — verify the alpha channel programmatically](./transparent-cutout-qa-previews-don-t-honor-alpha.md) - When producing a transparent cutout of the [[product-search-mascot-illo-character-pack]] (or any character) for web use, the cutout engine warns of…
-- [Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing](./extracted-svelte-scoped-css-needs-scope-classes.md) - When extracting compiled Svelte CSS into a standalone test harness (e.g. a plain HTML file to screenshot), naive selector stripping breaks everything…
-- [Headless-Chrome screenshots don't advance CSS animations — freeze frames with animation-play-state](./headless-chrome-screenshots-don-t-advance-css.md) - When visually verifying CSS animations via headless-Chrome screenshots, letting the page "run" for a while (or relying on virtual time) does not…
-- [21st.dev CDN preview pages inline the animation CSS inside the JS bundle, not the HTML](./21st-dev-cdn-preview-pages-inline-the-animation.md) - When the user shares a component URL like \`https://cdn.21st.dev/loading-ui/symmetric-wave/default/bundle.<id>.html\`, the HTML page is just a **React…
-- [SvelteKit normalizes event.url for data requests — always early-return on event.isDataRequest in handle hooks](./sveltekit-normalizes-event-url-for-data-requests.md) - **The gotcha (found 2026-11-01 while debugging a prod 500 on \`/?view=llm\`):** in a SvelteKit \`handle\` hook, \`event.url\` for a client-router data…
-- [Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](./site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md) - The site-wide accent (set 2026-11-01) is \`#0021FF\`, expressed in the OKLCH token system as:
-- [SvelteKit blocks $lib/server imports in client components — even for pure-data modules](./sveltekit-blocks-lib-server-imports-in-client.md) - SvelteKit refuses \`$lib/server/*\` imports from client-side code (\`+page.svelte\`) at dev/build time — **even when the module contains no server…
-- [Headless Chrome clamps window width (~500px) — "390px" screenshots are crops, not reflows](./headless-chrome-clamps-window-width-500px-390px.md) - When doing responsive visual QA via headless-Chrome screenshots:
-- [postgres-js double-encodes plain strings sent to jsonb — use sql.json()](./postgres-js-double-encodes-plain-strings-sent-to.md) - When writing to a \`jsonb\` column through Drizzle's postgres-js driver using a raw \`sql\` template, passing a plain JS string makes postgres-js…
-- [Svelte 5: values captured in plain consts go stale across param navigation — use $derived](./svelte-5-values-captured-in-plain-consts-go-stale.md) - A Svelte 5 component instance **persists across navigation** to the same route with different params (e.g. \`/archive/page/2\` → \`/archive/page/3\`). A…
-- [Relevance floor 0.45 sits exactly in the measured gap between noise and matches](./relevance-floor-0-45-sits-exactly-in-the-measured.md) - \`RELEVANCE_FLOOR = 0.45\` in \`src/lib/server/search.ts\` is not a guess — it was calibrated (2026-11-01) against real rerank-2.5-lite score…
-- [LLM usage skill lives outside the repo (E:\\skills.te9.dev\\productsear.ch\\SKILL.md) and must stay in sync](./llm-usage-skill-lives-outside-the-repo-e-skills.md) - The fact
-- [Corpus schema facts: raindrop_created_at, analysis who/what/how/when fields, 1,320 messy categories](./corpus-schema-facts-raindrop-created-at-analysis.md) - Discovered 2026-11-01 during the compendium-page design (facts homework before P2 interview).
-- [Voyage rerank-2.5-lite has run-to-run rank variance (±2 positions)](./voyage-rerank-2-5-lite-has-run-to-run-rank.md) - The gotcha
-- [Explicit outer SELECT silently drops columns carried by CTE \`scored.*\`](./explicit-outer-select-silently-drops-columns.md) - The gotcha
-- [synced_at runs ~4 days ahead of wall clock; sync rewrites all rows every pass](./synced-at-runs-4-days-ahead-of-wall-clock-sync.md) - Discovered 2026-10-31 while answering "has the repo/db been updating lately?":
-- [GitHub disables scheduled workflows after 60 days without commits — cron runs don't count](./github-disables-scheduled-workflows-after-60-days.md) - GitHub automatically disables scheduled workflows after **60 days with no commits** to the repository. Scheduled (cron) runs do **not** count as…
-- [Gold accent fails WCAG AA contrast when used for chip/tag text](./gold-accent-fails-wcag-aa-contrast-when-used-for.md) - Gotcha
-- [Raindrop→DB sync runs outside this repo; published page count sums all collections](./raindrop-db-sync-runs-outside-this-repo-published.md) - **Architecture:** The \`te9_dev.bookmarks\` table (and \`bookmark_content\`, \`bookmark_analysis\`) is a **read-only mirror populated by an EXTERNAL…
-- [bookmarks table is a read-only mirror — the Raindrop→DB sync lives outside this repo](./bookmarks-table-is-a-read-only-mirror-the-raindrop.md) - The gotcha
-- [Driving html-video (nexu-io) headlessly to render a product video](./driving-html-video-nexu-io-headlessly-to-render-a.md) - When using **html-video** (https://github.com/nexu-io/html-video) to render a video about this app:
-- [Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors](./skill-skill-md-description-must-quote-colons-to.md) - In \`.agents/skills/*/SKILL.md\`, a plain-scalar \`description:\` value containing \`: \` (colon-space — e.g. from embedded text like \`Triggers:\` or \`Use…
-- [Railpack (Railway build driver) requires a start command](./railpack-railway-build-driver-requires-a-start.md) - Railpack is Railway's default build driver (v0.30.0 at time of writing). It infers the start command for a Node app by checking, in order:
-- [adapter-node requires ORIGIN env var for CSRF protection](./adapter-node-requires-origin-env-var-for-csrf.md) - When deploying SvelteKit with \`@sveltejs/adapter-node\`, requests with a mismatched \`Host\`/\`Origin\` header are rejected unless the \`ORIGIN\`…
-- [GitHub requires \`workflow\` scope on the token to push commits touching \`.github/workflows/\`](./github-requires-workflow-scope-on-the-token-to.md) - A token with only \`repo\` (and \`gist\`, \`read:org\`) scopes cannot push a commit that modifies any file under \`.github/workflows/\`. GitHub rejects the…
-- [Postgres FTS "word too long" NOTICE for >2047-char tokens is harmless](./postgres-fts-word-too-long-notice-for-2047-char.md) - When populating a \`tsvector\` / \`search_tsv\` column, Postgres may emit a NOTICE like:
-- [Voyage free-tier rate limit (3 RPM / 10K TPM) blocks bulk backfill without a payment method](./voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md) - Gotcha
-- [agentos-sdk.dev is a light warm-paper theme, not dark](./agentos-sdk-dev-is-a-light-warm-paper-theme-not.md) - When extracting the design system from https://agentos-sdk.dev/, the \`:root\` CSS contains leftover shadcn dark-mode HSL variables (e.g.…
-- [SvelteKit dev server does not populate process.env from .env — load dotenv yourself](./sveltekit-dev-server-does-not-populate-process-env.md) - SvelteKit's Vite dev server does **not** populate \`process.env\` from your \`.env\` file. That is what the \`$env/*\` virtual modules are for. If your…
-- [$env/dynamic/private breaks under plain tsx — use process.env in shared server modules](./env-dynamic-private-breaks-under-plain-tsx-use.md) - SvelteKit's \`$env/dynamic/private\` is a **virtual module resolved only by the SvelteKit Vite pipeline**. Importing it from a standalone script run…
-- [postgres-js db.execute() returns rows directly, not { rows }](./postgres-js-db-execute-returns-rows-directly-not.md) - When using Drizzle's postgres-js driver, \`db.execute(sql\\\`...\\\`)\` returns the **row array directly**, not an object with a \`.rows\` property (unlike…
-- [Vercel AI SDK v4 streamText exposes async textStream, not toReadableStream()](./vercel-ai-sdk-v4-streamtext-exposes-async.md) - In AI SDK v4, \`streamText(...)\` exposes a **\`textStream\`** property (an async iterable of string chunks), not a \`toReadableStream()\` method. To…
-- [pi reads project MCP config from .pi/mcp.json — root .mcp.json is ignored](./pi-project-mcp-config-location.md) - The gotcha (found 2026-11-06 while debugging why \`/mcp\` showed no servers):
-- [MCP server names in .pi/mcp.json forbid dots — name them with letters/digits/_/- only](./mcp-server-names-no-dots.md) - The dot gotcha (found 2026-11-05): pi rejects MCP server names containing characters outside \`[A-Za-z0-9_-]\`. The project's \`.pi/mcp.json\` named its database se
-- [pi loads every standalone .md in .agents/skills/ as a skill named after its parent dir; slash commands live in .pi/prompts/](./pi-skill-name-fallback-and-prompts-dir.md) - Two related facts about how pi loads project-level agent config, discovered 2026-11-06 while fixing a \`commands\` collision warning:
-- [Dynamic dotenv import in standalone scripts: await it, and anchor the .env path to the project root before chdir](./dynamic-dotenv-import-in-standalone-scripts-await-it-and-anc.md) - Two failures when \`missing-repos.js\` (a plain Node script in \`.archive/repo-scan/\`) loaded \`DATABASE_URL\`, discovered 2026-11-06:
-- [Await dynamic dotenv imports; anchor .env path before chdir](./await-dynamic-dotenv-imports-anchor-env-path-before-chdir.md) - Two failures when \`missing-repos.js\` (a plain Node script in \`.archive/repo-scan/\`) loaded \`DATABASE_URL\`, discovered 2026-11-06:
-- [Await dotenv imports; anchor .env path](./await-dotenv-imports-anchor-env-path.md) - Two failures when \`missing-repos.js\` (a plain Node script in \`.archive/repo-scan/\`) loaded \`DATABASE_URL\`, discovered 2026-11-06:
-- [check-active.js: "active" is user-defined as pushed within 30 days; --resplit re-splits cached data without API calls](./check-active-js-active-is-user-defined-as-pushed-within-30-d.md) - **The fact (set 2026-11-06, user-defined):** for the digital-products-repos activity split, the user explicitly redefined **ACTIVE = last push within the last 3
-- [Negative synthetic ids for manual bookmarks-table inserts (never collide with the external sync)](./negative-synthetic-ids-for-manual-bookmarks-table-inserts-ne.md) - **The convention (set 2026-11-06):** when manually inserting rows into \`te9_dev.bookmarks\` (normally an external-sync mirror), use **negative synthetic ids**: \`
-- [Bookmark ingestion chain is gap-catching; archetypes classifier lives at src/lib/archetypes.ts](./bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md) - Discovered 2026-11-06 while processing the 522 synthetic repo rows end-to-end.
-- [Homepage "analyzed" vital sign = analyzed/total ratio — bulk inserts regress it until the external analysis pass runs](./homepage-analyzed-vital-sign-analyzed-total-ratio-bulk-inser.md) - Discovered 2026-11-06 while diagnosing why https://productsear.ch/ showed \`analyzed\` = 81% (user reported the drop).
-- [External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first](./external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md) - Discovered 2026-11-06 while answering "where is the sync/analysis pipeline?" (user's best guess: \`E:\\te9.dev\` — confirmed correct).
-- [llmview.ts / skill-doc.ts template literals contain escaped backticks; multi-hunk edit calls are atomic](./llmview-ts-skill-doc-ts-template-literals-contain-escaped-ba.md) - Discovered 2026-11-06 while renaming compendium → collections across the LLM-view surfaces.
-- [Analyzed metric 100%: analyzer fallback patch + what the metric actually counts](./analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md) - Discovered 2026-11-06 while driving the homepage \`analyzed\` vital sign to 100%.
+- [Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed](./git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md) - Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule):
+- [Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only](./deliberately-untracked-paths-archive-is-gitignored-holds-ght.md) - Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1ac2b8e..bbd94b1\`).
+- [Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly](./verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) - Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API:
+- [wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs](./wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md) - Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-domain ADR in \`docs/w
+- [better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed](./better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md) - Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06):
+- [Splitting npm dependency versions: direct dep for the new, pinned deps nest auto](./splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md) - When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct dependency — packag
+- [Production runs Railway commits only — local uncommitted work is invisible on the live site](./production-runs-railway-commits-only-local-uncommitted-work-.md) - **Discovered 2026-11-06** when the user reported "I don't see an icon to log into the admin" on https://productsear.ch/:
 `,
   "learnings/llm-usage-skill-lives-outside-the-repo-e-skills.md": `---
 type: Learning
@@ -1765,6 +1840,28 @@ await db.execute(sql\`INSERT INTO te9_dev.bookmark_archetypes (...) VALUES (\${i
 
 **Applies to**: any raw-SQL \`jsonb\` write in this repo (backfills, migrations run via tsx).
 `,
+  "learnings/production-runs-railway-commits-only-local-uncommitted-work-.md": `---
+type: Learning
+title: Production runs Railway commits only — local uncommitted work is invisible on the live site
+description: "**Discovered 2026-11-06** when the user reported "I don't see an icon to log into the admin" on https://productsear.ch/:"
+tags: [[deployment, railway, git, admin, production, debugging]]
+timestamp: "2026-11-06T14:29:02.581Z"
+---
+
+# Production runs Railway commits only — local uncommitted work is invisible on the live site
+
+**Discovered 2026-11-06** when the user reported "I don't see an icon to log into the admin" on https://productsear.ch/:
+
+The admin console code, icon, and login flow were fully built and working locally — but **the work was never committed/pushed**, so Railway production was still serving the old build. Nothing was broken in the code.
+
+**Symptom pattern:** a feature that exists in local dev but "doesn't exist" on production is a *deployment gap*, not a code bug. Before diagnosing any "missing on the live site" behavior:
+
+1. \`git status\` / \`git log\` — is the work committed and pushed?
+2. Check the Railway deployment state (latest deploy commit/\`git SHA\`, BUILDING vs SUCCESS) — the SUCCESS entry may predate the most recent push.
+3. Check the service's env vars on Railway — new env vars (\`ADMIN_EMAILS\`, \`ORIGIN\`, \`BETTER_AUTH_SECRET\`, …) added locally during development must be mirrored on the Railway service or form-action CSRF and auth break in ways unrelated to the code.
+
+**Also note:** concurrent sessions keep in-flight changes in this repo's tree — commit with strict pathspecs excluding others' work (see the check-index rule), then poll the deployment to SUCCESS before verifying production behavior.
+`,
   "learnings/railpack-railway-build-driver-requires-a-start.md": `---
 type: Learning
 title: Railpack (Railway build driver) requires a start command
@@ -1871,6 +1968,39 @@ In \`.agents/skills/*/SKILL.md\`, a plain-scalar \`description:\` value containi
 - Duplicate \`name:\` values across skill dirs collide; the first one found wins and the rest are silently skipped. Give each variant a unique \`name:\` (e.g. \`deep-research-v2\`, \`deep-research-v3\`) so all load.
 
 Run pi's skill-list check after editing frontmatter to confirm all skills load.
+`,
+  "learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md": `---
+type: Learning
+title: "Splitting npm dependency versions: direct dep for the new, pinned deps nest auto"
+description: When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct dependency — packag
+tags: [npm, dependency-management, zod]
+timestamp: "2026-11-06T14:18:49.894Z"
+---
+
+# Splitting npm dependency versions: direct dep for the new, pinned deps nest auto
+
+When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct dependency — packages with a pinned dependency get their version nested under themselves, while packages with a peer dep on the top-level resolve the hoisted one. E.g. zod@4 direct + @ai-sdk packages pinning zod@3 → clean split. Don't install just the version a lib needs as a direct dep when a peer-dep'd consumer still needs the old one.
+`,
+  "learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md": `---
+type: Learning
+title: Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first
+description: "Discovered 2026-11-06 while verifying the new "last 30 days" homepage tile on a local production build:"
+tags: [verification, debugging, local-dev, processes]
+timestamp: "2026-11-06T12:58:48.342Z"
+---
+
+# Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first
+
+Discovered 2026-11-06 while verifying the new "last 30 days" homepage tile on a local production build:
+
+An **orphaned preview server from an earlier session** was still holding the test port (3199), serving a **stale build**. The new code change looked "missing" on that server — the initial diagnosis ("the served doc differs from source") was environmental, not a code bug.
+
+**The method:** when a freshly-built change doesn't appear on a local verification server, before debugging the code:
+
+1. Identify what actually serves the port: \`netstat -ano | findstr :<port>\` → PID → \`Get-CimInstance Win32_Process -Filter "ProcessId=<pid>"\` (inspect \`CommandLine\` and start time).
+2. Kill orphans by **exact PID only** (never by name — see the global no-Node-name-kill rule), then re-verify on a clean server.
+
+Symptom tells: served output matches an *older* version of the code, and your recent edits are absent from an otherwise-working page.
 `,
   "learnings/svelte-5-values-captured-in-plain-consts-go-stale.md": `---
 type: Learning
@@ -2028,6 +2158,23 @@ Discovered while building \`/api/ask\` (RAG streaming). The \`.toReadableStream(
 
 When upgrading the AI SDK, re-check the streaming surface — it has changed across v3/v4/v5.
 `,
+  "learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md": `---
+type: Learning
+title: Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly
+description: "Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API:"
+tags: [dns, godaddy, email, verification, gotcha]
+timestamp: "2026-11-06T13:37:17.565Z"
+---
+
+# Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly
+
+Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API:
+
+- **GoDaddy API writes appear on the authoritative nameservers instantly.** After \`PUT\`-ing the four mail records, polling \`ns59.domaincontrol.com\` directly (\`dig @ns59.domaincontrol.com <name> <type>\`) showed all records passing on the **first poll**. Polling authoritative NS bypasses resolver caches entirely, so it shows the true zone state — the state any third-party checker (utobo's verification, MXToolbox) will converge to. No "wait for propagation" needed.
+- **Existing zone surprise**: the domain already had a \`_dmarc\` TXT with \`p=reject\` (GoDaddy/SecureServer default) — always inspect the full zone before writing, or you can silently downgrade/upgrade a security policy. (Here it was a deliberate, recorded downgrade — see the utobo sending-domain decision.)
+- **GoDaddy TXT strings cap at 255 chars per string.** The utobo DKIM key (234 chars incl. \`v=DKIM1; k=rsa; p=…\`) fit as a single string; longer DKIM keys would need to be split into multiple quoted strings.
+- The zone had **no MX records at all** before this — the \`MX @ → mx.inbound.utobo.com\` add was clean (skill rule: never clobber existing MX without checking).
+`,
   "learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md": `---
 type: Learning
 title: Voyage free-tier rate limit (3 RPM / 10K TPM) blocks bulk backfill without a payment method
@@ -2074,6 +2221,27 @@ Also: run-to-run shuffles also mean "minor top-5 reordering" on control queries 
 
 Related: the fix context in [[enrich-reranker-input-with-page-content-show-30]]; methodology in [[diagnose-search-misses-stage-by-step-before-tuning]].
 `,
+  "learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md": `---
+type: Learning
+title: wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs
+description: "Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-domain ADR in \`docs/w"
+tags: [wiki, okf, documentation, gotcha]
+timestamp: "2026-11-06T13:42:08.406Z"
+---
+
+# wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs
+
+Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-domain ADR in \`docs/wiki/decisions/\`.
+
+**The gotcha:** \`wiki_note_page\` (and the other \`wiki_note_*\` tools) **auto-convert \`[[wikilinks]]\` to relative markdown links at write time**. Two failure modes when linking across folders:
+
+- **Human-readable title-style wikilinks don't resolve at all** — e.g. \`[[the utobo sending-domain ADR]]\` is not a slug; the validator flags it as a broken link (W4).
+- **Bare-slug wikilinks to other folders produce relative links that resolve wrong** — e.g. \`[[utobo-sending-domain-dns-records]]\` written in a \`pages/entities/\` file was converted to a link relative to that folder, so a target living two directories up (\`../../decisions/...\`) came out broken.
+
+**The fix:** use **path-qualified slugs** for any cross-folder reference — \`[[decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c]]\`, not \`[[set up utobo as transactional email sender]]\`. Same-folder links can stay bare.
+
+**Working method:** after writing a page with wikilinks, run \`wiki_validate\` and read the actual written file (the transformation happens silently — the tool's input echoes don't show it); fix any W4 broken-link warnings with path-qualified slugs before declaring the page done. Pre-existing W2 long-filename warnings on tool-generated slugs are noise — leave them.
+`,
   "memory.md": `---
 okf_version: "0.1"
 ---
@@ -2084,10 +2252,11 @@ okf_version: "0.1"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12:40:33.916Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T14:29:02.619Z.
 
 ## Recent Decisions
 
+- [Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)](decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — Context (2026-11-06)
 - [Rename compendium to collections (routes moved, 308 redirects)](decisions/rename-compendium-to-collections-routes-moved-308-redirects.md) — Context (2026-11-06)
 - [Product-search corpus pipeline is self-contained in productsear.ch](decisions/product-search-corpus-pipeline-is-self-contained-in-products.md) — Context (2026-11-06)
 - [Repo-scan pipeline: cheapest-first phases; npm/PyPI registry lookups replace GitHub slug-guessing](decisions/repo-scan-pipeline-cheapest-first-phases-npm-pypi.md) — Context (2026-11-03)
@@ -2102,10 +2271,11 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12
 - [Store bookmark archetypes as multi-entry JSONB on an app-owned table](decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md) — Context (2026-11-01)
 - [Enrich reranker input with page content; show 30 results](decisions/enrich-reranker-input-with-page-content-show-30.md) — Context (2026-11-01)
 - [Shift visual design to instrument-grade precision-tool system (OKLCH)](decisions/shift-visual-design-to-instrument-grade-precision.md) — Context (2026-08-06)
-- [Adopt cross-encoder reranking (Voyage rerank-2.5-lite) on top of RRF hybrid search](decisions/adopt-cross-encoder-reranking-voyage-rerank-2-5.md) — Context (2026-07-04)
 
 ## Active Rules
 
+- [Verify the serving process on a test port before trusting smoke tests](rules/verify-the-serving-process-on-a-test-port-before-trusting-sm.md) — **Guideline:** After any restart of a local \`node build\` preview server, verify what actually serves the test port \`netstat -ano | findstr :… (2026-11-06)
+- [Attribute build failures before fixing; never touch a concurrent session's in-progress work](rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md) — **Guideline:** When a whole-project check (\`npm run build\`, typecheck) fails in this repo, attribute the errors **before** treating your own… (2026-11-06)
 - [Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes](rules/check-the-index-before-committing-use-pathspec-scoped-commit.md) — **Guideline:** Before running \`git commit\` in any repo — especially auxiliary/external repos like \`E:\\skills.te9.dev\` whose indexes accumula… (2026-11-06)
 - [Prepare and dry-run the rollback script before generating derived rows](rules/prepare-and-dry-run-the-rollback-script-before-generating-de.md) — **Guideline:** When a bulk data mutation against \`te9_dev\` is committed for real (no rollback wrapper), write and dry-run-verify the undo sc… (2026-11-06)
 - [Validate generated SQL inserts with a rollback-wrapped dry run against the live DB](rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r.md) — **Guideline:** Before declaring a generated/hand-written INSERT or migration SQL file ready to run, execute it against the real database ins… (2026-11-06)
@@ -2124,6 +2294,14 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12
 
 ## Recent Learnings — development patterns
 
+- [Production runs Railway commits only — local uncommitted work is invisible on the live site](learnings/production-runs-railway-commits-only-local-uncommitted-work-.md) — **Discovered 2026-11-06** when the user reported "I don't see an icon to log into the admin" on https://productsear.ch/: (2026-11-06)
+- [better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed](learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md) — Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06): (2026-11-06)
+- [Splitting npm dependency versions: direct dep for the new, pinned deps nest auto](learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md) — When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct… (2026-11-06)
+- [wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs](learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md) — Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-d… (2026-11-06)
+- [Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly](learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API: (2026-11-06)
+- [Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only](learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md) — Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1ac2b8e..bbd94b1\`). (2026-11-06)
+- [Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed](learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md) — Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule): (2026-11-06)
+- [Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first](learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md) — Discovered 2026-11-06 while verifying the new "last 30 days" homepage tile on a local production build: (2026-11-06)
 - [Analyzed metric 100%: analyzer fallback patch + what the metric actually counts](learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md) — Discovered 2026-11-06 while driving the homepage \`analyzed\` vital sign to 100%. (2026-11-06)
 - [llmview.ts / skill-doc.ts template literals contain escaped backticks; multi-hunk edit calls are atomic](learnings/llmview-ts-skill-doc-ts-template-literals-contain-escaped-ba.md) — Discovered 2026-11-06 while renaming compendium → collections across the LLM-view surfaces. (2026-11-06)
 - [External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first](learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md) — Discovered 2026-11-06 while answering "where is the sync/analysis pipeline?" (user's best guess: \`E:\\te9.dev\` — confirmed correct). (2026-11-06)
@@ -2136,14 +2314,6 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T12
 - [MCP server names in .pi/mcp.json forbid dots — name them with letters/digits/_/- only](learnings/mcp-server-names-no-dots.md) — The dot gotcha (found 2026-11-05): pi rejects MCP server names containing characters outside \`[A-Za-z0-9_-]\`. The project's \`.pi/mcp.json\` n… (2026-11-06)
 - [pi reads project MCP config from .pi/mcp.json — root .mcp.json is ignored](learnings/pi-project-mcp-config-location.md) — The gotcha (found 2026-11-06 while debugging why \`/mcp\` showed no servers): (2026-11-06)
 - [BrowserClaw owns IPv4 :9222; harness Chrome lands on IPv6 — discover CDP WS URL via curl, not undici fetch](learnings/browserclaw-owns-ipv4-9222-harness-chrome-lands-on.md) — Discovered 2026-11-03 while doing CDP-based visual QA of \`.archive/digital-products-repos.html\`: (2026-11-03)
-- [Transparent-cutout QA: previews don't honor alpha — verify the alpha channel programmatically](learnings/transparent-cutout-qa-previews-don-t-honor-alpha.md) — When producing a transparent cutout of the [[product-search-mascot-illo-character-pack]] (or any character) for web use, the cutout engine w… (2026-11-01)
-- [Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing](learnings/extracted-svelte-scoped-css-needs-scope-classes.md) — When extracting compiled Svelte CSS into a standalone test harness (e.g. a plain HTML file to screenshot), naive selector stripping breaks e… (2026-11-01)
-- [Headless-Chrome screenshots don't advance CSS animations — freeze frames with animation-play-state](learnings/headless-chrome-screenshots-don-t-advance-css.md) — When visually verifying CSS animations via headless-Chrome screenshots, letting the page "run" for a while (or relying on virtual time) does… (2026-11-01)
-- [21st.dev CDN preview pages inline the animation CSS inside the JS bundle, not the HTML](learnings/21st-dev-cdn-preview-pages-inline-the-animation.md) — When the user shares a component URL like \`https://cdn.21st.dev/loading-ui/symmetric-wave/default/bundle.<id>.html\`, the HTML page is just a… (2026-11-01)
-- [SvelteKit normalizes event.url for data requests — always early-return on event.isDataRequest in handle hooks](learnings/sveltekit-normalizes-event-url-for-data-requests.md) — **The gotcha (found 2026-11-01 while debugging a prod 500 on \`/?view=llm\`):** in a SvelteKit \`handle\` hook, \`event.url\` for a client-router … (2026-11-01)
-- [Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md) — The site-wide accent (set 2026-11-01) is \`#0021FF\`, expressed in the OKLCH token system as: (2026-11-01)
-- [SvelteKit blocks $lib/server imports in client components — even for pure-data modules](learnings/sveltekit-blocks-lib-server-imports-in-client.md) — SvelteKit refuses \`$lib/server/*\` imports from client-side code (\`+page.svelte\`) at dev/build time — **even when the module contains no serv… (2026-11-01)
-- [Headless Chrome clamps window width (~500px) — "390px" screenshots are crops, not reflows](learnings/headless-chrome-clamps-window-width-500px-390px.md) — When doing responsive visual QA via headless-Chrome screenshots: (2026-11-01)
 
 ## Architecture
 
@@ -2536,40 +2706,42 @@ type: Concept
 title: LLM content negotiation
 description: What is it?
 tags: [llms-view, content-negotiation, markdown, sveltekit]
-timestamp: "2026-11-01T01:49:55.402Z"
+timestamp: "2026-11-06T00:00:00.000Z"
 ---
 
 # LLM content negotiation
 
 ## What is it?
 
-One canonical URL (any page with \`?view=llm\`) serves two representations negotiated by the \`Accept\` header: non-browser clients (curl, LLM fetchers — anything whose \`Accept\` lacks \`text/html\`, or that passes \`?raw=1\`) receive the raw document as \`text/markdown; charset=utf-8\` straight from a SvelteKit server hook; browsers fall through to the normal page, which renders the *same markdown string* styled, with a \`raw .md\` link. The markdown is built server-side per route and every document opens with an instruction-bearing preamble so an LLM knows the next steps.
+One canonical URL (any page with \`?view=llm\`) serves two representations: non-browser clients receive the raw document as \`text/markdown; charset=utf-8\` straight from a SvelteKit server hook; browsers fall through to the normal page, which renders the *same markdown string* styled, with a \`raw .md\` link. The markdown is built server-side per route and every document opens with an instruction-bearing preamble whose first section is a **prominent "Search the API" advertisement** (try-it-now link \`https://productsear.ch/api/search?q=llm\`, \`format=md\` note) so an LLM knows the next steps.
 
 ## Why does it matter?
 
-LLM collaboration is first-class on this site: a URL pasted into a chat and the same URL opened by a human must each get its ideal format — without separate routes, duplicated content, or drifting copies. It makes every llms surface self-serve: fetch, digest, act.
+LLM collaboration is first-class on this site: a URL pasted into a chat and the same URL opened by a human must each get their ideal format — without separate routes, duplicated content, or drifting copies. It makes every llms surface self-serve: fetch, digest, act.
 
 ## Key rules / properties
 
-- Negotiation lives in \`wantsRawMarkdown()\` (\`src/lib/server/llms.ts\`): requires \`view=llm\`; \`raw=1\` forces raw; otherwise raw iff \`Accept\` does not include \`text/html\`.
+- Negotiation lives in \`wantsRawMarkdown()\` (\`src/lib/server/llms.ts\`): requires \`view=llm\`; \`raw=1\` forces raw; **user-agent match forces raw (2026-11-06)** — \`MARKDOWN_USER_AGENTS\` covers known LLM/agent UAs (ChatGPT, Claude, Perplexity, GPTBot, …) plus CLI/script clients (curl, wget, python, httpx, …) *even when they send \`Accept: text/html\`* (many LLM fetchers mimic browsers); otherwise raw iff \`Accept\` lacks \`text/html\`. Real browser UAs never match, so the humans|llms tab switch is unaffected.
 - Raw responses carry \`Content-Type: text/markdown; charset=utf-8\` and \`Cache-Control: no-store\`.
-- \`llmMarkdown()\` in \`llms.ts\` is the router: each llm surface (search, archive, compendium index/group) must register a builder there, or fetchers silently get the HTML page.
-- Never intercept SvelteKit data requests: the hook must early-return \`resolve(event)\` when \`event.isDataRequest\` — the client router normalizes \`event.url\` to the route for \`__data.json\` fetches, so a \`?view=llm\` tab switch looks like the page; answering it with markdown crashes the router (prod 500, fixed 2026-11-01). See the data-request learning.
+- \`llmMarkdown()\` in \`llms.ts\` is the router: each llm surface (search, archive, collections index/group) must register a builder there, or fetchers silently get the HTML page.
+- Never intercept SvelteKit data requests: the hook must early-return \`resolve(event)\` when \`event.isDataRequest\` — answering a \`__data.json\` fetch with markdown crashes the client router (prod 500, fixed 2026-11-01).
 - Markdown may echo user input (search query) → builders must HTML-escape echoes; markup itself is server-owned, so no sanitizer (per the sanitizer rule).
-- Preamble is instructions, not just data: shortlist → verify URLs → search deeper via API → browse archetypes → decide per candidate.
+- The search API also speaks markdown directly: \`GET /api/search?q=…&format=md\` or \`Accept: text/markdown\` (see [api-search-endpoint](../entities/api-search-endpoint.md)); JSON stays the default.
+- Preamble is instructions, not just data: **search the API (top section)** → shortlist → verify URLs → browse archetypes → decide per candidate.
 
 ## Relationships
 
 - [url-driven-search-state](./url-driven-search-state.md) — the view/state stays in the URL; only the representation is negotiated
 - [llmdoc-component](../entities/llmdoc-component.md) — the browser-side renderer of the same markdown
-- [compendium-pages](../entities/compendium-pages.md) — archetype pages ship both faces under this contract
+- [collections-pages](../entities/compendium-pages.md) — archetype pages ship both faces under this contract
+- [api-search-endpoint](../entities/api-search-endpoint.md) — the endpoint the preamble advertises; also serves markdown
 - Decision: "Dual-view surfaces: humans | llms tabs with ?view=llm on every route" — this mechanism implements and extends that decision
 
 ## Source
 
 - \`src/hooks.server.ts\` — the \`handle\` intercept performing the negotiation
-- \`src/lib/server/llms.ts\` — \`wantsRawMarkdown()\`, \`llmMarkdown()\` router, raw \`Response\` builder
-- \`src/lib/server/llmview.ts\` — markdown builders + instruction preamble
+- \`src/lib/server/llms.ts\` — \`wantsRawMarkdown()\`, \`MARKDOWN_USER_AGENTS\`, \`llmMarkdown()\` router, raw \`Response\` builder
+- \`src/lib/server/llmview.ts\` — markdown builders + instruction preamble (\`searchApiMd()\` for the API's markdown face)
 `,
   "pages/concepts/url-driven-search-state.md": `---
 type: Concept
@@ -2610,6 +2782,43 @@ The homepage search input is not component state — it is **derived from URL pa
 
 - \`src/routes/+page.svelte\` — derives \`q\`/\`mode\` from URL, owns the sync/push logic (lines ~35–90)
 `,
+  "pages/entities/admin-console-admin.md": `---
+type: Entity
+title: Admin console (/admin)
+description: What it is
+tags: [admin, auth, better-auth, console]
+timestamp: "2026-11-06T14:18:37.245Z"
+---
+
+# Admin console (/admin)
+
+## What it is
+
+\`/admin\` — the authenticated platform console of productsear.ch ("platform console" in the UI), for managing extensions, agents, settings, and feature flags. Entry point is the \`ShieldCogCorner\` icon in the site header (auth required to get in).
+
+## Details
+
+- **Location**: \`src/routes/(admin)/admin/*\` (guarded pages) and \`src/routes/(auth)/admin/login/\` (sign-in/sign-up, outside the guard so it can't loop)
+- **Auth**: better-auth 1.7.18 email+password. Server instance \`src/lib/server/auth.ts\`; catch-all handler \`src/routes/api/auth/[...all]/+server.ts\` (GET/POST \`/api/auth/*\`); browser client \`src/lib/auth-client.ts\` (better-auth/svelte)
+- **Admin gate**: \`ADMIN_EMAILS\` env (comma-separated allowlist). Sign-up is rejected server-side via a better-auth \`before\` hook for non-allowlisted emails; page loads are guarded by \`(admin)/admin/+layout.server.ts\`, and every form action re-guards itself via \`requireAdmin()\` in \`src/lib/server/admin-guard.ts\` (actions can be POSTed without a load)
+- **DB tables** ([corpus-enrichment-pipeline-sync-crawl-analyze](./corpus-enrichment-pipeline-sync-crawl-analyze.md) schema te9_dev): \`auth_user\`, \`auth_account\`, \`auth_session\`, \`auth_verification\` (better-auth, prefix \`auth_\`, model-name mapping via drizzleAdapter) + app-owned \`admin_extensions\`, \`admin_agents\`, \`admin_settings\`, \`admin_features\` (multi-entry in \`src/lib/server/db/admin-schema.ts\`, re-exported from \`db/index.ts\`)
+- **Migration**: \`scripts/migration-admin.sql\` (idempotent, seeds 3 flags + 2 settings), applied via the reusable \`scripts/run-sql.ts\` runner (dry-run = transaction rollback, \`--commit\` to persist). Undo: \`scripts/rollback-migration-admin.sql\`
+- **Section routes**: \`/admin\` (dashboard: corpus vitals + counts), \`/admin/extensions\`, \`/admin/agents\`, \`/admin/settings\`, \`/admin/features\` — all SvelteKit form actions (\`?/create\`, \`?/toggle|update|upsert\`, \`?/delete\`) with \`use:enhance\`
+- **Read helpers**: \`src/lib/server/admin-settings.ts\` — \`getSetting(key)\` and \`getFlag(key)\` with a 30s in-memory cache + \`clearSettingsCache()\` (called after every admin write) for production code that wants to consume console-managed values
+- **Icon**: \`src/lib/components/icons/ShieldCogCorner.svelte\` — NOT an upstream lucide icon (absent in lucide-svelte 1.0.1); composed from lucide's own shield + cog path data so it matches the lucide stroke style
+- **Env**: \`BETTER_AUTH_SECRET\` (required), \`ADMIN_EMAILS\`, \`BETTER_AUTH_URL\` (optional), \`TRUSTED_ORIGINS\` (extra, comma-separated). Local ports (localhost 3000/5173) are auto-allowed outside production
+
+## Gotchas that shaped this
+
+- adapter-node CSRF: production needs \`ORIGIN\` env set, else http-form POSTs are rejected as cross-site (url.origin defaults to https)
+- The shared postgres client now pins \`search_path: te9_dev,public\` (\`src/lib/server/db/index.ts\`) — required for drizzle's unqualified table names to hit the te9_dev schema
+- better-auth needs \`zod\` v4 (top-level) and \`@opentelemetry/api\` installed, or the built server chunk breaks at runtime
+
+## Related
+
+- [hybrid-search-via-reciprocal-rank-fusion](../concepts/hybrid-search-via-reciprocal-rank-fusion.md) — the search pipeline whose flags/settings the console manages
+- [remove-ask-mode-productsear-ch-becomes-search-only](../../decisions/remove-ask-mode-productsear-ch-becomes-search-only.md) — why the ai SDK deps could be dropped
+`,
   "pages/entities/api-ask-endpoint.md": `---
 type: Entity
 title: API ask endpoint
@@ -2648,8 +2857,8 @@ This is the "Ask" mode the user-facing UI exposes — natural-language Q&A over 
 type: Entity
 title: API search endpoint
 description: What is it?
-tags: [search, api, sveltekit]
-timestamp: "2026-07-03T14:42:17.796Z"
+tags: [search, api, sveltekit, llms-view]
+timestamp: "2026-11-06T00:00:00.000Z"
 ---
 
 # API search endpoint
@@ -2657,24 +2866,26 @@ timestamp: "2026-07-03T14:42:17.796Z"
 ## What is it?
 \`GET /api/search\` — the hybrid semantic search endpoint for bookmarks. Fuses pgvector cosine similarity with Postgres \`ts_rank\` full-text via Reciprocal Rank Fusion in one SQL query, then returns ranked bookmark hits with snippet/analysis context.
 
-[Concrete thing — the SvelteKit \`+server.ts\` route.]
-
 ## Why it matters
-This is the primary read path users hit when searching bookmarks. It is the runtime realization of the [hybrid-semantic-search-stack-pgvector-tsvector](../../decisions/hybrid-semantic-search-stack-pgvector-tsvector.md) decision.
+This is the primary read path users hit when searching bookmarks. It is the runtime realization of the [hybrid-search-via-reciprocal-rank-fusion](../concepts/hybrid-search-via-reciprocal-rank-fusion.md) decision, and — since 2026-11-06 — the endpoint advertised to every LLM at the top of each \`?view=llm\` document.
 
 ## Details
 - **Location**: \`src/routes/api/search/+server.ts\`
-- **Interface**: \`GET ?q=<query>\` → JSON list of ranked bookmark results.
-- **Depends on**: \`src/lib/server/search.ts\` (RRF query), \`src/lib/server/db/index.ts\` (Drizzle/postgres-js), OpenAI embeddings client.
-- **Configuration**: requires \`OPENAI_API_KEY\` to embed the query; without it, returns a clear "OPENAI_API_KEY is not set" error (wiring verified end-to-end, live run gated on a key).
+- **Interface**: \`GET ?q=<query>&page=N\` → JSON (default) or markdown.
+  - JSON (default): \`{ query, tookMs, count, total, page, pageSize, results[] }\` with \`rerankScore\` per result.
+  - **Markdown output** (added 2026-11-06): \`?format=md\` or request header \`Accept: text/markdown\` → \`text/markdown; charset=utf-8\`, same rows as [llm-content-negotiation](../concepts/llm-content-negotiation.md) search view minus the full preamble — built by \`searchApiMd()\` in \`src/lib/server/llmview.ts\`. No API key, no auth.
+- **Query style**: 2–4 word noun phrases ("url to markdown", "ocr pdf"); \`total\` is the honest count above the relevance floor (0.45).
+- **Depends on**: \`src/lib/server/search.ts\` (pool-then-rerank), \`src/lib/server/db/index.ts\` (Drizzle/postgres-js), Voyage embeddings + rerank.
+- **Configuration**: \`VOYAGE_API_KEY\` for embedding/reranking.
 
 ## Relationships
 - [hybrid-search-via-reciprocal-rank-fusion](../concepts/hybrid-search-via-reciprocal-rank-fusion.md) — the fusion concept it implements.
-- [api-ask-endpoint](./api-ask-endpoint.md) — sibling RAG endpoint that reuses the same search.
-- [postgres-js-db-execute-returns-rows-directly-not](../../learnings/postgres-js-db-execute-returns-rows-directly-not.md) — gotcha fixed in this file.
+- [llm-content-negotiation](../concepts/llm-content-negotiation.md) — markdown output mirrors the ?view=llm search format.
+- [skill-doc](../../learnings/llm-usage-skill-lives-outside-the-repo-e-skills.md) — usage guide served at \`/skill.md\` documents this endpoint.
 
 ## Lifecycle
 - First added: 2026-07-03 (initial project scaffold).
+- 2026-11-06: markdown output (\`format=md\` / \`Accept: text/markdown\`) + \`searchApiMd()\` builder; advertised as a try-it-now link in every \`?view=llm\` preamble (commit fb62e85).
 `,
   "pages/entities/archive-page.md": `---
 type: Entity
@@ -2893,6 +3104,10 @@ _Concrete named things will be listed here._
 - [Embed-bookmarks backfill script](./embed-bookmarks-backfill-script.md) - What is it?
 - [Daily embed-new-bookmarks workflow](./daily-embed-new-bookmarks-workflow.md) - \`.github/workflows/embed-new-bookmarks.yml\` — a GitHub Actions scheduled workflow that keeps the corpus enriched nightly. **Since 2026-11-06 it runs the full en
 - [Corpus enrichment pipeline (sync/crawl/analyze)](./corpus-enrichment-pipeline-sync-crawl-analyze.md) - What is it?
+- [Utobo sending-domain DNS records](./utobo-sending-domain-dns-records.md) - The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Wri
+- [utobo Email (transactional email service)](./utobo-email-transactional-email-service.md) - **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS
+- [utobo email platform](./utobo-email-platform.md) - utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
+- [Admin console (/admin)](./admin-console-admin.md) - What it is
 `,
   "pages/entities/infotip-component.md": `---
 type: Entity
@@ -3080,6 +3295,190 @@ Makes "why didn't search find X" a 2-minute answer instead of an archaeology dig
 
 - First added: 2026-11-01, during the MotionClone rerank-miss diagnosis (commit \`decb723\`).
 `,
+  "pages/entities/utobo-email-platform.md": `---
+type: Entity
+title: utobo email platform
+description: "utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a"
+tags: [email, utobo, saas, transactional-email, marketing, infrastructure]
+timestamp: "2026-11-06T13:41:10.653Z"
+---
+
+# utobo email platform
+
+utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and automations on one platform and one bill. productsear.ch is a **verified sending domain** there since 2026-11-06.
+
+## What is it?
+
+An all-in-one email platform marketed as "the email platform built for startups. API, marketing, and automation in one tool." It combines developer-facing transactional sending (email API / SMTP with custom sending domains) and marketer-facing tools (audience management, newsletters, campaigns, automations) in one workspace — "one workspace and one contact list for developers and marketers." It also ships an AI assistant (**Draper**, "your AI employee") plus an **AI Writer** for drafting emails. (utobo Inc. also sells a separate store/commerce product line — "Sell online with a store, grow with email" — not in use by this project.)
+
+## Why it matters?
+
+It is the only way productsear.ch sends email (verification/delivery mail today, marketing later). This page is the capability inventory: when the project needs a new email capability (e.g. user-facing newsletters, drip sequences, bounce handling), check here **before** evaluating other providers — the sending-domain plumbing already exists.
+
+## Feature inventory (as of 2026-11-06, from utobo.com)
+
+- **Transactional email / Email API** — programmatic sending from verified custom sending domains; the channel productsear.ch currently uses. Plans "from $9/mo" for transactional only; "all three channels" (transactional + newsletters + campaigns/automations) from $42.30/mo.
+- **Multiple custom sending domains** — "Your own domains", each with its own DKIM and SPF. Our plan covers 50 sending domains (4 in use per the setup decision).
+- **Newsletters, campaigns, automations** — broadcast/one-off sends, campaigns, and automated sequences; the marketing surface we have NOT yet used.
+- **Audience management** — "Lists, tags and segments": group contacts the way you send, one shared contact list across the workspace.
+- **Deliverability tooling** — **Domain health score** and a single place to "Check SPF, DKIM and DMARC" — directly useful for the DMARC-enforcement follow-up owed on this domain.
+- **Automatic suppression** — "Bounces and complaints removed for you"; hard bounces and spam complaints are suppressed automatically.
+- **Inbound email** — our MX points at \`mx.inbound.utobo.com\`, so utobo also receives mail for the domain (e.g. \`dmarc@productsear.ch\` DMARC reports).
+- **Draper (AI employee) + AI Writer** — AI drafts campaign copy and proposes sends (e.g. win-back drafts: "212 customers haven't ordered in 90 days. I drafted a win-back email… Send Tuesday at 10 AM?").
+
+## Details
+
+- **Location**: external service — https://utobo.com ; credentials/account are NOT in the repo
+- **Integration surface for this project**: the four DNS records ([utobo-sending-domain-dns-records](./utobo-sending-domain-dns-records.md)) plus utobo-side sending via the verified \`productsear.ch\` domain; no app code depends on utobo yet
+- **Configuration**: sending-domain DNS must stay in place (DKIM TXT, \`send\` CNAME, \`_dmarc\`, inbound MX) or sending/receiving breaks
+- **Known follow-up**: DMARC is \`p=none\` (monitor-only) — see the decision; use utobo's domain-health/DMARC checks while proving sending, then restore \`p=quarantine\` → \`p=reject\`
+
+## Relationships
+
+- [utobo-sending-domain-dns-records](./utobo-sending-domain-dns-records.md) — the DNS contract that makes productsear.ch a verified sending domain
+- [set-up-utobo-as-transactional-email-sender-for-productsear-c](../../decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — why utobo was chosen and why DMARC sits at \`p=none\`
+- [verify-godaddy-dns-writes-by-polling-the-authoritative-names](../../learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — verification method used during setup
+
+## Lifecycle
+
+- First added: 2026-11-06 — sending domain verified after the four DNS records went live; this feature-inventory page requested by the user the same day.
+- Not yet used: newsletters/campaigns/automations/Draper — candidates if the project ever needs outbound marketing email.
+
+## Source
+
+- https://utobo.com/ — homepage scrape 2026-11-06 (titles, feature headings, FAQ, pricing line)
+- [utobo-sending-domain-dns-records](./utobo-sending-domain-dns-records.md) — the live GoDaddy record set proving the integration
+`,
+  "pages/entities/utobo-email-transactional-email-service.md": `---
+type: Entity
+title: utobo Email (transactional email service)
+description: **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS 
+tags: [email, utobo, api, smtp, webhooks, transactional-email, infrastructure]
+timestamp: "2026-11-06T13:39:59.486Z"
+---
+
+# utobo Email (transactional email service)
+
+**utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS SES. Accounts live at \`email.utobo.com\`; docs at \`https://utobo.com/email/docs\`. The productsear.ch sending domain was **verified on 2026-11-06** (see [the utobo sending-domain decision](../../decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) for the DNS contract and the DMARC p=none tradeoff). Any server code that sends email from this project should use this service.
+
+## Details
+
+- **Service**: utobo Email (utobo.com) — REST API + SMTP relay + dashboard (campaigns, sequences, contacts)
+- **Base URL**: \`https://api.email.utobo.com\` (HTTPS only; legacy path \`/functions/v1/send-email\` still works)
+- **Auth**: \`Authorization: Bearer ut_live_…\` — keys are \`ut_live_\` + 64 hex chars, shown once at creation. Store as \`UTOBO_EMAIL_API_KEY\` env var. Key permissions: **Send only** (production) vs **Full access** (contacts/lists/domains admin).
+- **Node SDK**: \`npm install utobo-email\` → \`new UtoboEmail()\` reads \`UTOBO_EMAIL_API_KEY\` from env. Returns \`{ data, error }\` discriminated union (no try/catch needed). Full TS types exported. Optional \`@react-email/render\` peer dep lets you pass \`react:\` components instead of \`html:\`.
+- **Also official SDKs for**: Python (\`pip install utobo-email\`, note \`from_\` param), Ruby, Go (\`github.com/myutobo/utobo-email-go\`), PHP (Guzzle/cURL).
+
+### REST API surface
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| \`/v1/emails\` | POST | Send email. \`from\` (\`Name <addr>\`), \`to\`/\`cc\`/\`bcc\` (≤50 total), \`subject\`, \`html\` xor \`text\`, \`reply_to\`, \`headers\` (object), \`attachments\` (base64 \`{filename, content, contentType}\`). Returns \`{ id: UUID, message }\`. |
+| \`/v1/emails/:id\` | GET | Delivery status: \`status\` = \`sent\` \\| \`failed\`, plus \`ses_message_id\`, \`created_at\`. Org-scoped (other orgs' ids → 404). |
+| \`/functions/v1/manage-contacts\` | POST | \`action\`: \`unsubscribe\` (suppresses; idempotent) \\| \`resubscribe\` \\| \`delete\` (erases, does NOT suppress) \\| \`get\`. Unsubscribe stops campaigns/sequences but not transactional mail. |
+| \`/functions/v1/manage-sequence\` | POST | Dashboard-built sequences; \`action\`: \`list\` \\| \`get\` \\| \`enroll\` \\| \`enroll_list\` \\| \`unenroll\` (needs \`sequence_id\` + \`emails[]\`). Enrolling twice is a no-op; unenroll cancels pending steps. Scope: \`sequences:write\`. |
+| \`/functions/v1/manage-received\` | POST | Inbound mail readout (MX \`@\` → \`mx.inbound.utobo.com\` is already set): \`list\` (limit ≤100, \`before\` cursor, \`unread_only\`) \\| \`get\` \\| \`attachment\` (id + 0-based \`index\` → raw bytes). Scope: \`inbox:read\`. Subscribe to \`email.received\` webhook (metadata-only payload) first. |
+
+### SMTP relay
+
+- Host \`smtp.mail.utobo.com\`, port **587 STARTTLS** (recommended) or 465 SSL
+- Username: literal \`apikey\` — Password: the API key
+- Same verified-domain + 50-recipient rules as the API; suppressed recipients dropped automatically
+
+### Webhooks
+
+- Add endpoint in dashboard (Account → Webhooks) or via \`manage-webhooks\` (scope \`webhooks:manage\`)
+- Events: \`contact.*\` (created/updated/deleted/added_to_list/removed_from_list/unsubscribed/suppressed), \`email.*\` (sent/delivered/opened/clicked/bounced/complained), \`campaign.completed\`, \`sequence.enrolled\`, \`email.received\` (inbound)
+- Envelope: \`{ id, type, created_at, data }\`; headers \`x-utobo-event\`, \`x-utobo-delivery\`, \`x-utobo-timestamp\` (ms epoch), \`x-utobo-signature\` (\`sha256=<hex>\`)
+- **Signature check**: HMAC-SHA256 over \`timestamp + "." + rawBody\` with the \`whsec_…\` signing secret; reject if timestamp >5 min old; constant-time compare
+- Respond 2xx within 10 s. Retries ×6 with backoff 1m→5m→30m→2h→6h→24h; **auto-disabled after 50 consecutive failures** (one success resets)
+
+### Rate limits & sending caps
+
+- 100 req/min per key · 500 req/min per org · 10 req/min per unauthenticated IP
+- **Daily send cap (warm-up, per recipient, resets 00:00 UTC)**: day 1: 1,000 → days 2–4: 5,000 → days 5–8: 25,000 → days 9–15: 100,000 → day 16+: 250,000/day
+- Over-cap: HTTP 429 with \`name: "daily_cap"\`, \`retry_after\`, and a \`Retry-After\` header (SMTP: temporary 451)
+
+### Error model — branch on \`name\`, never on message text
+
+| name | Status | Meaning |
+|---|---|---|
+| \`validation_error\` | 400 | Missing/malformed field |
+| \`unauthorized\` | 401 | Key missing/invalid/revoked |
+| \`insufficient_scope\` | 403 | Key lacks required scope |
+| \`quota_exceeded\` | 403 | Monthly allowance used up |
+| \`sending_paused\` | 403 | Account paused/under review |
+| \`domain_not_verified\` | 422 | \`from\` domain unverified |
+| \`all_recipients_suppressed\` | 422 | Every recipient suppressed |
+| \`rate_limit_exceeded\` | 429 | Retry per \`Retry-After\` |
+| \`daily_cap\` | 429 | Warm-up cap hit; retry at next 00:00 UTC |
+| \`idempotency_conflict\` | 409 | Same \`Idempotency-Key\`, different payload |
+| \`internal_error\` | 500 | Transient — retry after a few seconds |
+
+Dashboard-only endpoints (domains, API keys) return plain \`{ "error": "…" }\` without \`name\`.
+
+### Gotchas
+
+- Bulk sending belongs in dashboard **Campaigns**, not the API
+- Hard bounces: remove immediately (keep bounce rate <1.5% or SES throttles you); soft bounces retry after 24–48h, treat 3–5 as hard. Bounce log lives in dashboard → Delivery Issues
+- A send may carry exactly **one** From address
+- Never expose keys client-side; one key per environment (dev/staging/prod), send-only for prod
+
+### Configuration for this project
+
+- Env var: \`UTOBO_EMAIL_API_KEY\` (add to \`.env\` when first integrating)
+- DNS contract (all live at GoDaddy, verified 2026-11-06): DKIM TXT \`utobozgb9pzudt3k1._domainkey\`, CNAME \`send\` → \`send.utobo.com\` (SPF), TXT \`_dmarc\` (currently \`p=none\` — enforcement follow-up owed), MX \`@\` → \`mx.inbound.utobo.com\` (receiving)
+- Plan: 50 sending domains, 4 in use
+
+- [the utobo sending-domain decision](../../decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — the ADR covering why utobo was chosen and the DMARC downgrade tradeoff
+
+## Lifecycle
+
+- First added: 2026-11-06 — sending domain verified (DKIM/CNAME/DMARC/MX live on GoDaddy)
+- Next: integrate API key + a send-only key when first transactional email feature ships (e.g., verification/delivery mail); revisit DMARC enforcement once sending is proven healthy
+`,
+  "pages/entities/utobo-sending-domain-dns-records.md": `---
+type: Entity
+title: Utobo sending-domain DNS records
+description: The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Wri
+tags: [email, dns, utobo, godaddy, dkim, spf, dmarc]
+timestamp: "2026-11-06T13:37:29.355Z"
+---
+
+# Utobo sending-domain DNS records
+
+The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Written and verified live on 2026-11-06 via the GoDaddy Domains API.
+
+## What is it?
+
+A concrete DNS configuration surface owned by the domain (not the app repo): the utobo onboarding contract for sending mail from \`@productsear.ch\` addresses and receiving inbound mail. Any future session touching the domain's zone must treat these records as load-bearing for email delivery.
+
+## Details
+
+- **Location**: GoDaddy DNS zone for \`productsear.ch\` (managed via GoDaddy Domains API; keys in \`E:/productsear.ch/.env\`)
+- **Records**:
+  - \`TXT utobozgb9pzudt3k1._domainkey\` → DKIM public key (234 chars, single string)
+  - \`CNAME send\` → \`send.utobo.com\`
+  - \`TXT _dmarc\` → \`v=DMARC1; p=none; rua=mailto:dmarc@productsear.ch\` — **downgraded from \`p=reject\`**; policy rationale and planned path back to enforcement in the linked decision
+  - \`MX @\` → \`mx.inbound.utobo.com\`, priority 10 (zone previously had no MX)
+- **Verification**: poll authoritative nameservers directly (\`dig @ns59.domaincontrol.com ...\`) — instant, cache-free state. Re-usable poll script kept at \`.work/poll-mail-dns.mjs\` (scratch, gitignored).
+- **Untouched**: website records (A \`@\`, \`www\` → Railway).
+
+## Relationships
+
+- [set-up-utobo-as-transactional-email-sender-for-productsear-c](../../decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — the decision recording why these records exist and why DMARC is \`p=none\`
+- [verify-godaddy-dns-writes-by-polling-the-authoritative-names](../../learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — the verification method used to confirm the records
+
+## Lifecycle
+
+- First added: 2026-11-06 — utobo sending-domain setup executed via GoDaddy API; all four records verified on first authoritative poll.
+- Follow-up owed: restore DMARC enforcement (\`p=quarantine\`/\`p=reject\`) once utobo sending is proven healthy.
+
+## Source
+
+- GoDaddy DNS zone for \`productsear.ch\` — the live record set
+- \`.work/poll-mail-dns.mjs\` — the poll script used for verification
+`,
   "pages/entities/waveloader-component.md": `---
 type: Entity
 title: WaveLoader component
@@ -3152,6 +3551,10 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [digital-products-repos activity split CSVs](./artifacts/digital-products-repos-activity-split-csvs.md) — What is it?
 - [insert-missing-repos-active-30d.sql](./artifacts/insert-missing-repos-active-30d-sql.md) — What is it?
 - [Corpus enrichment pipeline (sync/crawl/analyze)](./entities/corpus-enrichment-pipeline-sync-crawl-analyze.md) — What is it?
+- [Utobo sending-domain DNS records](./entities/utobo-sending-domain-dns-records.md) — The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Wri
+- [utobo Email (transactional email service)](./entities/utobo-email-transactional-email-service.md) — **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS
+- [utobo email platform](./entities/utobo-email-platform.md) — utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
+- [Admin console (/admin)](./entities/admin-console-admin.md) — What it is
 `,
   "pages/TEMPLATES.md": `---
 type: Concept
@@ -3224,6 +3627,26 @@ a stable structure so pages are consistent, skimmable, and well-linked.
 ## Source
 - Generated from: [what data, process, or session produced it]
 \`\`\`
+`,
+  "rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md": `---
+type: Rule
+title: Attribute build failures before fixing; never touch a concurrent session's in-progress work
+description: "**Guideline:** When a whole-project check (\`npm run build\`, typecheck) fails in this repo, attribute the errors **before** treating your own work as broken — an"
+tags: [multi-session, build, verification, collaboration, vite]
+timestamp: "2026-11-06T13:55:47.391Z"
+---
+
+# Attribute build failures before fixing; never touch a concurrent session's in-progress work
+
+**Guideline:** When a whole-project check (\`npm run build\`, typecheck) fails in this repo, attribute the errors **before** treating your own work as broken — and never touch a concurrent session's half-done code to unbreak the build.
+
+This repo is regularly worked by multiple concurrent sessions (orca/foreman siblings, parallel pi sessions). A failure in files you didn't change — e.g. an \`adminExtensions\` shorthand-property bug inside another session's in-progress \`(admin)\` route work — is not yours to fix:
+
+- **Diagnose ownership first**: map failing file paths against your own diff (\`git status\`, your touched-file list) before diagnosing your code.
+- **Never edit, fix, or revert another session's WIP** — you collide with its author mid-write and can destroy in-progress intent. Leave it alone and let its owner finish.
+- **Verify your own surfaces via the dev server**: the SvelteKit/Vite dev server compiles lazily per-request, so routes you own can be exercised in dev even while the full production build fails on unrelated WIP. Defer the "full build green" check until the other session's work lands.
+
+Rationale/evidence: 2026-11-06 — build failed with an \`adminExtensions\` shorthand bug in \`(admin)\` routes owned by a concurrent session; the correct move was to decline touching it and verify own surfaces via the lazily-compiling dev server.
 `,
   "rules/check-the-index-before-committing-use-pathspec-scoped-commit.md": `---
 type: Rule
@@ -3358,6 +3781,8 @@ _Reusable heuristics, guidelines, and conventions will be listed here._
 - [Validate generated SQL inserts with a rollback-wrapped dry run against the live DB](./validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r.md) - **Guideline:** Before declaring a generated/hand-written INSERT or migration SQL file ready to run, execute it against the real database inside a single \`BEGIN;
 - [Prepare and dry-run the rollback script before generating derived rows](./prepare-and-dry-run-the-rollback-script-before-generating-de.md) - **Guideline:** When a bulk data mutation against \`te9_dev\` is committed for real (no rollback wrapper), write and dry-run-verify the undo script **before** gene
 - [Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes](./check-the-index-before-committing-use-pathspec-scoped-commit.md) - **Guideline:** Before running \`git commit\` in any repo — especially auxiliary/external repos like \`E:\\skills.te9.dev\` whose indexes accumulate unrelated pre-sta
+- [Attribute build failures before fixing; never touch a concurrent session's in-progress work](./attribute-build-failures-before-fixing-never-touch-a-concurr.md) - **Guideline:** When a whole-project check (\`npm run build\`, typecheck) fails in this repo, attribute the errors **before** treating your own work as broken — an
+- [Verify the serving process on a test port before trusting smoke tests](./verify-the-serving-process-on-a-test-port-before-trusting-sm.md) - **Guideline:** After any restart of a local \`node build\` preview server, verify what actually serves the test port \`netstat -ano | findstr :<port>\` (and, when a
 `,
   "rules/instrument-grade-design-principles-avoid-banned.md": `---
 type: Rule
@@ -3603,6 +4028,20 @@ What the dry run proves with zero side effects:
 
 When it applies: any time SQL is generated by a script or written by hand for the Railway \`te9_dev\` database — ingest files, migrations, backfills. Cheap, fast, and the only failure mode is forgetting the ROLLBACK. See [[insert-missing-repos-active-30d-sql]] for the applied example.
 `,
+  "rules/verify-the-serving-process-on-a-test-port-before-trusting-sm.md": `---
+type: Rule
+title: Verify the serving process on a test port before trusting smoke tests
+description: "**Guideline:** After any restart of a local \`node build\` preview server, verify what actually serves the test port \`netstat -ano | findstr :<port>\` (and, when a"
+tags: [testing, ports, processes, debugging]
+timestamp: "2026-11-06T14:18:55.035Z"
+---
+
+# Verify the serving process on a test port before trusting smoke tests
+
+**Guideline:** After any restart of a local \`node build\` preview server, verify what actually serves the test port \`netstat -ano | findstr :<port>\` (and, when a kill is needed, positively identify the PID's command line — \`node build\` — before \`taskkill //PID <pid> //T //F\`; use \`taskkill //PID\` escaping in Git Bash). Never assume the newly-spawned server is the one answering requests: a stale listener silently wins the bind and the new process dies with EADDRINUSE, making freshly built changes look absent or misattributed. Check the spawned server's log for \`EADDRINUSE\` before concluding anything about a test result.
+
+Applies to every local smoke-test / preview-server loop in this workspace.
+`,
 };
 
 var WIKI_PAGES = [
@@ -3626,6 +4065,7 @@ var WIKI_PAGES = [
   { path: "decisions/rename-compendium-to-collections-routes-moved-308-redirects.md", label: "Rename compendium to collections (routes moved, 308 redirects)", group: "Decisions" },
   { path: "decisions/repo-scan-pipeline-cheapest-first-phases-npm-pypi.md", label: "Repo-scan pipeline: cheapest-first phases; npm/PyPI registry lookups replace GitHub slug-guessing", group: "Decisions" },
   { path: "decisions/serve-the-llm-usage-guide-at-skill-md-and-distill.md", label: "Serve the LLM usage guide at /skill.md and distill it into the llms-view preamble", group: "Decisions" },
+  { path: "decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md", label: "Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)", group: "Decisions" },
   { path: "decisions/shift-visual-design-to-instrument-grade-precision.md", label: "Shift visual design to instrument-grade precision-tool system (OKLCH)", group: "Decisions" },
   { path: "decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md", label: "Store bookmark archetypes as multi-entry JSONB on an app-owned table", group: "Decisions" },
   { path: "decisions/use-plausible-for-privacy-friendly-site-analytics.md", label: "Use Plausible for privacy-friendly site analytics, wired in app.html", group: "Decisions" },
@@ -3636,15 +4076,18 @@ var WIKI_PAGES = [
   { path: "learnings/agentos-sdk-dev-is-a-light-warm-paper-theme-not.md", label: "agentos-sdk.dev is a light warm-paper theme, not dark", group: "Learnings" },
   { path: "learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md", label: "Analyzed metric 100%: analyzer fallback patch + what the metric actually counts", group: "Learnings" },
   { path: "learnings/await-dotenv-imports-anchor-env-path.md", label: "Await dotenv imports; anchor .env path", group: "Learnings" },
+  { path: "learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md", label: "better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed", group: "Learnings" },
   { path: "learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md", label: "Bookmark ingestion chain is gap-catching; archetypes classifier lives at src/lib/archetypes.ts", group: "Learnings" },
   { path: "learnings/bookmarks-table-is-a-read-only-mirror-the-raindrop.md", label: "bookmarks table is a read-only mirror — the Raindrop→DB sync lives outside this repo", group: "Learnings" },
   { path: "learnings/browserclaw-owns-ipv4-9222-harness-chrome-lands-on.md", label: "BrowserClaw owns IPv4 :9222; harness Chrome lands on IPv6 — discover CDP WS URL via curl, not undici fetch", group: "Learnings" },
   { path: "learnings/check-active-js-active-is-user-defined-as-pushed-within-30-d.md", label: "check-active.js: \"active\" is user-defined as pushed within 30 days; --resplit re-splits cached data without API calls", group: "Learnings" },
   { path: "learnings/corpus-schema-facts-raindrop-created-at-analysis.md", label: "Corpus schema facts: raindrop_created_at, analysis who/what/how/when fields, 1,320 messy categories", group: "Learnings" },
+  { path: "learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md", label: "Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only", group: "Learnings" },
   { path: "learnings/driving-html-video-nexu-io-headlessly-to-render-a.md", label: "Driving html-video (nexu-io) headlessly to render a product video", group: "Learnings" },
   { path: "learnings/explicit-outer-select-silently-drops-columns.md", label: "Explicit outer SELECT silently drops columns carried by CTE `scored.*`", group: "Learnings" },
   { path: "learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md", label: "External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first", group: "Learnings" },
   { path: "learnings/extracted-svelte-scoped-css-needs-scope-classes.md", label: "Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing", group: "Learnings" },
+  { path: "learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md", label: "Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed", group: "Learnings" },
   { path: "learnings/github-disables-scheduled-workflows-after-60-days.md", label: "GitHub disables scheduled workflows after 60 days without commits — cron runs don't count", group: "Learnings" },
   { path: "learnings/github-requires-workflow-scope-on-the-token-to.md", label: "GitHub requires `workflow` scope on the token to push commits touching `.github/workflows/`", group: "Learnings" },
   { path: "learnings/gold-accent-fails-wcag-aa-contrast-when-used-for.md", label: "Gold accent fails WCAG AA contrast when used for chip/tag text", group: "Learnings" },
@@ -3661,11 +4104,14 @@ var WIKI_PAGES = [
   { path: "learnings/postgres-fts-word-too-long-notice-for-2047-char.md", label: "Postgres FTS \"word too long\" NOTICE for >2047-char tokens is harmless", group: "Learnings" },
   { path: "learnings/postgres-js-db-execute-returns-rows-directly-not.md", label: "postgres-js db.execute() returns rows directly, not { rows }", group: "Learnings" },
   { path: "learnings/postgres-js-double-encodes-plain-strings-sent-to.md", label: "postgres-js double-encodes plain strings sent to jsonb — use sql.json()", group: "Learnings" },
+  { path: "learnings/production-runs-railway-commits-only-local-uncommitted-work-.md", label: "Production runs Railway commits only — local uncommitted work is invisible on the live site", group: "Learnings" },
   { path: "learnings/railpack-railway-build-driver-requires-a-start.md", label: "Railpack (Railway build driver) requires a start command", group: "Learnings" },
   { path: "learnings/raindrop-db-sync-runs-outside-this-repo-published.md", label: "Raindrop→DB sync runs outside this repo; published page count sums all collections", group: "Learnings" },
   { path: "learnings/relevance-floor-0-45-sits-exactly-in-the-measured.md", label: "Relevance floor 0.45 sits exactly in the measured gap between noise and matches", group: "Learnings" },
   { path: "learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md", label: "Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe", group: "Learnings" },
   { path: "learnings/skill-skill-md-description-must-quote-colons-to.md", label: "Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors", group: "Learnings" },
+  { path: "learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md", label: "Splitting npm dependency versions: direct dep for the new, pinned deps nest auto", group: "Learnings" },
+  { path: "learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md", label: "Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first", group: "Learnings" },
   { path: "learnings/svelte-5-values-captured-in-plain-consts-go-stale.md", label: "Svelte 5: values captured in plain consts go stale across param navigation — use $derived", group: "Learnings" },
   { path: "learnings/sveltekit-blocks-lib-server-imports-in-client.md", label: "SvelteKit blocks $lib/server imports in client components — even for pure-data modules", group: "Learnings" },
   { path: "learnings/sveltekit-dev-server-does-not-populate-process-env.md", label: "SvelteKit dev server does not populate process.env from .env — load dotenv yourself", group: "Learnings" },
@@ -3673,8 +4119,10 @@ var WIKI_PAGES = [
   { path: "learnings/synced-at-runs-4-days-ahead-of-wall-clock-sync.md", label: "synced_at runs ~4 days ahead of wall clock; sync rewrites all rows every pass", group: "Learnings" },
   { path: "learnings/transparent-cutout-qa-previews-don-t-honor-alpha.md", label: "Transparent-cutout QA: previews don't honor alpha — verify the alpha channel programmatically", group: "Learnings" },
   { path: "learnings/vercel-ai-sdk-v4-streamtext-exposes-async.md", label: "Vercel AI SDK v4 streamText exposes async textStream, not toReadableStream()", group: "Learnings" },
+  { path: "learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md", label: "Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly", group: "Learnings" },
   { path: "learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md", label: "Voyage free-tier rate limit (3 RPM / 10K TPM) blocks bulk backfill without a payment method", group: "Learnings" },
   { path: "learnings/voyage-rerank-2-5-lite-has-run-to-run-rank.md", label: "Voyage rerank-2.5-lite has run-to-run rank variance (±2 positions)", group: "Learnings" },
+  { path: "learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md", label: "wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs", group: "Learnings" },
   { path: "pages/TEMPLATES.md", label: "Page Templates", group: "Pages" },
   { path: "pages/index.md", label: "Pages", group: "Pages" },
   { path: "pages/artifacts/agentos-sdk-dev-design-system-extraction.md", label: "agentos-sdk.dev design system extraction", group: "Pages / Artifacts" },
@@ -3691,6 +4139,7 @@ var WIKI_PAGES = [
   { path: "pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md", label: "Hybrid search via Reciprocal Rank Fusion", group: "Pages / Concepts" },
   { path: "pages/concepts/llm-content-negotiation.md", label: "LLM content negotiation", group: "Pages / Concepts" },
   { path: "pages/concepts/url-driven-search-state.md", label: "URL-driven search state", group: "Pages / Concepts" },
+  { path: "pages/entities/admin-console-admin.md", label: "Admin console (/admin)", group: "Pages / Entities" },
   { path: "pages/entities/api-ask-endpoint.md", label: "API ask endpoint", group: "Pages / Entities" },
   { path: "pages/entities/api-search-endpoint.md", label: "API search endpoint", group: "Pages / Entities" },
   { path: "pages/entities/archive-page.md", label: "Archive page", group: "Pages / Entities" },
@@ -3706,7 +4155,11 @@ var WIKI_PAGES = [
   { path: "pages/entities/repo-scan-pipeline.md", label: "repo-scan pipeline", group: "Pages / Entities" },
   { path: "pages/entities/rerank-service.md", label: "Rerank service", group: "Pages / Entities" },
   { path: "pages/entities/search-diagnostics.md", label: "Search diagnostics", group: "Pages / Entities" },
+  { path: "pages/entities/utobo-email-transactional-email-service.md", label: "utobo Email (transactional email service)", group: "Pages / Entities" },
+  { path: "pages/entities/utobo-email-platform.md", label: "utobo email platform", group: "Pages / Entities" },
+  { path: "pages/entities/utobo-sending-domain-dns-records.md", label: "Utobo sending-domain DNS records", group: "Pages / Entities" },
   { path: "pages/entities/waveloader-component.md", label: "WaveLoader component", group: "Pages / Entities" },
+  { path: "rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md", label: "Attribute build failures before fixing; never touch a concurrent session's in-progress work", group: "Rules" },
   { path: "rules/check-the-index-before-committing-use-pathspec-scoped-commit.md", label: "Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes", group: "Rules" },
   { path: "rules/corroborate-product-repo-matches-with-multi-signal.md", label: "Corroborate product→repo matches with multi-signal checks; stars never validate homepage/npm links", group: "Rules" },
   { path: "rules/diagnose-search-misses-stage-by-stage-before.md", label: "Diagnose search misses stage-by-stage before tuning", group: "Rules" },
@@ -3722,5 +4175,6 @@ var WIKI_PAGES = [
   { path: "rules/sanitize-text-at-the-embedding-api-boundary.md", label: "Sanitize text at the embedding API boundary", group: "Rules" },
   { path: "rules/skip-html-sanitizer-for-server-owned-llm-output.md", label: "Skip HTML sanitizer for server-owned LLM output; add one if untrusted input flows in", group: "Rules" },
   { path: "rules/sweep-every-render-path-when-renaming-display.md", label: "Sweep every render path when renaming display vocabulary", group: "Rules" },
-  { path: "rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r.md", label: "Validate generated SQL inserts with a rollback-wrapped dry run against the live DB", group: "Rules" }
+  { path: "rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r.md", label: "Validate generated SQL inserts with a rollback-wrapped dry run against the live DB", group: "Rules" },
+  { path: "rules/verify-the-serving-process-on-a-test-port-before-trusting-sm.md", label: "Verify the serving process on a test port before trusting smoke tests", group: "Rules" }
 ];

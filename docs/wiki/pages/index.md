@@ -28,3 +28,9 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [digital-products-repos activity split CSVs](./artifacts/digital-products-repos-activity-split-csvs.md) — What is it?
 - [insert-missing-repos-active-30d.sql](./artifacts/insert-missing-repos-active-30d-sql.md) — What is it?
 - [Corpus enrichment pipeline (sync/crawl/analyze)](./entities/corpus-enrichment-pipeline-sync-crawl-analyze.md) — What is it?
+- [Utobo sending-domain DNS records](./entities/utobo-sending-domain-dns-records.md) — The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Wri
+- [utobo Email (transactional email service)](./entities/utobo-email-transactional-email-service.md) — **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS
+- [utobo email platform](./entities/utobo-email-platform.md) — utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
+- [Admin console (/admin)](./entities/admin-console-admin.md) — What it is
+- [The Drum feed](./entities/the-drum-feed.md) — **The Drum** is the official name (2026-11-06, brainstorm round 14) of productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of
+- [The Drum feed spec](./artifacts/the-drum-feed-spec.md) — **The Drum feed spec** — the formal, converged specification for [[entities/the-drum-feed]], committed at `docs/specs/the-drum.md` after the 15-turn diverge/con

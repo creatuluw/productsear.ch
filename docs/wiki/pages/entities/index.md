@@ -17,3 +17,8 @@ _Concrete named things will be listed here._
 - [Embed-bookmarks backfill script](./embed-bookmarks-backfill-script.md) - What is it?
 - [Daily embed-new-bookmarks workflow](./daily-embed-new-bookmarks-workflow.md) - `.github/workflows/embed-new-bookmarks.yml` — a GitHub Actions scheduled workflow that keeps the corpus enriched nightly. **Since 2026-11-06 it runs the full en
 - [Corpus enrichment pipeline (sync/crawl/analyze)](./corpus-enrichment-pipeline-sync-crawl-analyze.md) - What is it?
+- [Utobo sending-domain DNS records](./utobo-sending-domain-dns-records.md) - The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Wri
+- [utobo Email (transactional email service)](./utobo-email-transactional-email-service.md) - **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS
+- [utobo email platform](./utobo-email-platform.md) - utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
+- [Admin console (/admin)](./admin-console-admin.md) - What it is
+- [The Drum feed](./the-drum-feed.md) - **The Drum** is the official name (2026-11-06, brainstorm round 14) of productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of
