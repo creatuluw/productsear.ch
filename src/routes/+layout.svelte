@@ -34,7 +34,7 @@
 	// the feed link is a feature flag — admin can hide it (feed_settings.nav_enabled)
 	const surfaces = $derived([
 		{ href: '/', label: 'search' },
-		...(data?.feedNav !== false ? [{ href: '/feed', label: 'feed' }] : []),
+		...(data?.feedNav !== false ? [{ href: '/feed', label: 'feed · the drum' }] : []),
 		{ href: '/archive', label: 'listings' },
 		{ href: '/collections', label: 'collections' }
 	]);
