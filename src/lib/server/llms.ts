@@ -75,8 +75,12 @@ export async function llmMarkdown(url: URL): Promise<Response | null> {
 
 	if (pathname === '/archive') {
 		const page = Math.max(1, Number(url.searchParams.get('page') ?? 1) || 1);
+		const last30 = url.searchParams.get('last') === '30';
+		const dateFilter = last30
+			? sql`WHERE b.raindrop_created_at >= now() - interval '30 days'`
+			: sql``;
 		const totalRows = await db.execute<{ n: number }>(
-			sql`SELECT count(*)::int AS n FROM te9_dev.bookmarks`
+			sql`SELECT count(*)::int AS n FROM te9_dev.bookmarks b ${dateFilter}`
 		);
 		const total = totalRows[0].n;
 		const rows = (await db.execute<{
@@ -91,6 +95,7 @@ export async function llmMarkdown(url: URL): Promise<Response | null> {
 			FROM te9_dev.bookmarks b
 			LEFT JOIN te9_dev.bookmark_analysis a ON a.bookmark_id = b.id
 			LEFT JOIN te9_dev.bookmark_archetypes x ON x.bookmark_id = b.id
+			${dateFilter}
 			ORDER BY b.raindrop_created_at DESC NULLS LAST
 			LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}`)) as {
 			title: string;
@@ -100,7 +105,7 @@ export async function llmMarkdown(url: URL): Promise<Response | null> {
 			created: string | null;
 		}[];
 		const entries = rows.map((r) => ({ ...r, archetypes: (r.archetypes as string[]) ?? [] }));
-		return mdResponse(archiveLlmView(entries, page, total, PAGE_SIZE));
+		return mdResponse(archiveLlmView(entries, page, total, PAGE_SIZE, last30));
 	}
 
 	if (pathname === '/collections') {

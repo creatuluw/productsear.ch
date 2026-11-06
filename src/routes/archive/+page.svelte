@@ -24,20 +24,31 @@
 		window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 	}
 
-	const href = (p: number) => `/archive${p > 1 ? `?page=${p}` : ''}`;
+	const href = (p: number) => {
+		const qs = new URLSearchParams();
+		if (data.last30) qs.set('last', '30');
+		if (p > 1) qs.set('page', String(p));
+		const s = qs.toString();
+		return `/archive${s ? `?${s}` : ''}`;
+	};
 </script>
 
-<svelte:head><title>listings — productsear.ch</title></svelte:head>
+<svelte:head><title>{data.last30 ? 'listings · last 30 days' : 'listings'} — productsear.ch</title></svelte:head>
 
 {#if data.llm}
 		<LlmDoc md={data.llm} />
 	{:else}
-	<h1 class="sr-only">listings — all entries, newest first</h1>
+	<h1 class="sr-only">{data.last30 ? 'listings — created in Raindrop in the last 30 days' : 'listings — all entries, newest first'}</h1>
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
 		<div class="mb-8 flex items-baseline justify-between">
 			<h2 class="text-[2rem] font-semibold leading-none tracking-[-0.025em] text-ink">listings</h2>
 			<p class="font-mono text-[11px] text-ink-soft">
-				{data.total.toLocaleString()} entries · newest first
+				{#if data.last30}
+					{data.total.toLocaleString()} entries · created in Raindrop in the last 30 days · newest first
+					<a href="/archive" class="ml-2 rounded border border-ink/15 px-1.5 py-0.5 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">clear ×</a>
+				{:else}
+					{data.total.toLocaleString()} entries · newest first
+				{/if}
 			</p>
 		</div>
 

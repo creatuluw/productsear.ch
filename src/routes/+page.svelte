@@ -231,9 +231,14 @@
 			</div>
 			<div class="border-b border-ink/10 px-4 py-3 lg:border-b-0 lg:border-r">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
-					<InfoTip text="Listings added to the collection in the last 30 days.">last 30 days</InfoTip>
+					<InfoTip text="Listings created in Raindrop within the last 30 days — click to browse them with their creation dates.">last 30 days</InfoTip>
 				</dt>
-				<dd class="mt-1.5 font-mono text-base text-ink sm:text-lg">+{data.recentCount.toLocaleString()}</dd>
+				<dd class="mt-1.5 font-mono text-base sm:text-lg">
+					<a href="/archive?last=30" class="group/tile inline-flex items-baseline gap-1 font-mono text-ink transition-colors duration-150 hover:text-accent">
+						+{data.recentCount.toLocaleString()}
+						<span aria-hidden="true" class="text-[11px] text-ink-faint transition-transform duration-150 group-hover/tile:translate-x-0.5">→</span>
+					</a>
+				</dd>
 			</div>
 			<div class="border-b border-r border-ink/10 px-4 py-3 lg:border-b-0">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">

@@ -54,12 +54,15 @@ export function archiveLlmView(
 	rows: { title: string; url: string; category: string | null; archetypes: string[]; created: string | null }[],
 	page: number,
 	total: number,
-	pageSize: number
+	pageSize: number,
+	last30 = false
 ): string {
 	const head = [
-		llmPreamble('/archive'),
+		llmPreamble(last30 ? '/archive?last=30' : '/archive'),
 		'',
-		`# archive — all entries, newest first`,
+		last30
+			? '# archive — listings created in Raindrop in the last 30 days, newest first'
+			: '# archive — all entries, newest first',
 		'',
 		`${total} entries · page ${page} of ${Math.max(1, Math.ceil(total / pageSize))}`,
 		''
