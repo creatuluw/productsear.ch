@@ -59,6 +59,7 @@
 			digestError = err instanceof Error ? err.message : String(err);
 		}
 	}
+
 </script>
 
 <svelte:head><title>the drum · productsear.ch</title></svelte:head>
@@ -67,22 +68,32 @@
 	<LlmDoc md={data.llm} />
 {:else}
 	<div class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
-		<header class="mb-8">
+		<!-- header: three grouped regions — identity, readout, digest -->
+		<header class="max-w-[820px]">
 			<h1 class="text-[2rem] font-semibold tracking-[-0.025em] text-ink">the drum</h1>
-			<p class="mt-1 max-w-2xl text-sm text-ink-soft">
+			<p class="mt-1 max-w-2xl text-sm leading-relaxed text-ink-soft">
 				One draw every {due.cadenceHours}h — a feed of item types, each showing how a listing can change or
 				enrich a life and its ambitions. The corpus drafts, the drum keeps time.
 			</p>
-			<div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] text-ink-faint">
-				<span>next draw: <span class="text-ink-soft">{nextDrawLabel}</span></span>
-				<span>last draw: <span class="text-ink-soft">{fmtDate(due.lastDrawAt)} {fmtTime(due.lastDrawAt)}</span></span>
-				<span>next type: <span class="text-ink-soft">{due.nextTypeName ?? '—'}</span></span>
-				<a href="/feed/methodology" class="text-ink-faint underline decoration-ink/20 underline-offset-2 transition-colors hover:text-accent">
-					how this drum works
-				</a>
-			</div>
 
-			<form onsubmit={subscribeDigest} class="mt-4 flex max-w-md items-center gap-2">
+			<!-- readout: one bounded region, three divided cells (common region) -->
+			<dl class="mt-6 grid grid-cols-3 divide-x divide-ink/10 rounded-[var(--radius)] border border-ink/10 bg-surface">
+				<div class="px-4 py-3">
+					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">next draw</dt>
+					<dd class="mt-1 truncate font-mono text-[12px] text-ink" title={nextDrawLabel}>{nextDrawLabel}</dd>
+				</div>
+				<div class="px-4 py-3">
+					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">last draw</dt>
+					<dd class="mt-1 truncate font-mono text-[12px] text-ink">{fmtDate(due.lastDrawAt)} {fmtTime(due.lastDrawAt)}</dd>
+				</div>
+				<div class="px-4 py-3">
+					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">next type</dt>
+					<dd class="mt-1 truncate font-mono text-[12px] text-ink">{due.nextTypeName ?? '—'}</dd>
+				</div>
+			</dl>
+
+			<!-- digest opt-in + methodology: one balanced row (symmetry) -->
+			<form onsubmit={subscribeDigest} class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
 				{#if digestState === 'done'}
 					<p class="font-mono text-[11px] text-success">You're in — the next digest has your name on it.</p>
 				{:else}
@@ -90,89 +101,127 @@
 						type="email"
 						bind:value={digestEmail}
 						placeholder="you@ elsewhere — get the digest by email"
-						class="min-w-0 flex-1 rounded-full border border-ink/15 bg-canvas px-3 py-1.5 font-mono text-[12px] text-ink outline-none transition-colors placeholder:text-ink-faint/70 focus:border-accent"
+						class="min-w-0 flex-1 rounded-full border border-ink/15 bg-canvas px-4 py-1.5 font-mono text-[12px] text-ink outline-none transition-colors placeholder:text-ink-faint/70 focus:border-accent sm:max-w-xs"
 					/>
 					<button
 						type="submit"
 						disabled={digestState === 'sending' || !digestEmail.trim()}
-						class="shrink-0 rounded-full bg-ink px-3 py-1.5 font-mono text-[11px] font-semibold text-canvas transition-colors hover:bg-ink/80 disabled:opacity-40"
+						class="shrink-0 rounded-full bg-ink px-4 py-1.5 font-mono text-[11px] font-semibold text-canvas transition-colors hover:bg-ink/80 disabled:opacity-40"
 					>
 						{digestState === 'sending' ? '…' : 'get the digest'}
 					</button>
 				{/if}
+				<a href="/feed/methodology" class="ml-auto font-mono text-[11px] text-ink-faint underline decoration-ink/20 underline-offset-2 transition-colors hover:text-accent">
+					how this drum works
+				</a>
 			</form>
 			{#if digestState === 'error'}
 				<p class="mt-1 font-mono text-[11px] text-danger">{digestError}</p>
 			{/if}
 		</header>
 
-		{#if items.length === 0}
-			<div class="border-t border-ink/10 px-2 py-16 text-center font-mono text-[13px] text-ink-faint">
-				The drum hasn't drawn yet — the first items arrive with the next due draw.
-			</div>
-		{:else}
-			<ol class="border-t border-ink/10">
-				{#each items as item, i (item.id)}
-					<li
-						transition:fly={{ y: 8, duration: 180, delay: Math.min(i * 35, 280), easing: cubicOut }}
-						class="border-b border-ink/10 px-2 py-6 transition-colors duration-150 hover:bg-ink/[0.018]"
-					>
-						<div class="mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-							<span class="rounded-full border border-ink/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft">
-								{item.typeName}
-							</span>
-							<span class="font-mono text-[11px] text-ink-faint">{fmtDate(item.publishedAt ?? item.createdAt)}</span>
-						</div>
+		<!-- the stream: a continuity spine + bounded card regions -->
+		<div class="relative mt-10 max-w-[860px]">
+			<!-- the spine: the drum's timeline, one continuous thread -->
+			<div aria-hidden="true" class="absolute bottom-4 left-[5px] top-4 w-px bg-ink/15"></div>
 
-						{#if item.body.listing}
-							<a
-								href={`/listings/${item.body.listing.id}`}
-								class="text-lg font-medium tracking-tight text-ink transition-colors duration-150 hover:text-accent"
-							>
-								{item.body.headline}
-							</a>
-							{#if item.body.listing.domain}
-								<span class="ml-2 hidden font-mono text-[11px] text-ink-faint sm:inline">{item.body.listing.domain}</span>
-							{/if}
-						{:else}
-							<span class="text-lg font-medium tracking-tight text-ink">{item.body.headline}</span>
-						{/if}
-
-						{#if item.body.standfirst}
-							<p class="mt-1.5 max-w-3xl text-sm leading-relaxed text-ink-soft">{item.body.standfirst}</p>
-						{/if}
-
-						{#if item.body.items?.length}
-							<ul class="mt-3 max-w-3xl space-y-1 font-mono text-[12px] text-ink-soft">
-								{#each item.body.items as li, j (j)}
-									<li class="flex items-baseline gap-2">
-										<span class="shrink-0 text-accent">▸</span>
-										<span class="min-w-0">{li.label}{#if li.note}<span class="text-ink-faint"> — {li.note}</span>{/if}</span>
-									</li>
-								{/each}
-							</ul>
-						{/if}
-
-						{#each item.body.paragraphs ?? [] as p}
-							<p class="mt-2 max-w-3xl text-sm leading-relaxed text-ink-soft">{p}</p>
-						{/each}
-
-						{#if item.body.question}
-							<p class="mt-3 max-w-3xl font-mono text-[12px] text-accent">{item.body.question}</p>
-						{/if}
-
-						<a
-							href={bskyHref(item)}
-							target="_blank"
-							rel="noopener"
-							class="mt-3 inline-flex items-baseline gap-1.5 font-mono text-[11px] text-ink-faint transition-colors hover:text-accent"
-							title="Share this card on Bluesky"
+			{#if items.length === 0}
+				<article class="relative ml-10 rounded-[10px] border border-ink/10 bg-surface px-7 py-8 text-center">
+					<p class="font-mono text-[12px] text-ink-faint">
+						The drum hasn't drawn yet — the first items arrive with the next due draw.
+					</p>
+				</article>
+			{:else}
+				<ol class="space-y-5">
+					{#each items as item, i (item.id)}
+						<li
+							transition:fly={{ y: 8, duration: 180, delay: Math.min(i * 35, 280), easing: cubicOut }}
+							class="relative pl-10"
 						>
-							share on bluesky ↗
-						</a>
-					</li>
-				{/each}
-			</ol>
-		{/if}
+							<!-- node: punches through the spine (closure) -->
+							<span
+								aria-hidden="true"
+								class="absolute left-0 top-8 h-[11px] w-[11px] rounded-full border-2 border-canvas bg-accent"
+							></span>
+
+							<!-- card: a bounded region (common region + closure) -->
+							<article class="rounded-[10px] border border-ink/10 bg-surface px-7 py-6 transition-colors duration-150 hover:border-ink/25">
+								<!-- eyebrow: type + date, tight pair (proximity) -->
+								<div class="flex items-baseline gap-3">
+									<span class="rounded-full border border-ink/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft">
+										{item.typeName}
+									</span>
+									<span class="font-mono text-[11px] text-ink-faint">{fmtDate(item.publishedAt ?? item.createdAt)}</span>
+								</div>
+
+								<!-- figure: the headline stands alone (figure-ground) -->
+								{#if item.body.listing}
+									<h2 class="mt-3 break-words text-[22px] font-semibold leading-snug tracking-[-0.015em] text-ink">
+										<a href={`/listings/${item.body.listing.id}`} class="transition-colors duration-150 hover:text-accent">
+											{item.body.headline}
+										</a>
+									</h2>
+									{#if item.body.listing.domain}
+										<p class="mt-1 font-mono text-[11px] text-ink-faint">{item.body.listing.domain}</p>
+									{/if}
+								{:else}
+									<h2 class="mt-3 break-words text-[22px] font-semibold leading-snug tracking-[-0.015em] text-ink">
+										{item.body.headline}
+									</h2>
+								{/if}
+
+								<!-- body: one measure, one rhythm (prägnanz) -->
+								{#if item.body.standfirst}
+									<p class="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-ink-soft">{item.body.standfirst}</p>
+								{/if}
+
+								{#if item.body.items?.length}
+									<ul class="mt-4 max-w-[65ch] space-y-1.5 border-l-2 border-accent/30 pl-4 font-mono text-[12px] leading-relaxed text-ink-soft">
+										{#each item.body.items as li, j (j)}
+											<li class="flex min-w-0 items-baseline gap-2">
+												<span class="shrink-0 text-accent">▸</span>
+												<span class="min-w-0">{li.label}{#if li.note}<span class="text-ink-faint"> — {li.note}</span>{/if}</span>
+											</li>
+										{/each}
+									</ul>
+								{/if}
+
+								{#each item.body.paragraphs ?? [] as p}
+									<p class="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-ink-soft">{p}</p>
+								{/each}
+
+								{#if item.body.question}
+									<p class="mt-4 max-w-[65ch] font-mono text-[12px] text-accent">{item.body.question}</p>
+								{/if}
+
+								<!-- actions: separated region, balanced pair (proximity + symmetry) -->
+								<div class="mt-5 flex items-center justify-between gap-4 border-t border-ink/10 pt-3">
+									{#if item.body.listing}
+										<a
+											href={`/listings/${item.body.listing.id}`}
+											class="font-mono text-[11px] text-ink-faint transition-colors hover:text-accent"
+											title="open the listing's stack page"
+										>
+											open stack ↗
+										</a>
+									{:else}
+										<span class="font-mono text-[11px] text-ink-faint/60">a corpus readout</span>
+									{/if}
+									<a
+										href={bskyHref(item)}
+										target="_blank"
+										rel="noopener"
+										class="font-mono text-[11px] text-ink-faint transition-colors hover:text-accent"
+										title="Share this card on Bluesky"
+									>
+										share on bluesky ↗
+									</a>
+								</div>
+							</article>
+						</li>
+					{/each}
+				</ol>
+			{/if}
+		</div>
 	</div>
 {/if}
