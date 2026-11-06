@@ -9,9 +9,14 @@ import {
 	archiveLlmView,
 	collectionsGroupLlmView,
 	collectionsIndexLlmView,
+	feedLlmView,
+	listingStackLlmView,
 	llmPreamble,
 	searchLlmView
 } from '$lib/server/llmview';
+import { listPublished } from '$lib/server/feed/queries';
+import { nextDueInfo } from '$lib/server/feed/rotation';
+import { getStack } from '$lib/server/feed/stack';
 
 const PAGE_SIZE = 20;
 
@@ -187,6 +192,23 @@ export async function llmMarkdown(url: URL): Promise<Response | null> {
 		return mdResponse(
 			collectionsGroupLlmView({ slug: archetype.slug, name: archetype.name, n }, entries)
 		);
+	}
+
+	if (pathname === '/feed') {
+		const items = await listPublished(50);
+		const due = await nextDueInfo();
+		return mdResponse(feedLlmView(items, due));
+	}
+
+	const listingMatch = pathname.match(/^\/listings\/(\d+)$/);
+	if (listingMatch) {
+		const stack = await getStack(Number(listingMatch[1]));
+		if (!stack)
+			return new Response('listing not found\n', {
+				status: 404,
+				headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+			});
+		return mdResponse(listingStackLlmView(stack));
 	}
 
 	return null;

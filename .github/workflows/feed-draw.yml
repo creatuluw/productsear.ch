@@ -1,0 +1,50 @@
+# The Drum — run the feed draw daily. The draw is cadence-gated (1 item / 2 days
+# by default, admin-configurable in te9_dev.feed_settings), so a daily check
+# produces an item every other day. Idempotent: draws only when due.
+#
+# Secrets required (Settings → Secrets and variables → Actions):
+#   DATABASE_URL — Railway Postgres connection string
+
+name: The Drum (feed draw)
+
+on:
+  schedule:
+    # 09:07 UTC daily — off the top of the hour to dodge GitHub's cron rush.
+    - cron: '7 9 * * *'
+  workflow_dispatch: # manual "Run workflow" button
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feed-draw
+  cancel-in-progress: false
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DB_SCHEMA: te9_dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Sanity check secrets present
+        run: |
+          test -n "$DATABASE_URL" || { echo "::error::DATABASE_URL secret is not set"; exit 1; }
+
+      - name: Run the drum
+        run: npx tsx scripts/feed-draw.ts
+
+      - name: Summary
+        if: always()
+        run: echo "### Drum draw: ${{ job.status }} — cadence-gated, draws only when due" >> "$GITHUB_STEP_SUMMARY"

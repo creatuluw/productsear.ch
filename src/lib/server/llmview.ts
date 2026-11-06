@@ -153,3 +153,124 @@ export function collectionsGroupLlmView(
 	);
 	return [...head, ...body].join('\n');
 }
+
+// ── The Drum (feed) ─────────────────────────────────────────────────────────
+
+interface FeedItemLike {
+	id: string;
+	type: string;
+	publishedAt: string | null;
+	createdAt: string;
+	body: {
+		headline: string;
+		standfirst?: string;
+		listing?: { id: number; title: string; url: string; domain: string | null; created?: string | null } | null;
+		items?: Array<{ id?: number; label: string; note?: string; url?: string }>;
+		paragraphs?: string[];
+		question?: string;
+	};
+	signals: Record<string, unknown>;
+}
+
+interface DueInfoLike {
+	due: boolean;
+	nextType: string | null;
+	lastDrawAt: string | null;
+	nextDrawAt: string | null;
+	cadenceHours: number;
+	typeOrder: string[];
+}
+
+/** Markdown for the /feed drum surface — stream + rotation state. */
+export function feedLlmView(items: FeedItemLike[], due: DueInfoLike): string {
+	const head = [
+		llmPreamble('/feed'),
+		'',
+		'# the drum — the corpus feed',
+		'',
+		`A feed of item types, one draw every ${due.cadenceHours}h (fixed round-robin). ` +
+			`Last draw: ${due.lastDrawAt ? fmtDate(due.lastDrawAt) : 'never'} · ` +
+			`next draw: ${due.nextDrawAt ? fmtDate(due.nextDrawAt) : 'due now'} (${due.due ? 'DUE' : 'waiting'}) · ` +
+			`next type: ${due.nextType ?? '—'}.`,
+		''
+	];
+	if (items.length === 0) {
+		return [...head, 'The drum has not drawn yet.'].join('\n');
+	}
+	const body = items.map((item) => {
+		const lines = [
+			`## ${item.type} · ${fmtDate(item.publishedAt ?? item.createdAt)}`,
+			`**${item.body.headline}**`
+		];
+		if (item.body.listing) {
+			lines.push(
+				`- listing: ${item.body.listing.title} — <${item.body.listing.url}> · stack: <https://productsear.ch/listings/${item.body.listing.id}>`
+			);
+		}
+		if (item.body.standfirst) lines.push(`- ${item.body.standfirst}`);
+		for (const p of item.body.paragraphs ?? []) lines.push(`- ${p}`);
+		for (const li of item.body.items ?? []) {
+			lines.push(`- ${li.label}${li.note ? ` (${li.note})` : ''}${li.url ? ` — <${li.url}>` : ''}`);
+		}
+		if (item.body.question) lines.push(`- question for the reader: ${item.body.question}`);
+		return lines.join('\n');
+	});
+	return [...head, ...body].join('\n');
+}
+
+/** Markdown for a listing stack page — the listing, its feed items, its Walk. */
+export function listingStackLlmView(stack: {
+	listing: {
+		id: number;
+		title: string;
+		url: string;
+		domain: string | null;
+		excerpt: string | null;
+		created: string | null;
+		archetypes: string[];
+		purpose: string | null;
+		howToUse: string | null;
+		whenToUse: string | null;
+	};
+	items: FeedItemLike[];
+	walk: Array<{ id: number; title: string; url: string; domain: string | null; distance: number }>;
+}): string {
+	const l = stack.listing;
+	const head = [
+		llmPreamble(`/listings/${l.id}`),
+		'',
+		`# listing · ${l.title}`,
+		'',
+		`- url: <${l.url}>${l.domain ? ` · domain: ${l.domain}` : ''}${l.created ? ` · added: ${fmtDate(l.created)}` : ''}`,
+		`- archetypes: ${l.archetypes.length > 0 ? l.archetypes.join(', ') : '—'}`,
+		`- what: ${l.purpose ?? '—'}`,
+		`- how: ${l.howToUse ?? '—'}`,
+		`- when: ${l.whenToUse ?? '—'}`,
+		''
+	];
+	const onDrum = stack.items.length
+		? [
+				'## On the drum',
+				'',
+				...stack.items.map(
+					(item) =>
+						`- ${item.type} · ${fmtDate(item.publishedAt ?? item.createdAt)} — **${item.body.headline}**${
+							item.body.standfirst ? ` · ${item.body.standfirst}` : ''
+						}`
+				),
+				''
+			]
+		: [];
+	const walk = stack.walk.length
+		? [
+				'## Keep walking — embedding nearest neighbors',
+				'',
+				...stack.walk.map(
+					(n) =>
+						`- ${n.title} — <https://productsear.ch/listings/${n.id}> · raw distance ${n.distance.toFixed(3)}`
+				),
+				''
+			]
+		: [];
+	return [...head, ...onDrum, ...walk].join('\n');
+}

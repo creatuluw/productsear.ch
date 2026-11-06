@@ -33,6 +33,7 @@
 
 	const surfaces = [
 		{ href: '/', label: 'search' },
+		{ href: '/feed', label: 'feed' },
 		{ href: '/archive', label: 'listings' },
 		{ href: '/collections', label: 'collections' }
 	];
