@@ -9,11 +9,13 @@ timestamp: "2026-07-04T00:00:00.000Z"
 
 **productsear.ch** is a semantic bookmark search application. Users search a corpus of bookmarks using natural language; the app returns relevant bookmarks via **hybrid search** (pgvector cosine similarity over embeddings fused with PostgreSQL full-text `ts_rank` via [reciprocal rank fusion](./pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md)), plus an **Ask** mode that streams a RAG-style answer grounded in the top results.
 
+User-facing vocabulary (2026-11): the nav, homepage, and archive/collections headings all say **"listings"** — "corpus" and "archive" are internal terms only, and URLs remain `/archive`. The archetype roll-up was renamed from compendium to **collections** on 2026-11-06 (routes `/collections`, old paths redirect). See [the listings decision](./decisions/user-facing-vocabulary-is-listings-display-terms.md) and [the collections decision](./decisions/rename-compendium-to-collections-routes-moved-308-redirects.md).
+
 ## Tech stack
 
 - **Frontend**: SvelteKit 2 + Svelte 5, Tailwind CSS v4. Visual design follows the agentos-sdk.dev look (light warm paper theme) — see [the ADR](./decisions/adopt-agentos-sdk-dev-visual-design-system.md).
 - **Database**: PostgreSQL on Railway (`te9_dev` schema), with the `pgvector` extension. Embeddings are 1024-dimensional (Voyage `voyage-4-large`) after a migration from the original 384-dim OpenAI/HuggingFace model — see the [embedding-provider ADR](./decisions/embedding-provider-voyage-voyage-4-large-1024-dim.md).
-- **Embeddings & reranking**: Voyage AI (`VOYAGE_API_KEY`). `src/lib/server/embeddings.ts` (embeddings) and `src/lib/server/rerank.ts` (cross-encoder rerank with `rerank-2.5-lite`) — both raw `fetch`, no SDK. Reranking was added on top of RRF — see the [reranking ADR](./decisions/adopt-cross-encoder-reranking-voyage-rerank-2-5-lite-on-top-.md).
+- **Embeddings & reranking**: Voyage AI (`VOYAGE_API_KEY`). `src/lib/server/embeddings.ts` (embeddings) and `src/lib/server/rerank.ts` (cross-encoder rerank with `rerank-2.5-lite`) — both raw `fetch`, no SDK. Reranking was added on top of RRF — see the [reranking ADR](./decisions/adopt-cross-encoder-reranking-voyage-rerank-2-5.md).
 - **Chat/RAG**: Vercel AI SDK v4 `streamText`. Chat provider is DeepSeek by default (OpenAI-compatible); `OPENAI_API_KEY` + `CHAT_BASE_URL` switch to OpenAI/OpenRouter.
 - **Deployment**: Railway via `@sveltejs/adapter-node`. `npm start` runs `node build`.
 
@@ -23,4 +25,4 @@ Three top-level dirs hold runtime/scratch state: `.pi/` (coding-agent session st
 
 ## Knowledge wiki
 
-`docs/wiki/` is an [OKF](https://github.com/earendil-works/okf) bundle: `index.md` (navigation), this overview, `glossary.md`, `architecture/file-tree.md`, plus typed folders — `decisions/` (ADRs), `rules/`, `learnings/`, `preferences/`, and `pages/` (split into `concepts/`, `entities/`, `artifacts/`). Each typed folder has its own `index.md`.
+`docs/wiki/` is an [OKF](https://github.com/earendil-works/okf) bundle: `index.md` (navigation), this overview, `glossary.md`, `architecture/file-tree.md`, plus typed folders — `decisions/` (ADRs), `rules/`, `learnings/`, and `pages/` (split into `concepts/`, `entities/`, `artifacts/`). Each typed folder has its own `index.md`.
