@@ -40,12 +40,12 @@
 	{:else}
 	<h1 class="sr-only">{data.last30 ? 'listings — created in Raindrop in the last 30 days' : 'listings — all entries, newest first'}</h1>
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
-		<div class="mb-8 flex items-baseline justify-between">
+		<div class="mb-8 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
 			<h2 class="text-[2rem] font-semibold leading-none tracking-[-0.025em] text-ink">listings</h2>
 			<p class="font-mono text-[11px] text-ink-soft">
 				{#if data.last30}
 					{data.total.toLocaleString()} entries · created in Raindrop in the last 30 days · newest first
-					<a href="/archive" class="ml-2 rounded border border-ink/15 px-1.5 py-0.5 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">clear ×</a>
+					<a href="/archive" class="hit ml-2 rounded border border-ink/15 px-1.5 py-0.5 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">clear ×</a>
 				{:else}
 					{data.total.toLocaleString()} entries · newest first
 				{/if}
@@ -92,12 +92,12 @@
 			<nav class="mt-8 flex items-center justify-center gap-3 font-mono text-xs" aria-label="pages">
 				{#if data.page > 1}
 					<a href={href(data.page - 1)} onclick={goToPage}
-						class="rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">‹ prev</a>
+						class="hit rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">‹ prev</a>
 				{/if}
 				<span class="text-ink-faint">page {data.page} / {totalPages}</span>
 				{#if data.page < totalPages}
 					<a href={href(data.page + 1)} onclick={goToPage}
-						class="rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">next ›</a>
+						class="hit rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink">next ›</a>
 				{/if}
 			</nav>
 		{/if}

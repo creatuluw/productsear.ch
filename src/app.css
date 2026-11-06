@@ -88,6 +88,41 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+/* safe areas: notched phones (landscape) and home-indicator phones (portrait).
+   Desktop browsers report 0 — no effect there. */
+body {
+	padding-left: env(safe-area-inset-left);
+	padding-right: env(safe-area-inset-right);
+}
+
+/* touch adaptation: kill double-tap-zoom delay on controls (pinch zoom is untouched) */
+a,
+button,
+[role='button'],
+summary {
+	touch-action: manipulation;
+}
+
+/* coarse pointers (phones, tablets): expand the tap target of small controls.
+   The pseudo-element is part of the element, so it receives taps — visual layout
+   does not move. Add class "hit" to compact interactive elements. */
+@media (pointer: coarse) {
+	.hit {
+		position: relative;
+	}
+	.hit::after {
+		content: '';
+		position: absolute;
+		inset: -8px;
+	}
+	/* iOS zooms the viewport on focus when an input's font-size is under 16px */
+	input,
+	select,
+	textarea {
+		font-size: max(16px, 1em);
+	}
+}
+
 /* numerals align like a gauge readout */
 .mono,
 code,

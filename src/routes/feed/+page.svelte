@@ -76,19 +76,20 @@
 				enrich a life and its ambitions. The corpus drafts, the drum keeps time.
 			</p>
 
-			<!-- readout: one bounded region, three divided cells (common region) -->
-			<dl class="mt-6 grid grid-cols-3 divide-x divide-ink/10 rounded-[var(--radius)] border border-ink/10 bg-surface">
+			<!-- readout: one bounded region, three divided cells (common region);
+				stacks on phones so the timestamps are never truncated away -->
+			<dl class="mt-6 grid grid-cols-1 divide-y divide-ink/10 rounded-[var(--radius)] border border-ink/10 bg-surface sm:grid-cols-3 sm:divide-x sm:divide-y-0">
 				<div class="px-4 py-3">
 					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">next draw</dt>
-					<dd class="mt-1 truncate font-mono text-[12px] text-ink" title={nextDrawLabel}>{nextDrawLabel}</dd>
+					<dd class="mt-1 font-mono text-[12px] text-ink" title={nextDrawLabel}>{nextDrawLabel}</dd>
 				</div>
 				<div class="px-4 py-3">
 					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">last draw</dt>
-					<dd class="mt-1 truncate font-mono text-[12px] text-ink">{fmtDate(due.lastDrawAt)} {fmtTime(due.lastDrawAt)}</dd>
+					<dd class="mt-1 font-mono text-[12px] text-ink">{fmtDate(due.lastDrawAt)} {fmtTime(due.lastDrawAt)}</dd>
 				</div>
 				<div class="px-4 py-3">
 					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">next type</dt>
-					<dd class="mt-1 truncate font-mono text-[12px] text-ink">{due.nextTypeName ?? '—'}</dd>
+					<dd class="mt-1 font-mono text-[12px] text-ink">{due.nextTypeName ?? '—'}</dd>
 				</div>
 			</dl>
 
@@ -111,7 +112,7 @@
 						{digestState === 'sending' ? '…' : 'get the digest'}
 					</button>
 				{/if}
-				<a href="/feed/methodology" class="ml-auto font-mono text-[11px] text-ink-faint underline decoration-ink/20 underline-offset-2 transition-colors hover:text-accent">
+				<a href="/feed/methodology" class="hit ml-auto font-mono text-[11px] text-ink-faint underline decoration-ink/20 underline-offset-2 transition-colors hover:text-accent">
 					how this drum works
 				</a>
 			</form>
@@ -126,7 +127,7 @@
 			<div aria-hidden="true" class="absolute bottom-4 left-[5px] top-4 w-px bg-ink/15"></div>
 
 			{#if items.length === 0}
-				<article class="relative ml-10 rounded-[10px] border border-ink/10 bg-surface px-7 py-8 text-center">
+				<article class="relative ml-10 rounded-[10px] border border-ink/10 bg-surface px-5 py-6 text-center sm:px-7 sm:py-8">
 					<p class="font-mono text-[12px] text-ink-faint">
 						The drum hasn't drawn yet — the first items arrive with the next due draw.
 					</p>
@@ -145,7 +146,7 @@
 							></span>
 
 							<!-- card: a bounded region (common region + closure) -->
-							<article class="rounded-[10px] border border-ink/10 bg-surface px-7 py-6 transition-colors duration-150 hover:border-ink/25">
+							<article class="rounded-[10px] border border-ink/10 bg-surface px-5 py-5 transition-colors duration-150 hover:border-ink/25 sm:px-7 sm:py-6">
 								<!-- eyebrow: type + date, tight pair (proximity) -->
 								<div class="flex items-baseline gap-3">
 									<span class="rounded-full border border-ink/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft">
@@ -199,7 +200,7 @@
 									{#if item.body.listing}
 										<a
 											href={`/listings/${item.body.listing.id}`}
-											class="font-mono text-[11px] text-ink-faint transition-colors hover:text-accent"
+											class="hit font-mono text-[11px] text-ink-faint transition-colors hover:text-accent"
 											title="open the listing's stack page"
 										>
 											open stack ↗
@@ -211,7 +212,7 @@
 										href={bskyHref(item)}
 										target="_blank"
 										rel="noopener"
-										class="font-mono text-[11px] text-ink-faint transition-colors hover:text-accent"
+										class="hit font-mono text-[11px] text-ink-faint transition-colors hover:text-accent"
 										title="Share this card on Bluesky"
 									>
 										share on bluesky ↗

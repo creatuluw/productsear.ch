@@ -206,7 +206,7 @@
 							pageNum = 1;
 							runSearch(true);
 						}}
-						class="absolute right-0 top-1/2 -translate-y-1/2 p-2 font-mono text-lg text-ink-faint transition-colors hover:text-ink"
+						class="hit absolute right-0 top-1/2 -translate-y-1/2 p-2 font-mono text-lg text-ink-faint transition-colors hover:text-ink"
 					>×</button>
 				{/if}
 			</div>
@@ -219,17 +219,19 @@
 			</div>
 		</form>
 
-		<!-- vital signs: one bounded panel, internal hairlines -->
-		<dl class="mb-8 grid grid-cols-2 rounded-[var(--radius)] border border-ink/10 lg:grid-cols-5">
-			<div class="border-b border-r border-ink/10 px-4 py-3 lg:border-b-0">
+		<!-- vital signs: one bounded panel, internal hairlines.
+			Mobile: 2×2 + full-width latency readout (symmetry — no orphan half cell);
+			md+: the five-across instrument strip. -->
+		<dl class="mb-8 grid grid-cols-2 rounded-[var(--radius)] border border-ink/10 md:grid-cols-5">
+			<div class="border-b border-r border-ink/10 px-4 py-3 md:border-b-0">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
 					<InfoTip text="Total searchable entries — every saved page with title, URL, and purpose/how/when metadata." align="left">listings</InfoTip>
 				</dt>
-				<dd class="mt-1.5 flex items-center gap-2 font-mono text-base text-ink sm:text-lg">
+				<dd class="mt-1.5 flex items-center gap-2 font-mono text-base text-ink lg:text-lg">
 					<span class="status-dot" aria-hidden="true"></span>{data.bookmarkCount.toLocaleString()}
 				</dd>
 			</div>
-			<div class="border-b border-ink/10 px-4 py-3 lg:border-b-0 lg:border-r">
+			<div class="border-b border-ink/10 px-3 py-3 sm:px-4 md:border-b-0 md:border-r">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
 					<InfoTip text="Listings created in Raindrop within the last 30 days — click to browse them with their creation dates.">last 30 days</InfoTip>
 				</dt>
@@ -240,25 +242,25 @@
 					</a>
 				</dd>
 			</div>
-			<div class="border-b border-r border-ink/10 px-4 py-3 lg:border-b-0">
+			<div class="border-b border-r border-ink/10 px-3 py-3 sm:px-4 md:border-b-0">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
 					<InfoTip text="When the collection was last synced into the search database.">synced</InfoTip>
 				</dt>
-				<dd class="mt-1.5 font-mono text-base text-ink sm:text-lg">{fmtSynced(data.lastSynced)}</dd>
+				<dd class="mt-1.5 font-mono text-base text-ink lg:text-lg">{fmtSynced(data.lastSynced)}</dd>
 			</div>
-			<div class="border-b border-ink/10 px-4 py-3 lg:border-b-0 lg:border-r">
+			<div class="border-b border-ink/10 px-3 py-3 sm:px-4 md:border-b-0 md:border-r">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
 					<InfoTip text="Share of entries enriched with purpose / how / when metadata by the analysis pass.">analyzed</InfoTip>
 				</dt>
-				<dd class="mt-1.5 font-mono text-base text-ink sm:text-lg">
+				<dd class="mt-1.5 font-mono text-base text-ink lg:text-lg">
 					{Math.round((data.analyzedCount / Math.max(1, data.bookmarkCount)) * 100)}<span class="text-ink-faint">%</span>
 				</dd>
 			</div>
-			<div class="min-w-0 px-4 py-3">
+			<div class="col-span-2 min-w-0 px-3 py-3 sm:px-4 md:col-span-1">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
 					<InfoTip text="Round-trip search time for your last query — retrieval, fusion, and rerank combined." align="right">latency</InfoTip>
 				</dt>
-				<dd class="mt-1.5 flex min-w-0 items-center font-mono text-base text-ink sm:text-lg">
+				<dd class="mt-1.5 flex min-w-0 items-center font-mono text-base text-ink lg:text-lg">
 					{#if loading}
 						<WaveLoader />
 					{:else}
@@ -341,7 +343,7 @@
 						<a
 							href={`/?q=${encodeURIComponent(query)}${pageNum - 1 > 1 ? `&page=${pageNum - 1}` : ''}`}
 							onclick={(e) => setPage(pageNum - 1, e)}
-							class="rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink"
+							class="hit rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink"
 						>‹ prev</a>
 					{/if}
 					<span class="text-ink-faint">page {pageNum} / {totalPages}</span>
@@ -349,7 +351,7 @@
 						<a
 							href={`/?q=${encodeURIComponent(query)}&page=${pageNum + 1}`}
 							onclick={(e) => setPage(pageNum + 1, e)}
-							class="rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink"
+							class="hit rounded border border-ink/15 px-2.5 py-1 text-ink-soft transition-colors hover:border-ink/40 hover:text-ink"
 						>next ›</a>
 					{/if}
 				</nav>
@@ -360,7 +362,7 @@
 				{#each examples as ex (ex)}
 					<button
 						onclick={() => pickExample(ex)}
-						class="rounded-full border border-ink/12 px-3 py-1.5 font-mono text-[13px] text-ink-soft transition-colors duration-150 hover:border-ink/35 hover:text-ink"
+						class="hit rounded-full border border-ink/12 px-3 py-1.5 font-mono text-[13px] text-ink-soft transition-colors duration-150 hover:border-ink/35 hover:text-ink"
 					>
 						{ex}
 					</button>
@@ -369,11 +371,11 @@
 
 			{#if data.drum?.items?.length}
 				<section class="mt-12" in:fly={{ y: 8, duration: 240, delay: 120, easing: cubicOut }}>
-					<div class="mb-3 flex items-baseline gap-4">
+					<div class="mb-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
 						<p class="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-faint">the drum — latest</p>
-						<a href="/feed" class="font-mono text-[11px] text-ink-faint transition-colors hover:text-accent">open the drum →</a>
+						<a href="/feed" class="hit font-mono text-[11px] text-ink-faint transition-colors hover:text-accent">open the drum →</a>
 					</div>
-					<div class="grid gap-4 md:grid-cols-3">
+					<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
 						{#each data.drum.items as card, i (card.id)}
 							<div
 								in:fly={{ y: 8, duration: 180, delay: 180 + Math.min(i * 60, 240), easing: cubicOut }}

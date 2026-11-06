@@ -35,7 +35,7 @@
 	<main class="mx-auto max-w-[1400px] px-6 py-10 sm:px-10 lg:px-14">
 		<div class="mb-8">
 			<a href="/collections" class="font-mono text-[11px] text-ink-soft transition-colors hover:text-accent">← collections</a>
-			<div class="mt-2 flex items-baseline justify-between">
+			<div class="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
 				<h2 class="text-[2rem] font-semibold leading-none tracking-[-0.025em] text-ink">
 					{data.group.name}
 				</h2>
@@ -103,7 +103,7 @@
 							{#if e.howToUse || e.whenToUse || tagList(e.tags).length > 1}
 								<button
 									type="button"
-									class="ml-auto flex shrink-0 items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.06em] text-accent transition-all duration-150 hover:opacity-80"
+									class="hit ml-auto flex shrink-0 items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.06em] text-accent transition-all duration-150 hover:opacity-80"
 									aria-expanded={openIds.has(e.id)}
 									aria-controls={openIds.has(e.id) ? `details-${e.id}` : undefined}
 									onclick={() => toggle(e.id)}

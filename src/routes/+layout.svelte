@@ -38,7 +38,6 @@
 		{ href: '/collections', label: 'collections' },
 		...(data?.feedNav !== false ? [{ href: '/feed', label: 'the drum' }] : [])
 	]);
-
 	const isActive = (href: string) =>
 		href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);
 
@@ -71,37 +70,42 @@
 	}
 </script>
 
-<div class="flex min-h-screen flex-col">
+<div class="flex min-h-dvh flex-col">
 	<header
 		class="sticky top-0 z-20 border-b border-ink/10 bg-canvas/90 backdrop-blur supports-[backdrop-filter]:bg-canvas/75"
 	>
-		<div
-			class="mx-auto flex h-12 max-w-[1400px] items-center gap-3 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-4 sm:px-10 lg:px-14"
-		>
-			<a href="/" class="shrink-0 font-mono text-[13px] font-semibold tracking-tight text-accent">
-				productsear.ch
-			</a>
-			<nav class="flex shrink-0 gap-1.5" aria-label="surfaces">
-				{#each surfaces as s (s.href)}
-					<a
-						href={s.href}
-						class="rounded-full px-3 py-1 font-mono text-xs transition-colors duration-150 {isActive(s.href)
-							? 'bg-ink text-canvas'
-							: 'text-ink-soft hover:bg-ink/5 hover:text-ink'}"
-					>
-						{s.label}
-					</a>
-				{/each}
-			</nav>
-			<div class="ml-auto flex shrink-0 items-center gap-3">
-				<button
-					type="button"
-					onclick={toggleTheme}
-					class="flex shrink-0 items-center text-ink-soft transition-colors hover:text-accent"
-					aria-label={dark ? 'switch to light theme' : 'switch to dark theme'}
-					aria-pressed={dark}
-					title={dark ? 'switch to light theme' : 'switch to dark theme'}
+		{#snippet navPills()}
+			{#each surfaces as s (s.href)}
+				<a
+					href={s.href}
+					class="hit rounded-full px-2.5 py-1 font-mono text-xs transition-colors duration-150 lg:px-3 {isActive(s.href)
+						? 'bg-ink text-canvas'
+						: 'text-ink-soft hover:bg-ink/5 hover:text-ink'}"
 				>
+					{s.label}
+				</a>
+			{/each}
+		{/snippet}
+		<div class="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14">
+			<!-- deck 1: wordmark + view cluster; wraps on very narrow phones so nothing is unreachable -->
+			<div
+				class="flex min-h-12 flex-wrap items-center gap-x-2 gap-y-1 py-1 sm:gap-3 sm:py-0 lg:h-12 lg:flex-nowrap lg:gap-4"
+			>
+				<a href="/" class="shrink-0 font-mono text-[13px] font-semibold tracking-tight text-accent">
+					productsear.ch
+				</a>
+				<nav class="hidden shrink-0 gap-1.5 sm:flex" aria-label="surfaces">
+					{@render navPills()}
+				</nav>
+				<div class="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-3">
+					<button
+						type="button"
+						onclick={toggleTheme}
+						class="hit -mx-1 flex shrink-0 items-center p-2 text-ink-soft transition-colors hover:text-accent"
+						aria-label={dark ? 'switch to light theme' : 'switch to dark theme'}
+						aria-pressed={dark}
+						title={dark ? 'switch to light theme' : 'switch to dark theme'}
+					>
 					{#if dark}
 						<svg
 							width="15"
@@ -136,7 +140,7 @@
 				</button>
 				<a
 					href="/admin"
-					class="flex shrink-0 items-center text-ink-soft transition-colors hover:text-accent"
+					class="hit -mx-1 flex shrink-0 items-center p-2 text-ink-soft transition-colors hover:text-accent"
 					aria-label="platform console"
 					title="platform console"
 				>
@@ -150,7 +154,7 @@
 				<a
 					role="tab" aria-selected={!isLlm}
 					href={viewHref(false)}
-					class="rounded-full px-2.5 py-1 transition-colors duration-150 {isLlm
+					class="hit rounded-full px-2 py-1 transition-colors duration-150 lg:px-2.5 {isLlm
 						? 'text-ink-soft hover:text-ink'
 						: 'bg-ink text-canvas'}"
 				>
@@ -159,7 +163,7 @@
 				<a
 					role="tab" aria-selected={isLlm}
 					href={viewHref(true)}
-					class="rounded-full px-2.5 py-1 transition-colors duration-150 {isLlm
+					class="hit rounded-full px-2 py-1 transition-colors duration-150 lg:px-2.5 {isLlm
 						? 'bg-ink text-canvas'
 						: 'text-ink-soft hover:text-ink'}"
 				>
@@ -167,6 +171,14 @@
 					</a>
 				</div>
 			</div>
+		</div>
+		<!-- deck 2 (mobile only): surface nav as its own full-width row — nothing hidden behind scroll -->
+		<nav
+			class="flex flex-wrap gap-1 pb-1.5 sm:hidden"
+			aria-label="surfaces"
+		>
+			{@render navPills()}
+		</nav>
 		</div>
 	</header>
 
@@ -176,20 +188,20 @@
 
 	{#if !isLlm}
 		<footer>
-			<div
-				class="mx-auto flex max-w-[1400px] items-end justify-between gap-6 px-6 sm:px-10 lg:px-14"
-			>
-				<p class="pb-5 pt-4 font-mono text-[11px] text-ink-faint">
-					productsear.ch :: A product and information catalog curated by Patrick Tehubijuluw
-				</p>
-				<img
-					src="/mascot-product-search.png"
-					alt="product-search, the productsear.ch bookmark-ribbon mascot"
-					width="163"
-					height="256"
-					class="h-24 w-auto sm:h-28"
-					loading="lazy"
-				/>
+			<div class="mx-auto max-w-[1400px] px-6 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-10 lg:px-14">
+				<div class="flex flex-col items-start gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+					<p class="pt-4 font-mono text-[11px] text-ink-faint sm:pb-5">
+						productsear.ch :: A product and information catalog curated by Patrick Tehubijuluw
+					</p>
+					<img
+						src="/mascot-product-search.png"
+						alt="product-search, the productsear.ch bookmark-ribbon mascot"
+						width="163"
+						height="256"
+						class="h-20 w-auto self-end sm:h-28"
+						loading="lazy"
+					/>
+				</div>
 			</div>
 		</footer>
 	{/if}
@@ -197,17 +209,17 @@
 	{#if toastVisible}
 		<div
 			role="status"
-			class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-4 rounded-full bg-ink px-5 py-3 font-mono text-xs text-canvas shadow-lg"
+			class="fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-50 flex w-max max-w-[calc(100vw-3rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-x-4 gap-y-2 rounded-[var(--radius)] bg-ink px-5 py-3 font-mono text-xs text-canvas shadow-lg sm:rounded-full"
 		>
 			<span>This URL is ready for your LLM — copy &amp; paste it into the chat.</span>
 			<button
 				onclick={copyUrl}
-				class="rounded-full border border-canvas/30 px-3 py-1 transition-colors hover:border-canvas/70"
+				class="hit rounded-full border border-canvas/30 px-3 py-1 transition-colors hover:border-canvas/70"
 			>copy URL</button>
 			<button
 				onclick={() => (toastVisible = false)}
 				aria-label="dismiss"
-				class="text-canvas/60 transition-colors hover:text-canvas"
+				class="hit text-canvas/60 transition-colors hover:text-canvas"
 			>×</button>
 		</div>
 	{/if}

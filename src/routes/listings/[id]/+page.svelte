@@ -41,7 +41,7 @@
 		<a href="/feed" class="font-mono text-[11px] text-ink-faint transition-colors hover:text-accent">← the drum</a>
 
 		<!-- the listing plate: one bounded region, the page's figure -->
-		<header class="mt-4 rounded-[10px] border border-ink/10 bg-surface px-7 py-6">
+		<header class="mt-4 rounded-[10px] border border-ink/10 bg-surface px-5 py-5 sm:px-7 sm:py-6">
 			<h1 class="break-words text-[26px] font-semibold leading-tight tracking-[-0.02em] text-ink">
 				<a href={listing.url} target="_blank" rel="noopener" class="transition-colors duration-150 hover:text-accent">
 					{listing.title}
@@ -98,7 +98,7 @@
 									aria-hidden="true"
 									class="absolute left-0 top-8 h-[11px] w-[11px] rounded-full border-2 border-canvas bg-accent"
 								></span>
-								<article class="rounded-[10px] border border-ink/10 bg-surface px-7 py-6 transition-colors duration-150 hover:border-ink/25">
+								<article class="rounded-[10px] border border-ink/10 bg-surface px-5 py-5 transition-colors duration-150 hover:border-ink/25 sm:px-7 sm:py-6">
 									<div class="flex items-baseline gap-3">
 										<span class="rounded-full border border-ink/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft">
 											{item.typeName ?? item.type}
@@ -137,7 +137,7 @@
 
 		<!-- keep walking: the serendipity region -->
 		{#if walk.length > 0}
-			<section class="mt-10 rounded-[10px] border border-ink/10 bg-surface px-7 py-6">
+			<section class="mt-10 rounded-[10px] border border-ink/10 bg-surface px-5 py-5 sm:px-7 sm:py-6">
 				<h2 class="font-mono text-[13px] uppercase tracking-[0.1em] text-ink-faint">keep walking</h2>
 				<p class="mt-1 font-mono text-[11px] text-ink-faint">Embedding nearest neighbors — the serendipity layer, unranked.</p>
 				<ul class="mt-4 space-y-1.5">
