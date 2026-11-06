@@ -366,6 +366,37 @@
 					</button>
 				{/each}
 			</div>
+
+			{#if data.drum?.items?.length}
+				<section class="mt-12" in:fly={{ y: 8, duration: 240, delay: 120, easing: cubicOut }}>
+					<div class="mb-3 flex items-baseline gap-4">
+						<p class="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-faint">the drum — latest</p>
+						<a href="/feed" class="font-mono text-[11px] text-ink-faint transition-colors hover:text-accent">open the drum →</a>
+					</div>
+					<div class="grid gap-4 border-t border-ink/10 pt-4 md:grid-cols-3">
+						{#each data.drum.items as card, i (card.id)}
+							<div
+								in:fly={{ y: 8, duration: 180, delay: 180 + Math.min(i * 60, 240), easing: cubicOut }}
+								class="min-w-0"
+							>
+								<span class="rounded-full border border-ink/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft">
+									{card.typeName}
+								</span>
+								<h3 class="mt-2 break-words text-[15px] font-medium leading-snug tracking-[-0.01em] text-ink">
+									{#if card.listingId}
+										<a href={`/listings/${card.listingId}`} class="transition-colors duration-150 hover:text-accent">{card.headline}</a>
+									{:else}
+										{card.headline}
+									{/if}
+								</h3>
+								{#if card.standfirst}
+									<p class="mt-1 line-clamp-2 break-words text-[13px] leading-relaxed text-ink-soft">{card.standfirst}</p>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				</section>
+			{/if}
 		{:else if query && !loading && total === 0 && tookMs !== null}
 			<div class="rounded-[var(--radius)] border border-ink/10 bg-surface px-5 py-4">
 				<p class="text-[15px] text-ink-soft">

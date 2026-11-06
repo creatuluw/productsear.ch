@@ -4,7 +4,7 @@
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
 	import ShieldCogCorner from '$lib/components/icons/ShieldCogCorner.svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	// llms-view toast: appears when the user switches to ?view=llm
 	let toastVisible = $state(false);
@@ -31,12 +31,13 @@
 		toastVisible = false;
 	}
 
-	const surfaces = [
+	// the feed link is a feature flag — admin can hide it (feed_settings.nav_enabled)
+	const surfaces = $derived([
 		{ href: '/', label: 'search' },
-		{ href: '/feed', label: 'feed' },
+		...(data?.feedNav !== false ? [{ href: '/feed', label: 'feed' }] : []),
 		{ href: '/archive', label: 'listings' },
 		{ href: '/collections', label: 'collections' }
-	];
+	]);
 
 	const isActive = (href: string) =>
 		href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);

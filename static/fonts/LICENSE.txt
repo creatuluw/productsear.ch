@@ -1,0 +1,4 @@
+Hanken Grotesk — SIL Open Font License 1.1
+Downloaded via Google Fonts (fonts.gstatic.com TTF kits), weights 400 + 600.
+Used for server-side receipt-card (OG image) rendering. © Hanken Design Co.
+License text: https://openfontlicense.org

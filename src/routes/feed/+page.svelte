@@ -23,6 +23,15 @@
 	function fmtTime(iso: string | null): string {
 		return iso ? iso.slice(11, 16) : '';
 	}
+
+	// Bluesky intent — the card's claim + the stack URL (the OG card rides on the stack page)
+	function bskyHref(item: (typeof items)[number]): string {
+		const url = item.body.listing
+			? `https://productsear.ch/listings/${item.body.listing.id}`
+			: 'https://productsear.ch/feed';
+		const text = `${item.body.headline}\n\n${url}`;
+		return `https://bsky.app/intent/compose?text=${encodeURIComponent(text)}`;
+	}
 </script>
 
 <svelte:head><title>the drum · productsear.ch</title></svelte:head>
@@ -101,6 +110,16 @@
 						{#if item.body.question}
 							<p class="mt-3 max-w-3xl font-mono text-[12px] text-accent">{item.body.question}</p>
 						{/if}
+
+						<a
+							href={bskyHref(item)}
+							target="_blank"
+							rel="noopener"
+							class="mt-3 inline-flex items-baseline gap-1.5 font-mono text-[11px] text-ink-faint transition-colors hover:text-accent"
+							title="Share this card on Bluesky"
+						>
+							share on bluesky ↗
+						</a>
 					</li>
 				{/each}
 			</ol>

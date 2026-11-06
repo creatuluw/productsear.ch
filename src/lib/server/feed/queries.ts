@@ -11,18 +11,30 @@ export interface FeedSettings {
 	cadenceHours: number;
 	digestEnabled: boolean;
 	typeOrder: FeedType[];
+	/** site nav shows the feed link */
+	navEnabled: boolean;
+	/** homepage shows the latest-3 drum cards */
+	homepageCardsEnabled: boolean;
 }
 
 export async function getFeedSettings(): Promise<FeedSettings> {
-	const rows = await db.execute<{ cadence_hours: number; digest_enabled: boolean; type_order: unknown }>(
-		sql`SELECT cadence_hours, digest_enabled, type_order FROM te9_dev.feed_settings WHERE id = true`
+	const rows = await db.execute<{
+		cadence_hours: number;
+		digest_enabled: boolean;
+		type_order: unknown;
+		nav_enabled: boolean;
+		homepage_cards_enabled: boolean;
+	}>(
+		sql`SELECT cadence_hours, digest_enabled, type_order, nav_enabled, homepage_cards_enabled FROM te9_dev.feed_settings WHERE id = true`
 	);
 	const row = rows[0];
 	const order = (row?.type_order as FeedType[] | undefined) ?? [];
 	return {
 		cadenceHours: row?.cadence_hours ?? DEFAULT_CADENCE_HOURS,
 		digestEnabled: row?.digest_enabled ?? false,
-		typeOrder: order.length > 0 ? order : []
+		typeOrder: order.length > 0 ? order : [],
+		navEnabled: row?.nav_enabled ?? true,
+		homepageCardsEnabled: row?.homepage_cards_enabled ?? true
 	};
 }
 
@@ -30,12 +42,16 @@ export async function updateFeedSettings(patch: {
 	cadenceHours?: number;
 	digestEnabled?: boolean;
 	typeOrder?: FeedType[];
+	navEnabled?: boolean;
+	homepageCardsEnabled?: boolean;
 }): Promise<void> {
 	await db.execute(sql`
 		UPDATE te9_dev.feed_settings SET
 			cadence_hours = ${patch.cadenceHours ?? sql`cadence_hours`},
 			digest_enabled = ${patch.digestEnabled ?? sql`digest_enabled`},
 			type_order = ${patch.typeOrder ? JSON.stringify(patch.typeOrder) : sql`type_order`}::jsonb,
+			nav_enabled = ${patch.navEnabled ?? sql`nav_enabled`},
+			homepage_cards_enabled = ${patch.homepageCardsEnabled ?? sql`homepage_cards_enabled`},
 			updated_at = now()
 		WHERE id = true`);
 }

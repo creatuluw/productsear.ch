@@ -18,7 +18,12 @@
 	}
 </script>
 
-<svelte:head><title>{listing.title} · the drum · productsear.ch</title></svelte:head>
+<svelte:head><title>{listing.title} · the drum · productsear.ch</title>
+	<meta property="og:title" content={listing.title} />
+	<meta property="og:description" content={listing.purpose ?? listing.excerpt ?? 'A listing from the productsear.ch corpus.'} />
+	<meta property="og:image" content={`https://productsear.ch/api/feed/og/listing/${listing.id}`} />
+	<meta name="twitter:card" content="summary_large_image" />
+</svelte:head>
 
 {#if data.llm}
 	<LlmDoc md={data.llm} />

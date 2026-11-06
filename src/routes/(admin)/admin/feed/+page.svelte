@@ -70,6 +70,14 @@
 			<input type="checkbox" name="digest_enabled" checked={data.settings.digestEnabled} class="accent-[var(--accent)]" />
 			the digest (email edition via utobo) — currently dark by default
 		</label>
+		<label class="flex items-center gap-2 font-mono text-xs text-ink-soft">
+			<input type="checkbox" name="nav_enabled" checked={data.settings.navEnabled} class="accent-[var(--accent)]" />
+			feed link in the site nav
+		</label>
+		<label class="flex items-center gap-2 font-mono text-xs text-ink-soft">
+			<input type="checkbox" name="homepage_cards_enabled" checked={data.settings.homepageCardsEnabled} class="accent-[var(--accent)]" />
+			latest-3 drum cards on the homepage
+		</label>
 		<button type="submit" class={btnClass}>save settings</button>
 	</form>
 </div>

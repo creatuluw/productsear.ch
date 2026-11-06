@@ -96,6 +96,8 @@ export const actions: Actions = {
 			return fail(400, { error: 'cadence must be an integer between 1 and 720 hours' });
 		}
 		const digestEnabled = String(fd.get('digest_enabled') ?? '') === 'on';
+		const navEnabled = String(fd.get('nav_enabled') ?? '') === 'on';
+		const homepageCardsEnabled = String(fd.get('homepage_cards_enabled') ?? '') === 'on';
 		const validSlugs = new Set(FEED_TYPES.map((t) => t.slug as string));
 		const requested = String(fd.get('type_order') ?? '')
 			.split(/[\n,]+/)
@@ -108,7 +110,9 @@ export const actions: Actions = {
 		await updateFeedSettings({
 			cadenceHours,
 			digestEnabled,
-			typeOrder: typeOrder.length > 0 ? typeOrder : undefined
+			typeOrder: typeOrder.length > 0 ? typeOrder : undefined,
+			navEnabled,
+			homepageCardsEnabled
 		});
 		return { ok: true, settingsSaved: true };
 	}
