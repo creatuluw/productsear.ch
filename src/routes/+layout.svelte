@@ -108,7 +108,7 @@
 				class="mx-auto flex max-w-[1400px] items-end justify-between gap-6 px-6 sm:px-10 lg:px-14"
 			>
 				<p class="pb-5 pt-4 font-mono text-[11px] text-ink-faint">
-					product-search — it has already read everything you saved.
+					productsear.ch :: A product and information catalog curated by Patrick Tehubijuluw
 				</p>
 				<img
 					src="/mascot-product-search.png"
