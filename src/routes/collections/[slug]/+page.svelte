@@ -49,14 +49,19 @@
 					transition:fly={{ y: 8, duration: 180, delay: Math.min(i * 35, 280), easing: cubicOut }}
 					class="rounded-[var(--radius)] border border-ink/10 bg-surface px-5 py-4 transition-colors duration-150 hover:border-ink/25"
 				>
-					<a href={e.url} target="_blank" rel="noopener" class="group block">
-						<span class="font-mono text-[11px] uppercase tracking-[0.06em] text-accent">
-							{e.domain ?? ''}
+					<div class="flex items-baseline justify-between gap-4">
+						<a href={e.url} target="_blank" rel="noopener" class="group min-w-0">
+							<span class="font-mono text-[11px] uppercase tracking-[0.06em] text-accent">
+								{e.domain ?? ''}
+							</span>
+							<h3 class="mt-0.5 break-words font-semibold tracking-[-0.01em] text-ink transition-colors duration-150 group-hover:text-accent">
+								{e.title}
+							</h3>
+						</a>
+						<span class="shrink-0 font-mono text-[10.5px] text-ink-faint">
+							{e.created ? e.created.slice(0, 10) : ''}
 						</span>
-						<h3 class="mt-0.5 break-words font-semibold tracking-[-0.01em] text-ink transition-colors duration-150 group-hover:text-accent">
-							{e.title}
-						</h3>
-					</a>
+					</div>
 					{#if e.purpose}
 						<dl class="mt-3 text-[13.5px] leading-relaxed">
 							<div class="flex gap-3">
@@ -90,26 +95,25 @@
 							{/if}
 						</div>
 					{/if}
-					<div class="mt-3 flex items-center justify-between gap-4">
-						{#if tagList(e.tags)[0]}
-							<span class="rounded border border-ink/10 px-1.5 py-0.5 font-mono text-[10.5px] text-ink-faint">{tagList(e.tags)[0]}</span>
-						{/if}
-						<span class="ml-auto shrink-0 font-mono text-[10.5px] text-ink-faint">
-							{e.created ? e.created.slice(0, 10) : ''}
-						</span>
-						{#if e.howToUse || e.whenToUse || tagList(e.tags).length > 1}
-							<button
-								type="button"
-								class="flex shrink-0 items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.06em] text-ink-soft transition-colors duration-150 hover:text-accent"
-								aria-expanded={openIds.has(e.id)}
-								aria-controls={openIds.has(e.id) ? `details-${e.id}` : undefined}
-								onclick={() => toggle(e.id)}
-							>
-								details
-								<span class="inline-block transition-transform duration-150" class:rotate-180={openIds.has(e.id)}>▾</span>
-							</button>
-						{/if}
-					</div>
+					{#if tagList(e.tags)[0] || e.howToUse || e.whenToUse || tagList(e.tags).length > 1}
+						<div class="mt-3 flex items-center justify-between gap-4">
+							{#if tagList(e.tags)[0]}
+								<span class="rounded border border-ink/10 px-1.5 py-0.5 font-mono text-[10.5px] text-ink-faint">{tagList(e.tags)[0]}</span>
+							{/if}
+							{#if e.howToUse || e.whenToUse || tagList(e.tags).length > 1}
+								<button
+									type="button"
+									class="ml-auto flex shrink-0 items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.06em] text-accent transition-all duration-150 hover:opacity-80"
+									aria-expanded={openIds.has(e.id)}
+									aria-controls={openIds.has(e.id) ? `details-${e.id}` : undefined}
+									onclick={() => toggle(e.id)}
+								>
+									details
+									<span class="inline-block text-[15px] leading-none transition-transform duration-150" class:rotate-180={openIds.has(e.id)}>▾</span>
+								</button>
+							{/if}
+						</div>
+					{/if}
 				</li>
 			{/each}
 		</ul>
