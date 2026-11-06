@@ -220,7 +220,7 @@
 		</form>
 
 		<!-- vital signs: one bounded panel, internal hairlines -->
-		<dl class="mb-8 grid grid-cols-2 rounded-[var(--radius)] border border-ink/10 lg:grid-cols-4">
+		<dl class="mb-8 grid grid-cols-2 rounded-[var(--radius)] border border-ink/10 lg:grid-cols-5">
 			<div class="border-b border-r border-ink/10 px-4 py-3 lg:border-b-0">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
 					<InfoTip text="Total searchable entries — every saved page with title, URL, and purpose/how/when metadata." align="left">listings</InfoTip>
@@ -229,13 +229,19 @@
 					<span class="status-dot" aria-hidden="true"></span>{data.bookmarkCount.toLocaleString()}
 				</dd>
 			</div>
-			<div class="border-b border-ink/10 px-4 py-3 lg:border-b-0">
+			<div class="border-b border-ink/10 px-4 py-3 lg:border-b-0 lg:border-r">
+				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+					<InfoTip text="Listings added to the collection in the last 30 days.">last 30 days</InfoTip>
+				</dt>
+				<dd class="mt-1.5 font-mono text-base text-ink sm:text-lg">+{data.recentCount.toLocaleString()}</dd>
+			</div>
+			<div class="border-b border-r border-ink/10 px-4 py-3 lg:border-b-0">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
 					<InfoTip text="When the collection was last synced into the search database.">synced</InfoTip>
 				</dt>
 				<dd class="mt-1.5 font-mono text-base text-ink sm:text-lg">{fmtSynced(data.lastSynced)}</dd>
 			</div>
-			<div class="border-r border-ink/10 px-4 py-3">
+			<div class="border-b border-ink/10 px-4 py-3 lg:border-b-0 lg:border-r">
 				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
 					<InfoTip text="Share of entries enriched with purpose / how / when metadata by the analysis pass.">analyzed</InfoTip>
 				</dt>

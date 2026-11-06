@@ -14,11 +14,15 @@ export const load: PageServerLoad = async ({ url }) => {
 	const a = await db.execute<{ n: number }>(
 		sql`SELECT count(*)::int AS n FROM te9_dev.bookmark_analysis`
 	);
+	const r = await db.execute<{ n: number }>(
+		sql`SELECT count(*)::int AS n FROM te9_dev.bookmarks WHERE raindrop_created_at >= now() - interval '30 days'`
+	);
 
 	const data = {
 		bookmarkCount: c[0].n,
 		lastSynced: s[0].t,
-		analyzedCount: a[0].n
+		analyzedCount: a[0].n,
+		recentCount: r[0].n
 	};
 
 	if (url.searchParams.get('view') === 'llm') {

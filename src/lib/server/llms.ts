@@ -33,6 +33,7 @@ export function wantsRawMarkdown(url: URL, request: Request): boolean {
 /** Overview markdown for `/` with no query — shared by hooks + page load. */
 export async function corpusOverviewMd(): Promise<string> {
 	const c = await db.execute<{ n: number }>(sql`SELECT count(*)::int AS n FROM te9_dev.bookmarks`);
+	const r = await db.execute<{ n: number }>(sql`SELECT count(*)::int AS n FROM te9_dev.bookmarks WHERE raindrop_created_at >= now() - interval '30 days'`);
 	const groups = await db.execute<{ archetype: string; n: number }>(sql`
 		SELECT t.archetype, count(*)::int AS n
 		FROM te9_dev.bookmark_archetypes x, jsonb_array_elements_text(x.archetypes) AS t(archetype)
@@ -42,7 +43,7 @@ export async function corpusOverviewMd(): Promise<string> {
 		'',
 		'# productsear.ch — search the corpus',
 		'',
-		`${c[0].n.toLocaleString()} entries, each with purpose/how/when metadata.`,
+		`${c[0].n.toLocaleString()} entries (${r[0].n.toLocaleString()} added in the last 30 days), each with purpose/how/when metadata.`,
 		'',
 		'## Next steps',
 		'',
