@@ -47,7 +47,7 @@
 			{#each data.entries as e, i (e.id)}
 				<li
 					transition:fly={{ y: 8, duration: 180, delay: Math.min(i * 35, 280), easing: cubicOut }}
-					class="rounded-[var(--radius)] border border-ink/10 bg-surface px-5 py-4 transition-colors duration-150 hover:border-ink/25"
+					class="flex flex-col rounded-[var(--radius)] border border-ink/10 bg-surface px-5 py-4 transition-colors duration-150 hover:border-ink/25"
 				>
 					<div class="flex items-baseline justify-between gap-4">
 						<a href={e.url} target="_blank" rel="noopener" class="group min-w-0">
@@ -96,7 +96,7 @@
 						</div>
 					{/if}
 					{#if tagList(e.tags)[0] || e.howToUse || e.whenToUse || tagList(e.tags).length > 1}
-						<div class="mt-3 flex items-center justify-between gap-4">
+						<div class="mt-auto flex items-center justify-between gap-4 border-t border-ink/10 pt-3">
 							{#if tagList(e.tags)[0]}
 								<span class="rounded border border-ink/10 px-1.5 py-0.5 font-mono text-[10.5px] text-ink-faint">{tagList(e.tags)[0]}</span>
 							{/if}
