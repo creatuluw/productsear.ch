@@ -34,6 +34,9 @@
 	let loading = $state(false);
 	let tookMs = $state<number | null>(null);
 	let error_ = $state('');
+	// system drawer: engine-room readout (vital signs + retrieval method) —
+	// auto-opens while a search executes, auto-hides when results are returned
+	let drawerOpen = $state(false);
 
 	let debounce: ReturnType<typeof setTimeout> | null = null;
 	let reduceMotion = $state(false);
@@ -74,6 +77,7 @@
 		}
 		loading = true;
 		error_ = '';
+		drawerOpen = true;
 		try {
 			const res = await fetch(
 				`/api/search?q=${encodeURIComponent(q)}&page=${pageNum}`
@@ -95,6 +99,7 @@
 			results = [];
 		} finally {
 			loading = false;
+			drawerOpen = false;
 		}
 	}
 
@@ -178,6 +183,8 @@
 	});
 </script>
 
+<svelte:window onkeydown={(e) => { if (e.key === 'Escape') drawerOpen = false; }} />
+
 <svelte:head><title>productsear.ch — semantic tool search</title></svelte:head>
 
 {#if data.llm}
@@ -210,65 +217,8 @@
 					>×</button>
 				{/if}
 			</div>
-			<div class="mt-2 font-mono text-[11px] text-ink-faint">
-				<InfoTip text="Hybrid retrieval: vector similarity over Voyage embeddings fused with Postgres full-text match — reciprocal rank fusion merges both rankings." align="left">semantic + full-text</InfoTip>
-				<span class="mx-1.5">·</span>
-				<InfoTip text="Top candidates are re-scored against your query by a cross-encoder (Voyage rerank-2.5-lite) for the final ordering.">cross-encoder reranked</InfoTip>
-				<span class="mx-1.5">·</span>
-				<InfoTip text="Results below a calibrated relevance floor (0.45) are dropped as noise — counts are honest, never padded.">relevance-floored</InfoTip>
-			</div>
 		</form>
 
-		<!-- vital signs: one bounded panel, internal hairlines.
-			Mobile: 2×2 + full-width latency readout (symmetry — no orphan half cell);
-			md+: the five-across instrument strip. -->
-		<dl class="mb-8 grid grid-cols-2 rounded-[var(--radius)] border border-ink/10 md:grid-cols-5">
-			<div class="border-b border-r border-ink/10 px-4 py-3 md:border-b-0">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
-					<InfoTip text="Total searchable entries — every saved page with title, URL, and purpose/how/when metadata." align="left">listings</InfoTip>
-				</dt>
-				<dd class="mt-1.5 flex items-center gap-2 font-mono text-base text-ink lg:text-lg">
-					<span class="status-dot" aria-hidden="true"></span>{data.bookmarkCount.toLocaleString()}
-				</dd>
-			</div>
-			<div class="border-b border-ink/10 px-3 py-3 sm:px-4 md:border-b-0 md:border-r">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
-					<InfoTip text="Listings created in Raindrop within the last 30 days — click to browse them with their creation dates.">last 30 days</InfoTip>
-				</dt>
-				<dd class="mt-1.5 font-mono text-base sm:text-lg">
-					<a href="/archive?last=30" class="group/tile inline-flex items-baseline gap-1 font-mono text-ink transition-colors duration-150 hover:text-accent">
-						+{data.recentCount.toLocaleString()}
-						<span aria-hidden="true" class="text-[11px] text-ink-faint transition-transform duration-150 group-hover/tile:translate-x-0.5">→</span>
-					</a>
-				</dd>
-			</div>
-			<div class="border-b border-r border-ink/10 px-3 py-3 sm:px-4 md:border-b-0">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
-					<InfoTip text="When the collection was last synced into the search database.">synced</InfoTip>
-				</dt>
-				<dd class="mt-1.5 font-mono text-base text-ink lg:text-lg">{fmtSynced(data.lastSynced)}</dd>
-			</div>
-			<div class="border-b border-ink/10 px-3 py-3 sm:px-4 md:border-b-0 md:border-r">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
-					<InfoTip text="Share of entries enriched with purpose / how / when metadata by the analysis pass.">analyzed</InfoTip>
-				</dt>
-				<dd class="mt-1.5 font-mono text-base text-ink lg:text-lg">
-					{Math.round((data.analyzedCount / Math.max(1, data.bookmarkCount)) * 100)}<span class="text-ink-faint">%</span>
-				</dd>
-			</div>
-			<div class="col-span-2 min-w-0 px-3 py-3 sm:px-4 md:col-span-1">
-				<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
-					<InfoTip text="Round-trip search time for your last query — retrieval, fusion, and rerank combined." align="right">latency</InfoTip>
-				</dt>
-				<dd class="mt-1.5 flex min-w-0 items-center font-mono text-base text-ink lg:text-lg">
-					{#if loading}
-						<WaveLoader />
-					{:else}
-						{tookMs !== null ? `${tookMs}ms` : '—'}
-					{/if}
-				</dd>
-			</div>
-		</dl>
 
 		{#if error_}
 			<div class="mb-5 rounded-[var(--radius)] border border-danger/25 bg-danger/[0.06] px-4 py-3 text-sm text-danger">
@@ -410,7 +360,97 @@
 			</div>
 		{/if}
 	</main>
-{/if}
+
+	<!-- system drawer: the engine-room readout — vital signs + retrieval method.
+		Opens while a search executes, hides when results return; the corner chip
+		reopens it anytime. -->
+	{#if drawerOpen}
+		<aside
+			id="system-drawer"
+			role="region"
+			aria-label="system readout"
+			transition:fly={{ y: reduceMotion ? 0 : 80, duration: reduceMotion ? 0 : 220, easing: cubicOut }}
+			class="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-canvas shadow-[0_-6px_24px_color-mix(in_oklab,var(--ink)_12%,transparent)]"
+		>
+			<div class="mx-auto max-w-[1400px] px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2.5 sm:px-10 lg:px-14">
+				<div class="flex items-center justify-between">
+					<p class="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-faint">system</p>
+					<button
+						type="button"
+						onclick={() => (drawerOpen = false)}
+						aria-label="close system readout"
+						class="hit rounded border border-ink/15 px-2 py-1 font-mono text-[11px] text-ink-soft transition-colors hover:border-ink/40 hover:text-ink"
+					>▾ close</button>
+				</div>
+
+				<dl class="mb-8 grid grid-cols-2 rounded-[var(--radius)] border border-ink/10 md:grid-cols-5">
+				<div class="border-b border-r border-ink/10 px-4 py-3 md:border-b-0">
+					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+						<InfoTip text="Total searchable entries — every saved page with title, URL, and purpose/how/when metadata." align="left">listings</InfoTip>
+					</dt>
+					<dd class="mt-1.5 flex items-center gap-2 font-mono text-base text-ink lg:text-lg">
+						<span class="status-dot" aria-hidden="true"></span>{data.bookmarkCount.toLocaleString()}
+					</dd>
+				</div>
+				<div class="border-b border-ink/10 px-3 py-3 sm:px-4 md:border-b-0 md:border-r">
+					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+						<InfoTip text="Listings created in Raindrop within the last 30 days — click to browse them with their creation dates.">last 30 days</InfoTip>
+					</dt>
+					<dd class="mt-1.5 font-mono text-base sm:text-lg">
+						<a href="/archive?last=30" class="group/tile inline-flex items-baseline gap-1 font-mono text-ink transition-colors duration-150 hover:text-accent">
+							+{data.recentCount.toLocaleString()}
+							<span aria-hidden="true" class="text-[11px] text-ink-faint transition-transform duration-150 group-hover/tile:translate-x-0.5">→</span>
+						</a>
+					</dd>
+				</div>
+				<div class="border-b border-r border-ink/10 px-3 py-3 sm:px-4 md:border-b-0">
+					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+						<InfoTip text="When the collection was last synced into the search database.">synced</InfoTip>
+					</dt>
+					<dd class="mt-1.5 font-mono text-base text-ink lg:text-lg">{fmtSynced(data.lastSynced)}</dd>
+				</div>
+				<div class="border-b border-ink/10 px-3 py-3 sm:px-4 md:border-b-0 md:border-r">
+					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+						<InfoTip text="Share of entries enriched with purpose / how / when metadata by the analysis pass.">analyzed</InfoTip>
+					</dt>
+					<dd class="mt-1.5 font-mono text-base text-ink lg:text-lg">
+						{Math.round((data.analyzedCount / Math.max(1, data.bookmarkCount)) * 100)}<span class="text-ink-faint">%</span>
+					</dd>
+				</div>
+				<div class="col-span-2 min-w-0 px-3 py-3 sm:px-4 md:col-span-1">
+					<dt class="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+						<InfoTip text="Round-trip search time for your last query — retrieval, fusion, and rerank combined." align="right">latency</InfoTip>
+					</dt>
+					<dd class="mt-1.5 flex min-w-0 items-center font-mono text-base text-ink lg:text-lg">
+						{#if loading}
+							<WaveLoader />
+						{:else}
+							{tookMs !== null ? `${tookMs}ms` : '—'}
+						{/if}
+					</dd>
+				</div>
+			</dl>
+
+				<p class="mt-3 font-mono text-[11px] text-ink-faint">
+					<InfoTip text="Hybrid retrieval: vector similarity over Voyage embeddings fused with Postgres full-text match — reciprocal rank fusion merges both rankings." align="left">semantic + full-text</InfoTip>
+					<span class="mx-1.5">·</span>
+					<InfoTip text="Top candidates are re-scored against your query by a cross-encoder (Voyage rerank-2.5-lite) for the final ordering.">cross-encoder reranked</InfoTip>
+					<span class="mx-1.5">·</span>
+					<InfoTip text="Results below a calibrated relevance floor (0.45) are dropped as noise — counts are honest, never padded.">relevance-floored</InfoTip>
+				</p>
+			</div>
+		</aside>
+	{:else}
+		<button
+			type="button"
+			onclick={() => (drawerOpen = true)}
+			aria-expanded={drawerOpen}
+			aria-controls="system-drawer"
+			class="hit fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-30 flex items-center gap-1.5 rounded-full border border-ink/15 bg-canvas/90 px-3 py-1.5 font-mono text-[11px] text-ink-soft backdrop-blur transition-colors hover:border-ink/40 hover:text-ink"
+		>
+			system <span aria-hidden="true">▴</span>
+		</button>
+	{/if}{/if}
 
 <style>
 	.status-dot {
