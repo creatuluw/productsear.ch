@@ -1,4 +1,12 @@
+Fonts used for server-side OG (receipt-card) image rendering. All OFL.
+
 Hanken Grotesk — SIL Open Font License 1.1
-Downloaded via Google Fonts (fonts.gstatic.com TTF kits), weights 400 + 600.
-Used for server-side receipt-card (OG image) rendering. © Hanken Design Co.
-License text: https://openfontlicense.org
+Weights 400 + 600, real TTFs from the Hanken Grotesk repo (the Google Fonts
+css2 legacy-UA kit delivers EOT, not TTF — see wiki learning). © Hanken Design Co.
+
+Martian Mono — SIL Open Font License 1.1
+Standard-width static instances (Rg + Bd) from github.com/evilmartians/mono
+v1.1.0. © Evil Martians.
+
+License texts: https://openfontlicense.org
+Full Hanken text: OFL-HankenGrotesk.txt
