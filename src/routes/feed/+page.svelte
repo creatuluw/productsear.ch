@@ -20,6 +20,15 @@
 		return iso ? iso.slice(0, 10) : '—';
 	}
 
+	// items drawn within the last 2 days wear the NEW label in the card corner
+	const FRESH_MS = 2 * 24 * 60 * 60 * 1000;
+	function isNew(item: (typeof items)[number]): boolean {
+		const iso = item.publishedAt ?? item.createdAt;
+		if (!iso) return false;
+		const t = Date.parse(iso);
+		return !Number.isNaN(t) && Date.now() - t < FRESH_MS;
+	}
+
 	function fmtTime(iso: string | null): string {
 		return iso ? iso.slice(11, 16) : '';
 	}
@@ -146,7 +155,16 @@
 							></span>
 
 							<!-- card: a bounded region (common region + closure) -->
-							<article class="rounded-[10px] border border-ink/10 bg-surface px-5 py-5 transition-colors duration-150 hover:border-ink/25 sm:px-7 sm:py-6">
+							<article class="relative rounded-[10px] border border-ink/10 bg-surface px-5 py-5 transition-colors duration-150 hover:border-ink/25 sm:px-7 sm:py-6">
+							{#if isNew(item)}
+								<!-- live-state green: drawn within the last 2 days -->
+								<span
+									class="absolute right-3 top-3 flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink sm:right-4 sm:top-4"
+								>
+									<span class="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true"></span>
+									new
+								</span>
+							{/if}
 								<!-- eyebrow: type + date, tight pair (proximity) -->
 								<div class="flex items-baseline gap-3">
 									<span class="rounded-full border border-ink/15 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft">
