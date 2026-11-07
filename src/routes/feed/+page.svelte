@@ -33,11 +33,12 @@
 		return iso ? iso.slice(11, 16) : '';
 	}
 
-	// Bluesky intent — the card's claim + the stack URL (the OG card rides on the stack page)
+	// Bluesky caches link cards per-URL — the utm param gives each share a fresh
+	// cache key so the current og:image always unfurls (also a Plausible referral)
 	function bskyHref(item: (typeof items)[number]): string {
 		const url = item.body.listing
-			? `https://productsear.ch/listings/${item.body.listing.id}`
-			: 'https://productsear.ch/feed';
+			? `https://productsear.ch/listings/${item.body.listing.id}?utm_source=bsky`
+			: 'https://productsear.ch/feed?utm_source=bsky';
 		const text = `${item.body.headline}\n\n${url}`;
 		return `https://bsky.app/intent/compose?text=${encodeURIComponent(text)}`;
 	}
