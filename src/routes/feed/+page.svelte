@@ -76,7 +76,7 @@
 	<!-- corpus-readout cards share this URL on Bluesky — give it its own OG card -->
 	<meta property="og:title" content="the drum — productsear.ch" />
 	<meta property="og:description" content="One draw every 48h — a feed of item types, each showing how a listing can change or enrich a life and its ambitions. The corpus drafts, the drum keeps time." />
-	<meta property="og:image" content="https://productsear.ch/api/feed/og/drum" />
+	<meta property="og:image" content="https://productsear.ch/api/feed/og/drum?v=2" />
 	<meta property="og:url" content="https://productsear.ch/feed" />
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>

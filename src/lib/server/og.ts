@@ -58,7 +58,17 @@ function wrap(text: string, size: number, maxWidth: number, maxLines: number, em
 	return lines.slice(0, maxLines);
 }
 
-const MASCOT_PNG = readFileSync(path.join(process.cwd(), 'static', 'mascot-product-search.png')).toString('base64');
+// mascot: tolerant read — an OG asset must never take the server down at boot
+let MASCOT_PNG: string | null = null;
+function mascotDataUri(): string | null {
+	if (MASCOT_PNG !== null) return MASCOT_PNG;
+	try {
+		MASCOT_PNG = readFileSync(path.join(process.cwd(), 'static', 'mascot-product-search.png')).toString('base64');
+	} catch {
+		MASCOT_PNG = '';
+	}
+	return MASCOT_PNG || null;
+}
 
 interface CardCopy {
 	chip: string;
@@ -103,7 +113,7 @@ function cardSvg(d: CardCopy): string {
 	${standfirstLines.length > 0 ? `<text x="${MARGIN}" y="${sfY}" font-family="Hanken Grotesk" font-weight="400" font-size="25" fill="${INK_SOFT}">${standfirstTspans}</text>` : ''}
 
 	<!-- mascot: the brand's charm, bottom-right of the text band -->
-	<image href="data:image/png;base64,${MASCOT_PNG}" x="988" y="168" width="140" height="220"/>
+	${mascotDataUri() ? `<image href="data:image/png;base64,${mascotDataUri()}" x="988" y="168" width="140" height="220"/>` : ''}
 
 	<!-- footer: hairline + meta -->
 	<line x1="${MARGIN}" y1="544" x2="${OG_W - MARGIN}" y2="544" stroke="${HAIRLINE}"/>

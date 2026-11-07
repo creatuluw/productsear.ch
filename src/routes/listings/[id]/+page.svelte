@@ -30,7 +30,7 @@
 <svelte:head><title>{listing.title} · the drum · productsear.ch</title>
 	<meta property="og:title" content={listing.title} />
 	<meta property="og:description" content={listing.purpose ?? listing.excerpt ?? 'A listing from the productsear.ch corpus.'} />
-	<meta property="og:image" content={`https://productsear.ch/api/feed/og/listing/${listing.id}`} />
+	<meta property="og:image" content={`https://productsear.ch/api/feed/og/listing/${listing.id}?v=2`} />
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
