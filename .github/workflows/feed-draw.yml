@@ -47,4 +47,5 @@ jobs:
 
       - name: Summary
         if: always()
-        run: echo "### Drum draw: ${{ job.status }} — cadence-gated, draws only when due" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "### Drum draw: ${{ job.status }} — cadence-gated, draws only when due" >> "$GITHUB_STEP_SUMMARY"

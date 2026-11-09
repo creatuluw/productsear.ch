@@ -49,4 +49,5 @@ jobs:
 
       - name: Summary
         if: always()
-        run: echo "### Digest run: ${{ job.status }} — gated by digest_enabled + new-items window" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "### Digest run: ${{ job.status }} — gated by digest_enabled + new-items window" >> "$GITHUB_STEP_SUMMARY"
