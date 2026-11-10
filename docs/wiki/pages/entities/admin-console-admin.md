@@ -3,7 +3,7 @@ type: Entity
 title: Admin console (/admin)
 description: What it is
 tags: [admin, auth, better-auth, console]
-timestamp: "2026-11-06T14:18:37.245Z"
+timestamp: "2026-11-06T20:27:08.223Z"
 ---
 
 # Admin console (/admin)
@@ -19,7 +19,7 @@ timestamp: "2026-11-06T14:18:37.245Z"
 - **Admin gate**: `ADMIN_EMAILS` env (comma-separated allowlist). Sign-up is rejected server-side via a better-auth `before` hook for non-allowlisted emails; page loads are guarded by `(admin)/admin/+layout.server.ts`, and every form action re-guards itself via `requireAdmin()` in `src/lib/server/admin-guard.ts` (actions can be POSTed without a load)
 - **DB tables** ([corpus-enrichment-pipeline-sync-crawl-analyze](./corpus-enrichment-pipeline-sync-crawl-analyze.md) schema te9_dev): `auth_user`, `auth_account`, `auth_session`, `auth_verification` (better-auth, prefix `auth_`, model-name mapping via drizzleAdapter) + app-owned `admin_extensions`, `admin_agents`, `admin_settings`, `admin_features` (multi-entry in `src/lib/server/db/admin-schema.ts`, re-exported from `db/index.ts`)
 - **Migration**: `scripts/migration-admin.sql` (idempotent, seeds 3 flags + 2 settings), applied via the reusable `scripts/run-sql.ts` runner (dry-run = transaction rollback, `--commit` to persist). Undo: `scripts/rollback-migration-admin.sql`
-- **Section routes**: `/admin` (dashboard: corpus vitals + counts), `/admin/extensions`, `/admin/agents`, `/admin/settings`, `/admin/features` — all SvelteKit form actions (`?/create`, `?/toggle|update|upsert`, `?/delete`) with `use:enhance`
+- **Section routes**: `/admin` (dashboard: corpus vitals + counts), `/admin/extensions`, `/admin/agents`, `/admin/settings`, `/admin/features`, `/admin/feed` ([pages/entities/admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — The Drum editorial console) — all SvelteKit form actions (`?/create`, `?/toggle|update|upsert`, `?/delete`) with `use:enhance`
 - **Read helpers**: `src/lib/server/admin-settings.ts` — `getSetting(key)` and `getFlag(key)` with a 30s in-memory cache + `clearSettingsCache()` (called after every admin write) for production code that wants to consume console-managed values
 - **Icon**: `src/lib/components/icons/ShieldCogCorner.svelte` — NOT an upstream lucide icon (absent in lucide-svelte 1.0.1); composed from lucide's own shield + cog path data so it matches the lucide stroke style
 - **Env**: `BETTER_AUTH_SECRET` (required), `ADMIN_EMAILS`, `BETTER_AUTH_URL` (optional), `TRUSTED_ORIGINS` (extra, comma-separated). Local ports (localhost 3000/5173) are auto-allowed outside production
@@ -32,5 +32,6 @@ timestamp: "2026-11-06T14:18:37.245Z"
 
 ## Related
 
+- [pages/entities/admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — The Drum editorial console section (slice B)
 - [hybrid-search-via-reciprocal-rank-fusion](../concepts/hybrid-search-via-reciprocal-rank-fusion.md) — the search pipeline whose flags/settings the console manages
 - [remove-ask-mode-productsear-ch-becomes-search-only](../../decisions/remove-ask-mode-productsear-ch-becomes-search-only.md) — why the ai SDK deps could be dropped

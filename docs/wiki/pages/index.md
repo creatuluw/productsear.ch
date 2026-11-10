@@ -34,3 +34,8 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [Admin console (/admin)](./entities/admin-console-admin.md) — What it is
 - [The Drum feed](./entities/the-drum-feed.md) — **The Drum** is the official name (2026-11-06, brainstorm round 14) of productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of
 - [The Drum feed spec](./artifacts/the-drum-feed-spec.md) — **The Drum feed spec** — the formal, converged specification for [[entities/the-drum-feed]], committed at `docs/specs/the-drum.md` after the 15-turn diverge/con
+- [Admin feed console (/admin/feed)](./entities/admin-feed-console-admin-feed.md) — What it is
+- [Feed feature flags](./entities/feed-feature-flags.md) — What it is
+- [Receipt-card OG image route](./entities/receipt-card-og-image-route.md) — What it is
+- [The Digest (email digest pipeline)](./entities/the-digest-email-digest-pipeline.md) — **The Digest** is the weekly email edition of [[the-drum-feed]] — an opt-in digest of freshly published drum cards, delivered through [[utobo-email-transactiona
+- [Homepage system drawer](./entities/homepage-system-drawer.md) — The bottom-sheet drawer on the productsear.ch homepage that holds the system-metadata blocks — the vital-signs panel (listings / last 30 days / synced / analyze
