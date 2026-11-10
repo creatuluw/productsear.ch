@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
-import { FEED_TYPE_BY_SLUG } from '$lib/server/feed/types';
+import { FEED_TYPE_BY_SLUG, type FeedType } from '$lib/server/feed/types';
 import { listingCardSvg, ogResponse, renderOgPng } from '$lib/server/og';
 import type { RequestHandler } from './$types';
 
@@ -37,7 +37,7 @@ export const GET: RequestHandler = async ({ params }) => {
 	}
 
 	const svg = listingCardSvg({
-		typeName: FEED_TYPE_BY_SLUG.get(rows[0].type)?.name ?? rows[0].type,
+		typeName: FEED_TYPE_BY_SLUG.get(rows[0].type as FeedType)?.name ?? rows[0].type,
 		headline: rows[0].headline,
 		standfirst: rows[0].standfirst,
 		domain: rows[0].domain,

@@ -75,6 +75,7 @@ interface CardCopy {
 	headline: string;
 	standfirst: string | null;
 	footerLeft: string;
+	footerRight?: string;
 }
 
 /** The receipt card: chip → accent tick → big headline → standfirst → hairline footer, mascot at right. */
@@ -118,7 +119,7 @@ function cardSvg(d: CardCopy): string {
 	<!-- footer: hairline + meta -->
 	<line x1="${MARGIN}" y1="544" x2="${OG_W - MARGIN}" y2="544" stroke="${HAIRLINE}"/>
 	<text x="${MARGIN}" y="588" font-family="Martian Mono Std Rg" font-weight="400" font-size="22" fill="${INK_FAINT}">${esc(d.footerLeft)}</text>
-	<text x="${OG_W - MARGIN}" y="588" text-anchor="end" font-family="Martian Mono Std Rg" font-weight="700" font-size="22" fill="${ACCENT}">productsear.ch · the drum</text>
+	<text x="${OG_W - MARGIN}" y="588" text-anchor="end" font-family="Martian Mono Std Rg" font-weight="700" font-size="22" fill="${ACCENT}">${esc(d.footerRight ?? 'productsear.ch · the drum')}</text>
 </svg>`;
 }
 
@@ -135,6 +136,17 @@ export function listingCardSvg(d: {
 		headline: d.headline,
 		standfirst: d.standfirst,
 		footerLeft: d.domain ?? hostOf(d.listingUrl)
+	});
+}
+
+/** Homepage card — what shares of the root URL unfurl. */
+export function homeCardSvg(): string {
+	return cardSvg({
+		chip: 'semantic search',
+		headline: 'Search the corpus by the problem you are trying to solve.',
+		standfirst: 'Every entry carries purpose, how and when metadata.',
+		footerLeft: 'tools · products · open source',
+		footerRight: 'productsear.ch'
 	});
 }
 

@@ -2,10 +2,30 @@
 	import { fly, slide } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
+	import JsonLd from '$lib/components/JsonLd.svelte';
 
 	let { data } = $props();
 
 	const totalPages = $derived(Math.max(1, Math.ceil(data.group.n / data.pageSize)));
+
+	// structured data: CollectionPage with the first page of entries as an ItemList
+	const groupJsonLd = $derived({
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		'@id': `https://productsear.ch/collections/${data.group.slug}`,
+		name: data.group.name,
+		description: `${data.group.n} listings tagged ${data.group.name.toLowerCase()} in the productsear.ch corpus.`,
+		isPartOf: { '@id': 'https://productsear.ch/#website' },
+		mainEntity: {
+			'@type': 'ItemList',
+			itemListElement: data.entries.map((e: { id: number; title: string }, i: number) => ({
+				'@type': 'ListItem',
+				position: i + 1,
+				url: `https://productsear.ch/listings/${e.id}`,
+				name: e.title
+			}))
+		}
+	});
 
 	function goToPage(e: MouseEvent) {
 		// keep default link navigation (URL state) and return the viewport to the top
@@ -26,7 +46,29 @@
 	};
 </script>
 
-<svelte:head><title>{data.group.name} — collections — productsear.ch</title></svelte:head>
+<svelte:head><title>{data.group.name} — collections — productsear.ch</title>
+	<meta
+		name="description"
+		content={`${data.group.n} listings in the ${data.group.name} collection — each with purpose, how and when metadata. Part of the productsear.ch corpus.`}
+	/>
+	<link
+		rel="canonical"
+		href={`https://productsear.ch/collections/${data.group.slug}${data.page > 1 ? `?page=${data.page}` : ''}`}
+	/>
+	<meta property="og:title" content={`${data.group.name} — collections — productsear.ch`} />
+	<meta
+		property="og:description"
+		content={`${data.group.n} listings tagged ${data.group.name.toLowerCase()}.`}
+	/>
+	<meta property="og:type" content="website" />
+	<meta
+		property="og:url"
+		content={`https://productsear.ch/collections/${data.group.slug}`}
+	/>
+	<meta property="og:image" content="https://productsear.ch/api/og/home?v=1" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<JsonLd data={groupJsonLd} />
+</svelte:head>
 
 {#if data.llm}
 		<LlmDoc md={data.llm} />

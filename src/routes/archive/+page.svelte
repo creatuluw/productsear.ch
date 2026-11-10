@@ -3,8 +3,14 @@
 	import { cubicOut } from 'svelte/easing';
 	import { ARCHETYPE_BY_SLUG } from '$lib/archetypes';
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
+	import { page } from '$app/state';
 
 	let { data } = $props();
+
+	// self-canonical per page of the paginated series (page/last params kept)
+	const canonicalUrl = $derived(
+		`https://productsear.ch${page.url.pathname}${page.url.search}`
+	);
 
 	// group rows by month headline: 2026-11 · 2026-10 · … (continuity on one axis)
 	const groups = $derived.by(() => {
@@ -33,7 +39,22 @@
 	};
 </script>
 
-<svelte:head><title>{data.last30 ? 'listings · last 30 days' : 'listings'} — productsear.ch</title></svelte:head>
+<svelte:head><title>{data.last30 ? 'listings · last 30 days' : 'listings'} — productsear.ch</title>
+	<meta
+		name="description"
+		content="Every listing in the corpus, newest first — developer tools, digital products and open-source projects, each with purpose, how and when metadata."
+	/>
+	<link rel="canonical" href={canonicalUrl} />
+	<meta property="og:title" content="listings — productsear.ch" />
+	<meta
+		property="og:description"
+		content="Every listing in the corpus, newest first — tools, products and open source with purpose/how/when metadata."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={canonicalUrl} />
+	<meta property="og:image" content="https://productsear.ch/api/og/home?v=1" />
+	<meta name="twitter:card" content="summary_large_image" />
+</svelte:head>
 
 {#if data.llm}
 		<LlmDoc md={data.llm} />

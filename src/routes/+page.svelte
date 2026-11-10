@@ -8,8 +8,43 @@
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
 	import WaveLoader from '$lib/components/WaveLoader.svelte';
 	import InfoTip from '$lib/components/InfoTip.svelte';
+	import JsonLd from '$lib/components/JsonLd.svelte';
 
 	let { data } = $props();
+
+	// structured data: WebSite + SearchAction (sitelinks searchbox) + WebApplication
+	const homeJsonLd = {
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'WebSite',
+				'@id': 'https://productsear.ch/#website',
+				url: 'https://productsear.ch/',
+				name: 'productsear.ch',
+				description:
+					'Semantic search over a curated corpus of developer tools, digital products and open-source projects.',
+				potentialAction: {
+					'@type': 'SearchAction',
+					target: {
+						'@type': 'EntryPoint',
+						urlTemplate: 'https://productsear.ch/?q={search_term_string}'
+					},
+					'query-input': 'required name=search_term_string'
+				}
+			},
+			{
+				'@type': 'WebApplication',
+				'@id': 'https://productsear.ch/#app',
+				name: 'productsear.ch',
+				url: 'https://productsear.ch/',
+				applicationCategory: 'SearchApplication',
+				operatingSystem: 'Web',
+				description:
+					'Natural-language search over a curated corpus of developer tools, digital products and open-source projects.',
+				offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
+			}
+		]
+	};
 
 	type SearchResult = {
 		id: number;
@@ -185,7 +220,26 @@
 
 <svelte:window onkeydown={(e) => { if (e.key === 'Escape') drawerOpen = false; }} />
 
-<svelte:head><title>productsear.ch — semantic tool search</title></svelte:head>
+<svelte:head>
+	<title>productsear.ch — semantic tool search</title>
+	<meta
+		name="description"
+		content={`Semantic search over ${data.bookmarkCount.toLocaleString('en-US')} hand-picked developer tools, digital products and open-source projects. Describe the problem — get listings that solve it, each with purpose, how and when metadata.`}
+	/>
+	<link rel="canonical" href="https://productsear.ch/" />
+	<meta property="og:title" content="productsear.ch — semantic tool search" />
+	<meta
+		property="og:description"
+		content="Describe the problem you are trying to solve — the corpus answers with listings that solve it."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://productsear.ch/" />
+	<meta property="og:image" content="https://productsear.ch/api/og/home?v=1" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<JsonLd data={homeJsonLd} />
+</svelte:head>
 
 {#if data.llm}
 		<LlmDoc md={data.llm} />

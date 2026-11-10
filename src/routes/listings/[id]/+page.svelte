@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
+	import JsonLd from '$lib/components/JsonLd.svelte';
 	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 
@@ -8,6 +9,17 @@
 	const listing = $derived(data.listing);
 	const items = $derived(data.items);
 	const walk = $derived(data.walk);
+
+	// structured data: ItemPage for the listing's own corpus page
+	const listingJsonLd = $derived({
+		'@context': 'https://schema.org',
+		'@type': 'ItemPage',
+		'@id': `https://productsear.ch/listings/${listing.id}`,
+		name: listing.title,
+		description: listing.purpose ?? listing.excerpt ?? undefined,
+		url: `https://productsear.ch/listings/${listing.id}`,
+		isPartOf: { '@id': 'https://productsear.ch/#website' }
+	});
 
 	function fmtDate(iso: string | null): string {
 		return iso ? iso.slice(0, 10) : '—';
@@ -29,10 +41,18 @@
 </script>
 
 <svelte:head><title>{listing.title} · the drum · productsear.ch</title>
+	<meta
+		name="description"
+		content={listing.purpose ?? listing.excerpt ?? 'A listing from the productsear.ch corpus.'}
+	/>
+	<link rel="canonical" href={`https://productsear.ch/listings/${listing.id}`} />
 	<meta property="og:title" content={listing.title} />
 	<meta property="og:description" content={listing.purpose ?? listing.excerpt ?? 'A listing from the productsear.ch corpus.'} />
 	<meta property="og:image" content={`https://productsear.ch/api/feed/og/listing/${listing.id}?v=2`} />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={`https://productsear.ch/listings/${listing.id}`} />
 	<meta name="twitter:card" content="summary_large_image" />
+	<JsonLd data={listingJsonLd} />
 </svelte:head>
 
 {#if data.llm}

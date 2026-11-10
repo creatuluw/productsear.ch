@@ -11,6 +11,11 @@
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="theme-color" content="#F9FBFA" />
+		<meta name="color-scheme" content="light dark" />
+		<!-- discovery for clients that never parse page markup: feed + llms map -->
+		<link rel="alternate" type="application/rss+xml" title="The Drum — productsear.ch" href="/feed.xml" />
+		<link rel="llms-txt" href="/llms.txt" />
+		<meta property="og:site_name" content="productsear.ch" />
 		<script>
 			// pre-paint theme: stored preference wins, else OS preference — runs before first paint
 			(() => {
@@ -27,7 +32,8 @@
 					?.setAttribute('content', dark ? '#1A2221' : '#F9FBFA');
 			})();
 		</script>
-		<title>productsear.ch</title>
+		<!-- per-page titles come from each route's svelte:head — a static
+			fallback here would shadow the real titles in raw-HTML crawls -->
 		<!-- Privacy-friendly analytics by Plausible -->
 		<script async src="https://plausible.io/js/pa-wy3y_Tr88wMGSxJ0WPXrO.js"></script>
 		<script>

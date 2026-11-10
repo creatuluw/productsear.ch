@@ -76,6 +76,7 @@ export async function corpusOverviewMd(): Promise<string> {
 		'- Search: `GET https://productsear.ch/api/search?q=<problem-shape>&page=N` — JSON; add `&format=md` for markdown output',
 		'- This page with a query: append `&q=<query>` to get rendered results',
 		'- Full usage guide: https://productsear.ch/skill.md',
+		'- Site map for agents: https://productsear.ch/llms.txt — RSS: https://productsear.ch/feed.xml',
 		'- Browse by archetype: ' +
 			groups
 				.slice(0, 10)

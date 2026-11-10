@@ -1,9 +1,28 @@
 <script lang="ts">
 	import LlmDoc from '$lib/components/LlmDoc.svelte';
+	import { ARCHETYPES } from '$lib/archetypes';
+
 	let { data } = $props();
+
+	const nArchetypes = ARCHETYPES.length;
 </script>
 
-<svelte:head><title>collections — productsear.ch</title></svelte:head>
+<svelte:head><title>collections — productsear.ch</title>
+	<meta
+		name="description"
+		content={`The corpus rolled up into ${nArchetypes} archetypes — curated collections of developer tools, digital products and open-source projects, each listing with purpose/how/when metadata.`}
+	/>
+	<link rel="canonical" href="https://productsear.ch/collections" />
+	<meta property="og:title" content="collections — productsear.ch" />
+	<meta
+		property="og:description"
+		content={`The corpus rolled up into ${nArchetypes} curated collections.`}
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://productsear.ch/collections" />
+	<meta property="og:image" content="https://productsear.ch/api/og/home?v=1" />
+	<meta name="twitter:card" content="summary_large_image" />
+</svelte:head>
 
 {#if data.llm}
 		<LlmDoc md={data.llm} />

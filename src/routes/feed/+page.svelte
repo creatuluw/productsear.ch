@@ -74,11 +74,18 @@
 
 <svelte:head>
 	<title>the drum · productsear.ch</title>
+	<meta
+		name="description"
+		content="The Drum — one draw every 48h. A feed of item types, each showing how a listing can change or enrich a life and its ambitions."
+	/>
+	<link rel="canonical" href="https://productsear.ch/feed" />
+	<link rel="alternate" type="application/rss+xml" title="The Drum — RSS" href="/feed.xml" />
 	<!-- corpus-readout cards share this URL on Bluesky — give it its own OG card -->
 	<meta property="og:title" content="the drum — productsear.ch" />
 	<meta property="og:description" content="One draw every 48h — a feed of item types, each showing how a listing can change or enrich a life and its ambitions. The corpus drafts, the drum keeps time." />
 	<meta property="og:image" content="https://productsear.ch/api/feed/og/drum?v=2" />
 	<meta property="og:url" content="https://productsear.ch/feed" />
+	<meta property="og:type" content="website" />
 	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 

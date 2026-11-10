@@ -25,6 +25,8 @@
 	}
 </script>
 
+<svelte:head><title>admin · productsear.ch</title></svelte:head>
+
 {#if data.denied}
 	<div class="mx-auto my-24 w-full max-w-md px-4">
 		<div class="rounded-lg border border-danger/30 bg-danger/5 p-8 text-center">

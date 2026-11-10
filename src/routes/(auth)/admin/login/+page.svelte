@@ -37,6 +37,8 @@
 	}
 </script>
 
+<svelte:head><title>sign in · productsear.ch</title></svelte:head>
+
 <div class="mx-auto my-20 w-full max-w-sm px-4">
 	<div class="rounded-lg border border-ink/10 bg-surface p-7 shadow-sm">
 		<div class="mb-6 flex items-center gap-3">

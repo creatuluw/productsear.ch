@@ -60,4 +60,6 @@ Verification is mandatory — snippets regularly describe abandoned projects.
   RAG & search, web scraping, video & motion, …), each entry with what it
   does, how to use it, and when to use it
 - Append \`?view=llm\` to any page for paste-ready markdown of its content
+- \`/feed.xml\` — The Drum as RSS 2.0
+- \`/llms.txt\` — machine-readable site map (this guide is linked from there)
 `;
