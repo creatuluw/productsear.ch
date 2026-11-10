@@ -9,3 +9,4 @@
 - 2026-11-01T00:52:28.688Z — p4 gate approved — 0 edits
 - 2026-11-01T01:24:10.154Z — p5 draft shown (round 1) — home/archive/compendium/skill.md built; verify round fixed 5 defects: scrollbar theme, snippet-title dedup, shell bar overflow-x, stats grid 2x2->lg:4, json tag normalization
 - 2026-11-01T01:34:36.271Z — p6 final approved — user approved; original query re-confirmed: MotionClone #21 page 2 score 0.72
+- 2026-11-01T01:44:43.083Z — p6 round 2 applied (post-approval refinement) — 4 items: llm content negotiation, instructions preamble, copy-URL toast, pagination scroll-to-top + accent #0021FF
