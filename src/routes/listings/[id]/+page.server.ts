@@ -10,7 +10,9 @@ import type { PageServerLoad } from './$types';
 // from $lib/server).
 export const load: PageServerLoad = async ({ params, url }) => {
 	const id = Number(params.id);
-	if (!Number.isInteger(id) || id <= 0) error(404, 'listing not found');
+	// any integer id is valid — negative ids are the synthetic manual inserts
+	// (deliberately negative so the external Raindrop sync never collides)
+	if (!Number.isInteger(id)) error(404, 'listing not found');
 
 	const stack = await getStack(id);
 	if (!stack) error(404, 'listing not found');

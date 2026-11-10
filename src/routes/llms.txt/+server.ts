@@ -48,7 +48,7 @@ export const GET: RequestHandler = async () => {
 - [How the Drum works](${ORIGIN}/feed/methodology)
 - [RSS feed](${ORIGIN}/feed.xml): The Drum as RSS 2.0
 - [llms.txt](${ORIGIN}/llms.txt): this file
-- [XML sitemap](${ORIGIN}/sitemap.xml): every indexable URL incl. one page per listing
+- [XML sitemap](${ORIGIN}/sitemap.xml): hub surfaces and the ${ARCHETYPES.length} collections (listing pages are crawled via the archive)
 
 ## Collections
 

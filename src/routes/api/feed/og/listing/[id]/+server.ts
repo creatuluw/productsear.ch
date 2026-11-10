@@ -10,7 +10,8 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
 	const listingId = Number(params.id);
-	if (!Number.isInteger(listingId) || listingId <= 0) {
+	// any integer id is valid — negative ids are the synthetic manual inserts
+	if (!Number.isInteger(listingId)) {
 		return new Response('bad listing id', { status: 400, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 	}
 
