@@ -53,7 +53,7 @@ export const DEFAULT_TYPE_ORDER: FeedType[] = [
 	'impress-the-boss'
 ];
 
-export const DEFAULT_CADENCE_HOURS = 48;
+export const DEFAULT_CADENCE_HOURS = 24;
 
 /** Common base of every item body — jsonb in feed_items.body. */
 export interface FeedItemBody {

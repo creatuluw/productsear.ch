@@ -1,16 +1,24 @@
-# The Drum — run the feed draw daily. The draw is cadence-gated (1 item / 2 days
-# by default, admin-configurable in te9_dev.feed_settings), so a daily check
-# produces an item every other day. Idempotent: draws only when due.
+# The Drum — run the feed draw daily at 06:00 Amsterdam time. The draw is
+# cadence-gated (1 item / day by default, admin-configurable in
+# te9_dev.feed_settings.cadence_hours), so the daily check draws exactly once.
+# Idempotent: draws only when due. New cards are DRAFTS — the draw emails the
+# operator (approval-by-email) and nothing publishes until approved.
 #
 # Secrets required (Settings → Secrets and variables → Actions):
-#   DATABASE_URL — Railway Postgres connection string
+#   DATABASE_URL       — Railway Postgres connection string
+#   UTOBO_EMAIL_API_KEY — for the approval-request email (optional: without it
+#                         the card still drafts; approve via /admin/feed)
+#
+# Timezone note: GitHub cron is UTC-only. 05:03 UTC = 06:03 Amsterdam in
+# winter (CET, UTC+1); during DST (CEST, UTC+2) it fires at 07:03 local.
 
 name: The Drum (feed draw)
 
 on:
   schedule:
-    # 09:07 UTC daily — off the top of the hour to dodge GitHub's cron rush.
-    - cron: '7 9 * * *'
+    # 05:03 UTC daily = 06:03 Amsterdam (CET) — off the top of the hour to
+    # dodge GitHub's cron rush. See the timezone note above re: DST.
+    - cron: '3 5 * * *'
   workflow_dispatch: # manual "Run workflow" button
 
 permissions:
@@ -41,8 +49,11 @@ jobs:
       - name: Sanity check secrets present
         run: |
           test -n "$DATABASE_URL" || { echo "::error::DATABASE_URL secret is not set"; exit 1; }
-
       - name: Run the drum
+        env:
+          UTOBO_EMAIL_API_KEY: ${{ secrets.UTOBO_EMAIL_API_KEY }}
+          DRUM_APPROVAL_EMAIL: ${{ secrets.DRUM_APPROVAL_EMAIL }}
+          DRUM_APPROVAL_SECRET: ${{ secrets.DRUM_APPROVAL_SECRET }}
         run: npx tsx scripts/feed-draw.ts
 
       - name: Summary
