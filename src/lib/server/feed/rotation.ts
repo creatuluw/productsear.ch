@@ -4,6 +4,7 @@
 
 import { DEFAULT_TYPE_ORDER, type FeedItem, type FeedType } from './types';
 import { getFeedSettings, insertFeedItem, lastDrawAt, totalDraws } from './queries';
+import { sendApprovalRequest } from './approval';
 import { GENERATORS } from './generators';
 
 export interface DueInfo {
@@ -59,7 +60,17 @@ export async function drawNext(force = false): Promise<FeedItem | null> {
 		try {
 			const draft = await generate();
 			if (!draft) continue; // nothing to draw for this type right now
-			return await insertFeedItem({ type, ...draft });
+			// approval-by-email: every draw lands as a draft and is mailed to the
+			// operator for approve / regenerate / skip before it publishes. A failed
+			// send must never lose the item — it stays a draft for the admin console.
+			const item = await insertFeedItem({ type, ...draft, requiresApproval: true });
+			try {
+				const mail = await sendApprovalRequest(item);
+				console.log(`[feed] approval ${mail.sent ? 'sent' : 'NOT sent'}: ${mail.reason}`);
+			} catch (e) {
+				console.error('[feed] approval email failed — item stays draft:', e);
+			}
+			return item;
 		} catch (e) {
 			// a broken generator must never stall the drum — log and move on
 			console.error(`[feed] generator ${type} failed:`, e);
