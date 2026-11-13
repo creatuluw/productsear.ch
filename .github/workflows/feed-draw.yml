@@ -16,9 +16,13 @@ name: The Drum (feed draw)
 
 on:
   schedule:
-    # 05:03 UTC daily = 06:03 Amsterdam (CET) — off the top of the hour to
-    # dodge GitHub's cron rush. See the timezone note above re: DST.
-    - cron: '3 5 * * *'
+    # Morning window 04:03–06:03 UTC (cadence-gated: only the first attempt
+    # past the 24h clock draws — normally 05:03 UTC = 06:03 Amsterdam CET;
+    # DST summer it is 07:03 local, GitHub cron is UTC-only). The evening
+    # attempt is a catch-up: it only fires if the morning attempts all missed,
+    # so the drum never loses a day. Redundant attempts no-op when not due.
+    - cron: '3 4,5,6 * * *'
+    - cron: '3 16 * * *'
   workflow_dispatch: # manual "Run workflow" button
 
 permissions:
