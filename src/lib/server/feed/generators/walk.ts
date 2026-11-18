@@ -10,6 +10,21 @@ import type { GeneratorResult } from '../types';
 
 const HOPS = 4;
 
+/** The Walk rests between appearances: it may publish again only after this
+ * many days since the last *published* walk. The round-robin hands it a slot
+ * every ~10 draws; a 20-day minimum gap halves that frequency (demoted
+ * 2026-11-18 — three consecutive walks during the LLM outage showed it reads
+ * as repetition, and it is the weakest-narrated card). Returning null lets
+ * the rotation fall through to the next type, as designed. */
+const WALK_MIN_GAP_DAYS = 20;
+
+async function lastPublishedWalkAt(): Promise<string | null> {
+	const rows = await db.execute<{ t: string | null }>(
+		sql`SELECT max(published_at)::text AS t FROM te9_dev.feed_items WHERE type = 'walk' AND status = 'published'`
+	);
+	return rows[0]?.t ?? null;
+}
+
 type WalkNode = {
 	id: number;
 	title: string;
@@ -25,6 +40,12 @@ function intArrayLiteral(ids: number[]): string {
 }
 
 export async function generateWalk(): Promise<GeneratorResult | null> {
+	// resting cadence — too recent? hand the slot to the next type
+	const lastWalk = await lastPublishedWalkAt();
+	if (lastWalk && Date.now() - new Date(lastWalk).getTime() < WALK_MIN_GAP_DAYS * 24 * 3_600_000) {
+		return null;
+	}
+
 	const used = await usedListingIds();
 
 	// seed: random embedded listing, not already drawn

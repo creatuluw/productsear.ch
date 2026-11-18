@@ -215,7 +215,19 @@
 										{#each item.body.items as li, j (j)}
 											<li class="flex min-w-0 items-baseline gap-2">
 												<span class="shrink-0 text-accent">▸</span>
-												<span class="min-w-0">{li.label}{#if li.note}<span class="text-ink-faint"> — {li.note}</span>{/if}</span>
+												<span class="min-w-0">
+												{#if li.url}
+													<a
+														href={li.url}
+														target="_blank"
+														rel="noopener"
+														class="underline decoration-ink/20 underline-offset-2 transition-colors hover:text-accent hover:decoration-accent/50"
+													>{li.label}</a>
+												{:else}
+													{li.label}
+												{/if}
+												{#if li.note}<span class="text-ink-faint"> — {li.note}</span>{/if}
+											</span>
 											</li>
 										{/each}
 									</ul>
