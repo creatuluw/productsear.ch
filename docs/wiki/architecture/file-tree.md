@@ -2,10 +2,10 @@
 type: Artifact
 title: File tree
 description: Complete project file listing with per-file descriptions.
-timestamp: "2026-11-06T20:27:08.223Z"
+timestamp: "2026-11-10T11:36:05.690Z"
 ---
 
-# File tree — regenerated 2026-11-06 (through The Drum slices A–C)
+# File tree — updated 2026-11-10 (adds the search/LLM discovery layer; base regenerated 2026-11-06 through The Drum slices A–C)
 # Excludes .git, node_modules, .svelte-kit, build, .pi, .work, .agents, .archive (gitignored).
 # [description] — shorthand summary of each file's function
 
@@ -53,17 +53,19 @@ timestamp: "2026-11-06T20:27:08.223Z"
 ├── static/
 │   ├── favicon.svg
 │   ├── fonts/ [vendored Hanken Grotesk TTFs + SIL OFL licenses — brand fonts for the resvg receipt-card OG render]
-│   └── mascot-product-search.png [transparent mascot cutout for the site-wide footer]
+│   ├── mascot-product-search.png [transparent mascot cutout for the site-wide footer]
+│   └── robots.txt [crawler control: 17-bot AI-crawler group + shared private-path Disallows + Sitemap: line]
 └── src/
     ├── app.css [Tailwind 4 + semantic theme tokens (@theme inline; html.dark swap for dark mode)]
     ├── app.d.ts [SvelteKit app typings]
-    ├── app.html [root HTML shell; Plausible analytics script wired here]
-    ├── hooks.server.ts [content negotiation: ?view=llm from non-browser clients → raw text/markdown]
+    ├── app.html [root HTML shell; Plausible analytics script wired here; static <title> removed 2026-11-10 — per-page titles own it]
+    ├── hooks.server.ts [content negotiation: ?view=llm from non-browser clients → raw text/markdown; X-Robots-Tag noindex,nofollow on /admin, /api/auth, /api/digest, /digest; HTTP Link discovery header (llms.txt + sitemap + RSS) on every HTML response]
     ├── lib/
     │   ├── archetypes.ts [30-canonical-archetype multi-label classifier (shared)]
     │   ├── auth-client.ts [better-auth browser client]
     │   ├── components/
     │   │   ├── InfoTip.svelte [hover/focus tooltip; methodology + vital-signs labels]
+│   │   ├── JsonLd.svelte [JSON-LD renderer: WebSite+SearchAction on /, CollectionPage+ItemList on collections, ItemPage on listings; escapes < to <]
     │   │   ├── LlmDoc.svelte [renders ?view=llm markdown for humans + raw .md link]
     │   │   ├── WaveLoader.svelte [CSS-only wave animation in the latency gauge]
     │   │   ├── wave-loader-demo.html [standalone WaveLoader demo harness; local-only]
@@ -80,6 +82,7 @@ timestamp: "2026-11-06T20:27:08.223Z"
     │       │   └── auth-schema.ts [better-auth tables (auth_ prefix)]
     │       ├── embeddings.ts [Voyage embedding client; voyage-4-large 1024-dim; raw fetch]
     │       ├── feed/
+    │       │   ├── approval.ts [drum approval-by-email: HMAC per-item token (no schema), utobo preview mail with Approve/Generate-new/Skip GET links]
     │       │   ├── digest.ts [Digest pipeline: subscribers, windowed selection (published_at > last_digest_sent_at; limit 12, first send 5), buildDigestHtml, sendDigest()]
     │       │   ├── llm.ts [shared LLM drafting helper: z.ai GLM-5 → Railway gateway; draftText/draftJson; throws so rotation skips]
     │       │   ├── queries.ts [feed_items/feed_settings reads + mutations; listAllItems, patchItemBody, setItemApproval/Status, settings]
@@ -100,10 +103,12 @@ timestamp: "2026-11-06T20:27:08.223Z"
     │       │       └── walk.ts [pure pgvector: random seed → 4 nearest-neighbor hops (WalkNode; ARRAY[...]::int[] literal for ALL comparisons)]
     │       ├── llms.ts [?view=llm core: wantsRawMarkdown(), llmMarkdown() route router, mdResponse()]
     │       ├── llmview.ts [per-surface markdown builders (search/archive/collections/feed/methodology) + usage preamble]
-    │       ├── rerank.ts [Voyage rerank-2.5-lite cross-encoder client; shares VOYAGE_API_KEY]
+    │       ├── og.ts [shared OG card builder: receipt-card SVG → resvg; serves /api/og/home + /api/feed/og/listing/[id]; fail-soft asset loads]
+│       ├── rerank.ts [Voyage rerank-2.5-lite cross-encoder client; shares VOYAGE_API_KEY]
     │       ├── search.ts [single hybrid RRF SQL query + pool-then-rerank + RELEVANCE_FLOOR]
     │       └── skill-doc.ts [SKILL_MD — LLM usage guide served at /skill.md; synced with E:\skills.te9.dev]
     └── routes/
+        ├── +error.svelte [branded error page; returns real 404/500 HTTP status — no soft-404s]
         ├── +layout.svelte [site-wide layout: nav (search · listings · collections · feed · the drum) + llms-view toast + footer, footer hidden on ?view=llm]
         ├── +page.server.ts [homepage search load; ?view=llm markdown surfaces]
         ├── +page.svelte [search UI; humans | llms tabs; WaveLoader; InfoTip]
@@ -120,8 +125,10 @@ timestamp: "2026-11-06T20:27:08.223Z"
         │   ├── auth/[...all]/+server.ts [better-auth catch-all handler]
         │   ├── digest/subscribe/+server.ts [POST — public Digest opt-in: validated, duplicate-safe, unsubscribe-token rotation]
         │   ├── feed/draw/+server.ts [POST — admin-allowlist gated manual drum draw]
+    │   ├── feed/approve/+server.ts [GET — email-click approval endpoint: HMAC-token authorizes approve|regenerate|skip; 200 branded confirm page, 403 invalid token; regenerate redraws + remails synchronously]
         │   ├── feed/og/listing/[id]/+server.ts [GET — receipt-card OG PNG: hand-built SVG → resvg, vendored Hanken Grotesk fonts]
-        │   └── search/+server.ts [GET — hybrid RRF search + Voyage rerank]
+        │   ├── og/home/+server.ts [GET — homepage OG card: root-URL shares unfurl a designed receipt-card image]
+│   └── search/+server.ts [GET — hybrid RRF search + Voyage rerank]
         ├── archive/ [chronological listings browser + ?view=llm]
         ├── collections/ (+ [slug]/) [archetype roll-up + ?view=llm]
         ├── compendium/ (+ [slug]/) [308 redirects → /collections]
@@ -130,9 +137,13 @@ timestamp: "2026-11-06T20:27:08.223Z"
         │   ├── +page.server.ts / +page.svelte [the drum: header with cadence/next-draw/next-type + methodology link, type-tagged stream, LlmDoc twin]
         │   └── methodology/ [how this drum works — trust surface; same markdown for human + raw views]
         ├── listings/[id]/ [listing stack page: context, its feed items, Keep Walking + ?view=llm]
+        ├── .well-known/security.txt/+server.ts [GET — RFC 9116 security.txt]
+        ├── feed.xml/+server.ts [GET — The Drum as RSS 2.0; 30–60 min public cache]
+        ├── llms.txt/+server.ts [GET — llmstxt.org agent index with live corpus stats; fail-soft]
+        ├── sitemap.xml/+server.ts [GET — dynamic XML sitemap: 6 static + 30 collections + all listings; fail-soft]
         └── skill.md/+server.ts [GET /skill.md — raw LLM usage guide]
 └── .github/
     └── workflows/
         ├── digest-send.yml [weekly Mon 10:07 UTC cron: The Digest send via utobo (dark by default) + manual dispatch]
         ├── embed-new-bookmarks.yml [daily cron: embed new bookmarks]
-        └── feed-draw.yml [daily 09:07 UTC cron: cadence-gated drum draw]
+        └── feed-draw.yml [daily 05:03 UTC cron (= 06:03 Amsterdam CET / 07:03 CEST): cadence-gated drum draw → approval email]

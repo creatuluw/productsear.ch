@@ -43,3 +43,10 @@ _Major decisions and direction shifts (ADRs) will be listed here._
 - [Adapt every public surface for touch/mobile — rethink, don't scale](./adapt-every-public-surface-for-touch-mobile-rethink-don-t-sc.md) - **Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-
 - [Homepage content/system-metadata split: auto-opening search drawer](./homepage-content-system-metadata-split-auto-opening-search-d.md) - **Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text · cross-encoder rera
 - [Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint](./elegant-shared-og-cards-one-card-builder-in-lib-server-og-pl.md) - Context
+- [Adopt full search-engine and LLM discovery infrastructure](./adopt-full-search-engine-and-llm-discovery-infrastructure.md) - Context
+- [Trim sitemap.xml to hub surfaces only — no individual listing URLs](./trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md) - Context
+- [Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes](./drum-items-gate-on-email-approval-preview-approve-generate-n.md) - Context
+- [Drum draw cadence: once daily at 07:00 Amsterdam time](./drum-draw-cadence-once-daily-at-07-00-amsterdam-time.md) - Context
+- [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](./drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) - Context
+- [Drum draw schedule made miss-proof (cron redundancy)](./drum-draw-schedule-made-miss-proof-cron-redundancy.md) - Context
+- [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](./the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md) - Context

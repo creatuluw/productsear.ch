@@ -4,119 +4,238 @@ var WIKI_CONTENT = {
 type: Artifact
 title: File tree
 description: Complete project file listing with per-file descriptions.
-timestamp: "2026-07-04T00:00:00.000Z"
+timestamp: "2026-11-10T11:36:05.690Z"
 ---
 
-# File tree — generated 2026-11-01
-# Excludes .git, node_modules, .svelte-kit, build, .pi, .work, .agents.
+# File tree — updated 2026-11-10 (adds the search/LLM discovery layer; base regenerated 2026-11-06 through The Drum slices A–C)
+# Excludes .git, node_modules, .svelte-kit, build, .pi, .work, .agents, .archive (gitignored).
 # [description] — shorthand summary of each file's function
 
 .
-├── .env [local env, gitignored — DATABASE_URL + VOYAGE_API_KEY + chat provider keys]
-├── .env.example [committed env template; Voyage keys + DeepSeek/OpenAI chat config]
-├── .gitignore
+├── .env [local env, gitignored — DATABASE_URL + VOYAGE_API_KEY + chat/LLM provider keys]
+├── .env.example [committed env template]
+├── .gitignore [.archive/ and wave-loader-demo.html deliberately untracked]
 ├── .prettierrc
 ├── README.md
 ├── eslint.config.js [flat config: typescript-eslint + eslint-plugin-svelte]
-├── package.json [SvelteKit 2 + adapter-node + Drizzle + ai SDK + Tailwind 4; \`start\` = node build]
+├── package.json [SvelteKit 2 + adapter-node + Drizzle + Tailwind 4; \`start\` = node build]
 ├── package-lock.json
 ├── svelte.config.js [adapter-node]
 ├── tsconfig.json [TS strict]
-├── vite.config.ts [sveltekit() plugin from @sveltejs/kit/vite + Tailwind 4]
-├── docs/ [project documentation]
-│   └── wiki/ [OKF knowledge wiki bundle]
-│       ├── architecture/ [architectural artifacts (diagrams, file maps)]
-│       │   └── file-tree.md [this file — complete project listing]
-│       ├── decisions/ [Architecture Decision Records (ADRs)]
-│       │   ├── hybrid-semantic-search-stack-pgvector-tsvector.md [core search/RAG stack choice]
-│       │   └── index.md
-│       ├── learnings/ [captured insights and non-obvious facts]
-│       │   ├── env-dynamic-private-breaks-under-plain-tsx-use.md [$env/dynamic/private + tsx gotcha]
-│       │   ├── postgres-js-db-execute-returns-rows-directly-not.md [db.execute shape gotcha]
-│       │   ├── vercel-ai-sdk-v4-streamtext-exposes-async.md [streamText surface gotcha]
-│       │   └── index.md
-│       ├── pages/ [project pages: concepts, entities, artifacts]
-│       │   ├── concepts/
-│       │   │   ├── hybrid-search-via-reciprocal-rank-fusion.md [RRF fusion concept]
-│       │   │   └── index.md
-│       │   ├── entities/
-│       │   │   ├── api-ask-endpoint.md [streaming RAG route]
-│       │   │   ├── api-search-endpoint.md [hybrid search route]
-│       │   │   ├── embed-bookmarks-backfill-script.md [resumable embedding backfill]
-│       │   │   └── index.md
-│       │   ├── artifacts/ [empty — index only]
-│       │   ├── TEMPLATES.md [reference templates for Concept/Entity/Artifact pages]
-│       │   └── index.md
-│       ├── preferences/ [empty — index only]
-│       ├── rules/ [empty — index only]
-│       ├── glossary.md [key terms and definitions]
-│       ├── index.md [wiki landing page linking all sections]
-│       ├── last_updated.md [sync marker]
-│       └── log.md [chronological update/changelog log]
+├── vite.config.ts [sveltekit() plugin + Tailwind 4]
 ├── docs/
+│   ├── specs/
+│   │   └── the-drum.md [formal converged spec for The Drum feed]
 │   ├── research_semantic_search/
 │   │   └── research_report.md [research backing the search/RAG stack decision]
-│   └── wiki/ [OKF knowledge wiki bundle]  (see below)
+│   └── wiki/ [OKF knowledge wiki bundle — index/overview/memory/glossary + decisions/rules/learnings/pages/changelog]
 ├── scripts/
-│   ├── analyze-bookmarks.js [LLM analysis pass (z.ai GLM-5 → Railway Qwen fallback) → bookmark_analysis; LIMIT 100/run; imported from te9.dev 2026-11-06] (npm run analyze)
-│   ├── backfill-archetypes.ts [deterministic multi-label archetype classifier → bookmark_archetypes; --missing for unclassified only]
+│   ├── analyze-bookmarks.js [LLM analysis pass (z.ai GLM-5 → Railway Qwen fallback) → bookmark_analysis; LIMIT 100/run]
+│   ├── backfill-archetypes.ts [deterministic multi-label archetype classifier → bookmark_archetypes; --missing]
 │   ├── calibrate-floor.ts [rerank score-distribution calibration for RELEVANCE_FLOOR]
-│   ├── crawl-bookmarks.js [Readability crawler → bookmark_content; LIMIT 100/run; imported from te9.dev 2026-11-06] (npm run crawl)
+│   ├── crawl-bookmarks.js [Readability crawler → bookmark_content; LIMIT 100/run]
 │   ├── diagnose-query.ts [trace a query + url-substring target through vec/text/RRF stages]
+│   ├── digest-send.ts [The Digest send runner: --dry renders the email, --send sends via utobo; stage-verified gates]
 │   ├── embed-bookmarks.ts [resumable batched embedding backfill; --dry-run]
-│   ├── insert-missing-repos-active-30d.sql [idempotent INSERT of the 522 active missing GitHub repos (synthetic negative ids); executed 2026-11-06]
+│   ├── feed-draw.ts [The Drum cadence-gated draw runner; --force / --status]
+│   ├── insert-missing-repos-active-30d.sql [idempotent INSERT of the 522 active missing repos (synthetic negative ids)]
 │   ├── migrate.ts [applies a SQL migration file to DATABASE_URL]
-│   ├── migration.sql [enable pgvector, create bookmark_embeddings (384-dim) + HNSW + GIN — original schema]
-│   ├── migration-384.sql [original OpenAI/hf 384-dim variant, superseded by voyage-1024]
+│   ├── migration.sql [pgvector + bookmark_embeddings 384-dim original schema]
+│   ├── migration-384.sql [superseded 384-dim variant]
+│   ├── migration-admin.sql [auth + admin console tables; idempotent; seeds flags/settings]
+│   ├── migration-archetypes.sql [bookmark_archetypes table]
+│   ├── migration-digest.sql [digest_subscribers table + feed_settings.last_digest_sent_at send cursor]
+│   ├── migration-feed.sql [The Drum data core: feed_items, feed_settings, search_misses]
+│   ├── migration-feed-flags.sql [feed_settings nav_enabled / homepage_cards_enabled — The Drum visibility flags]
 │   ├── migration-voyage-1024.sql [Voyage voyage-4-large 1024-dim embedding column + index]
-│   ├── rollback-insert-missing-repos-active-30d.sql [undo for the insert above: deletes bookmark_id/id < 0 rows children-first, one transaction]
-│   ├── sync-raindrop.js [Raindrop collection → te9_dev.bookmarks upsert-only mirror sync; imported from te9.dev 2026-11-06] (npm run sync)
-│   └── verify-search.ts [end-to-end check that the conversational video-query returns MotionClone]
+│   ├── rollback-insert-missing-repos-active-30d.sql / rollback-migration-admin.sql [undo scripts]
+│   ├── run-sql.ts [reusable SQL runner: dry-run = transaction rollback, --commit to persist]
+│   ├── sync-raindrop.js [Raindrop → te9_dev.bookmarks upsert-only mirror sync]
+│   └── verify-search.ts [end-to-end check that the video-query returns MotionClone]
 ├── static/
 │   ├── favicon.svg
-│   └── mascot-product-search.png [transparent mascot cutout for the site-wide footer]
+│   ├── fonts/ [vendored Hanken Grotesk TTFs + SIL OFL licenses — brand fonts for the resvg receipt-card OG render]
+│   ├── mascot-product-search.png [transparent mascot cutout for the site-wide footer]
+│   └── robots.txt [crawler control: 17-bot AI-crawler group + shared private-path Disallows + Sitemap: line]
 └── src/
-    ├── app.css [Tailwind 4 import]
+    ├── app.css [Tailwind 4 + semantic theme tokens (@theme inline; html.dark swap for dark mode)]
     ├── app.d.ts [SvelteKit app typings]
-    ├── app.html [root HTML shell; Plausible analytics script wired here]
-    ├── hooks.server.ts [content negotiation: ?view=llm from non-browser clients → raw text/markdown via lib/server/llms.ts]
+    ├── app.html [root HTML shell; Plausible analytics script wired here; static <title> removed 2026-11-10 — per-page titles own it]
+    ├── hooks.server.ts [content negotiation: ?view=llm from non-browser clients → raw text/markdown; X-Robots-Tag noindex,nofollow on /admin, /api/auth, /api/digest, /digest; HTTP Link discovery header (llms.txt + sitemap + RSS) on every HTML response]
     ├── lib/
+    │   ├── archetypes.ts [30-canonical-archetype multi-label classifier (shared)]
+    │   ├── auth-client.ts [better-auth browser client]
     │   ├── components/
-    │   │   ├── InfoTip.svelte [hover/focus tooltip; explains methodology + vital-signs labels on the homepage]
-    │   │   ├── LlmDoc.svelte [renders ?view=llm markdown for humans (marked) with a raw .md link]
-    │   │   ├── WaveLoader.svelte [CSS-only wave animation shown in the latency gauge while searching]
-    │   │   └── wave-loader-demo.html [standalone demo harness for the WaveLoader (21st.dev symmetric-wave port); dev-only, not imported]
+    │   │   ├── InfoTip.svelte [hover/focus tooltip; methodology + vital-signs labels]
+│   │   ├── JsonLd.svelte [JSON-LD renderer: WebSite+SearchAction on /, CollectionPage+ItemList on collections, ItemPage on listings; escapes < to <]
+    │   │   ├── LlmDoc.svelte [renders ?view=llm markdown for humans + raw .md link]
+    │   │   ├── WaveLoader.svelte [CSS-only wave animation in the latency gauge]
+    │   │   ├── wave-loader-demo.html [standalone WaveLoader demo harness; local-only]
+    │   │   └── icons/ShieldCogCorner.svelte [admin entry icon; lucide-style shield+cog]
     │   └── server/
+    │       ├── admin-guard.ts [requireAdmin() — re-guards every admin form action]
+    │       ├── admin-settings.ts [getSetting/getFlag with 30s cache + clearSettingsCache()]
+    │       ├── admin-util.ts [shared admin helpers]
+    │       ├── auth.ts [better-auth server instance (email+password)]
     │       ├── bookmark-text.ts [builds the one searchable text blob per bookmark]
     │       ├── db/
-    │       │   └── index.ts [Drizzle/postgres-js client; reads process.env]
-    │       ├── embeddings.ts [Voyage AI embedding client; default voyage-4-large 1024-dim; raw fetch, no SDK]
-    │       ├── llms.ts [?view=llm core: wantsRawMarkdown(), corpusOverviewMd(), llmMarkdown() route router, mdResponse()]
-    │       ├── llmview.ts [per-surface ?view=llm markdown builders (search / archive / collections) + usage preamble]
-    │       ├── rerank.ts [Voyage rerank-2.5-lite cross-encoder re-scoring client; shares VOYAGE_API_KEY]
-    │       ├── search.ts [single hybrid RRF SQL query: cosine + ts_rank]
-    │       └── skill-doc.ts [SKILL_MD — LLM usage guide served at /skill.md; kept in sync with E:\\skills.te9.dev\\productsear.ch\\SKILL.md]
+    │       │   ├── index.ts [Drizzle/postgres-js client; search_path te9_dev,public]
+    │       │   ├── admin-schema.ts [admin_extensions/agents/settings/features]
+    │       │   └── auth-schema.ts [better-auth tables (auth_ prefix)]
+    │       ├── embeddings.ts [Voyage embedding client; voyage-4-large 1024-dim; raw fetch]
+    │       ├── feed/
+    │       │   ├── approval.ts [drum approval-by-email: HMAC per-item token (no schema), utobo preview mail with Approve/Generate-new/Skip GET links]
+    │       │   ├── digest.ts [Digest pipeline: subscribers, windowed selection (published_at > last_digest_sent_at; limit 12, first send 5), buildDigestHtml, sendDigest()]
+    │       │   ├── llm.ts [shared LLM drafting helper: z.ai GLM-5 → Railway gateway; draftText/draftJson; throws so rotation skips]
+    │       │   ├── queries.ts [feed_items/feed_settings reads + mutations; listAllItems, patchItemBody, setItemApproval/Status, settings]
+    │       │   ├── rotation.ts [drawNext/nextDueInfo — cadence clock + round-robin, catch-and-skip]
+    │       │   ├── stack.ts [listing-stack queries + Keep Walking neighbors]
+    │       │   ├── types.ts [FeedType roster (10 implemented of 11), FeedItemBody, GeneratorResult — type aliases by design]
+    │       │   └── generators/
+    │       │       ├── index.ts [GENERATORS registry — one function per implemented type]
+    │       │       ├── ambition-path.ts [corpus picks cluster + 5 listings; LLM names ambition, orders steps (id-validated)]
+    │       │       ├── floor.ts [aggregated zero-result search themes; waits for search_misses]
+    │       │       ├── impress-the-boss.ts [LLM names role + artifact; origin tag described-from-analysis]
+    │       │       ├── one-save.ts [LLM why-it-mattered paragraph + reader question]
+    │       │       ├── pitch.ts [LLM infers persona, pitches in second person]
+    │       │       ├── pulse.ts [archetype drift movers + rising domains]
+    │       │       ├── resurrections.ts [300–900-day-old saves, second life]
+    │       │       ├── tombola.ts [last-10 saves scored by archetype drift]
+    │       │       ├── two-futures.ts [LLM writes the two Tuesday scenes]
+    │       │       └── walk.ts [pure pgvector: random seed → 4 nearest-neighbor hops (WalkNode; ARRAY[...]::int[] literal for ALL comparisons)]
+    │       ├── llms.ts [?view=llm core: wantsRawMarkdown(), llmMarkdown() route router, mdResponse()]
+    │       ├── llmview.ts [per-surface markdown builders (search/archive/collections/feed/methodology) + usage preamble]
+    │       ├── og.ts [shared OG card builder: receipt-card SVG → resvg; serves /api/og/home + /api/feed/og/listing/[id]; fail-soft asset loads]
+│       ├── rerank.ts [Voyage rerank-2.5-lite cross-encoder client; shares VOYAGE_API_KEY]
+    │       ├── search.ts [single hybrid RRF SQL query + pool-then-rerank + RELEVANCE_FLOOR]
+    │       └── skill-doc.ts [SKILL_MD — LLM usage guide served at /skill.md; synced with E:\\skills.te9.dev]
     └── routes/
-        ├── +layout.svelte [site-wide layout: slim nav (search · listings · collections) + llms-view toast + slim footer (mascot cutout + tagline), footer hidden on ?view=llm]
-        ├── +page.server.ts [load: homepage search results; ?view=llm → markdown surfaces, corpus overview when no q]
-        ├── +page.svelte [search UI; humans | llms dual-view tabs; WaveLoader in the latency gauge; InfoTip tooltips on methodology + vital-signs]
-        ├── archive/
-        │   ├── +page.server.ts [archive browser load + ?view=llm markdown]
-        │   └── +page.svelte [chronological listings browser (display term "listings"; URL stays /archive)]
-        ├── collections/
-        │   ├── +page.server.ts [collections load + ?view=llm markdown]
-        │   └── +page.svelte [browse listings by archetype]
-        ├── compendium/
-        │   ├── +page.server.ts [308 redirect → /collections (query string preserved)]
-        │   └── [slug]/+page.server.ts [308 redirect → /collections/<slug>]
-        ├── skill.md/
-        │   └── +server.ts [GET /skill.md — raw LLM usage guide (SKILL_MD)]
-        └── api/
-            └── search/
-                └── +server.ts [GET /api/search — hybrid RRF search + Voyage rerank]
+        ├── +error.svelte [branded error page; returns real 404/500 HTTP status — no soft-404s]
+        ├── +layout.svelte [site-wide layout: nav (search · listings · collections · feed · the drum) + llms-view toast + footer, footer hidden on ?view=llm]
+        ├── +page.server.ts [homepage search load; ?view=llm markdown surfaces]
+        ├── +page.svelte [search UI; humans | llms tabs; WaveLoader; InfoTip]
+        ├── (admin)/admin/
+        │   ├── +layout.svelte [(admin) guard layout]
+        │   ├── +page.server.ts / +page.svelte [dashboard: corpus vitals + counts]
+        │   ├── agents/ [agent CRUD]
+        │   ├── extensions/ [extension CRUD]
+        │   ├── features/ [feature-flag toggles]
+        │   ├── feed/ [The Drum editorial console: queue, inline editor, approval dial, publish/retract/delete, draw-now, cadence/order/Digest settings]
+        │   └── settings/ [settings form]
+        ├── (auth)/admin/login/ [sign-in/sign-up outside the (admin) guard]
+        ├── api/
+        │   ├── auth/[...all]/+server.ts [better-auth catch-all handler]
+        │   ├── digest/subscribe/+server.ts [POST — public Digest opt-in: validated, duplicate-safe, unsubscribe-token rotation]
+        │   ├── feed/draw/+server.ts [POST — admin-allowlist gated manual drum draw]
+    │   ├── feed/approve/+server.ts [GET — email-click approval endpoint: HMAC-token authorizes approve|regenerate|skip; 200 branded confirm page, 403 invalid token; regenerate redraws + remails synchronously]
+        │   ├── feed/og/listing/[id]/+server.ts [GET — receipt-card OG PNG: hand-built SVG → resvg, vendored Hanken Grotesk fonts]
+        │   ├── og/home/+server.ts [GET — homepage OG card: root-URL shares unfurl a designed receipt-card image]
+│   └── search/+server.ts [GET — hybrid RRF search + Voyage rerank]
+        ├── archive/ [chronological listings browser + ?view=llm]
+        ├── collections/ (+ [slug]/) [archetype roll-up + ?view=llm]
+        ├── compendium/ (+ [slug]/) [308 redirects → /collections]
+        ├── digest/unsubscribe/ [+page.server.ts / +page.svelte — token unsubscribe from The Digest; subscribers marked, never erased]
+        ├── feed/
+        │   ├── +page.server.ts / +page.svelte [the drum: header with cadence/next-draw/next-type + methodology link, type-tagged stream, LlmDoc twin]
+        │   └── methodology/ [how this drum works — trust surface; same markdown for human + raw views]
+        ├── listings/[id]/ [listing stack page: context, its feed items, Keep Walking + ?view=llm]
+        ├── .well-known/security.txt/+server.ts [GET — RFC 9116 security.txt]
+        ├── feed.xml/+server.ts [GET — The Drum as RSS 2.0; 30–60 min public cache]
+        ├── llms.txt/+server.ts [GET — llmstxt.org agent index with live corpus stats; fail-soft]
+        ├── sitemap.xml/+server.ts [GET — dynamic XML sitemap: 6 static + 30 collections + all listings; fail-soft]
+        └── skill.md/+server.ts [GET /skill.md — raw LLM usage guide]
 └── .github/
     └── workflows/
-        └── embed-new-bookmarks.yml [daily cron + manual dispatch: embeds new bookmarks]
+        ├── digest-send.yml [weekly Mon 10:07 UTC cron: The Digest send via utobo (dark by default) + manual dispatch]
+        ├── embed-new-bookmarks.yml [daily cron: embed new bookmarks]
+        └── feed-draw.yml [daily 05:03 UTC cron (= 06:03 Amsterdam CET / 07:03 CEST): cadence-gated drum draw → approval email]
+`,
+  "decisions/adapt-every-public-surface-for-touch-mobile-rethink-don-t-sc.md": `---
+type: Decision
+title: Adapt every public surface for touch/mobile — rethink, don't scale
+description: "**Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-"
+tags: [frontend, mobile, responsive, touch, gestalt, design]
+status: accepted
+timestamp: "2026-11-06T23:46:41.433Z"
+---
+
+# Adapt every public surface for touch/mobile — rethink, don't scale
+
+**Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-method]] lens) found 11 structural mobile problems across every surface: nav hidden behind invisible horizontal scroll; touch targets ≪44px (icon buttons, pills, tabs, pager, chips, toggles); 12px digest input triggering iOS focus zoom; no \`viewport-fit=cover\` / safe-area insets; \`100vh\` root breaking under dynamic mobile toolbars; vital-signs panel orphaning a half-width latency cell (a symmetry & order violation); Drum cards 3-across at 768px (~230px each); feed readout truncating values on phones; footer credit + mascot colliding and toast overflowing 320px; InfoTips hover-only (unreachable on touch); \`px-7\` plates eating narrow screens.
+
+**Choice.** One adaptation pass across every public surface (home, archive, collections, feed, listings, layout shell): two-deck mobile header; ≥44px touch targets everywhere; 16px+ inputs; \`min-h-dvh\` + safe-area insets + \`viewport-fit=cover\`; structural vital-panel grid rework (2×2 + latency on phones, \`md:grid-cols-5\` on tablets); 2-col Drum cards on tablet; stacked feed readout; stacked footer + 320px-safe toast; tap-toggle InfoTips; slimmer plate padding below \`lg\`.
+
+**Alternatives considered.** (1) Incremental media-query patches — rejected: leaves desktop-first assumptions in place and produces the orphan-cell / cramped-card class of bugs. (2) Separate mobile site — rejected: dual maintenance for one corpus.
+
+**Rationale.** The adapt skill's "rethink, don't scale": the problems were structural (Gestalt violations), not spacing nudges, so fixes were grid/layout reworks. Verified with [[rules/probe-responsive-overflow-programmatically-don-t-eyeball-sc]]: 0px horizontal overflow at 320/390/768/1280 on all surfaces, desktop unchanged.
+
+**Consequences.** Touch parity everywhere; the header wraps gracefully below \`lg\` on tablets (intended fallback, everything visible); the InfoTip trigger surface now includes tap; closed tipboxes use \`display:none\` (see [[learnings/opacity-0-elements-still-occupy-layout-space-closed-ti]]).
+`,
+  "decisions/add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos.md": `---
+type: Decision
+title: Add a corpus-narrated magazine feed to productsear.ch (proposed)
+description: Context
+tags: [magazine, editorial, content-strategy, feed, corpus, proposed]
+status: proposed
+supersedes: [remove-ask-mode-productsear-ch-becomes-search-only]
+timestamp: "2026-11-06T18:44:46.196Z"
+---
+
+# Add a corpus-narrated magazine feed to productsear.ch (proposed)
+
+## Context
+
+Brainstorm (2026-11-06, status: **proposed, awaiting user answers**). productsear.ch is currently search-only (see [the Ask-mode removal ADR](remove-ask-mode-productsear-ch-becomes-search-only.md)). The user is exploring adding an editorial layer: a **magazine narrated by the corpus**. The stated unfair advantage: the corpus (3,764 classified bookmarks with embeddings, 30 archetypes, timestamps, analysis fields) means every editorial claim has a receipt — the actual saved link — and enables formats no other publication can produce. No writing staff required; drafts are template-generated from corpus data.
+
+## The proposal — three idea groups (round 1)
+
+1. **"The Living Index"** — corpus-native formats (the ~80%):
+   - *Why We Saved This* — the intention behind one save ("saved 4:02am, 412 days ago")
+   - *The Semantic Walk* — essay connecting 4–5 embedding nearest-neighbor hops; readers can continue the walk live into search
+   - *Resurrections* — saved-but-never-returned-to links, revived
+   - *Distance charts* — the two most semantically distant bookmarks of the week
+
+2. **"The Signal Desk"** — the unexpected ~20%:
+   - *Archetype drift report* — 30 archetypes × timestamps as a mood ring for what builders care about
+   - *Abandonware obituaries* — from the repo-scan data: 1,751 inactive repos (no push in 30+ days) with live successors
+   - *The Floor* — searches that fell below relevance floor 0.45 = demand the corpus can't satisfy, published as transparency column (doubles as an ingestion pipeline)
+
+3. **Feed primitives**:
+   - *The One Save* — daily single-bookmark edition (one link, one paragraph, one question) as the habit anchor
+   - *Desks rotation* instead of categories: Emotion / Real Life / Improvement / Ambition / Signal desks
+   - *Receipt cards* as share primitive: claim + 3 nearest-neighbor bookmarks as proof, in the riso/instrument-grade visual identity
+   - *Magazine-in-the-corpus flywheel*: articles themselves bookmarked, archetyped, searchable; KPI = **saves generated per edition**, not pageviews
+
+## Round-2 additions (2026-11-06, untriaged — in the scorecard as ideas 12–14)
+
+- *Marginalia Desk* — publish the private \`bookmark_analysis\` who/what/how/when fields as margin annotations on the saved page snapshot; readers add their own marginalia, which becomes corpus data (UGC loop that deepens with every reader).
+- *The Ribbon's Diary* — product-search the mascot writes a serialized weekly first-person column on what it "witnessed" being saved this week; whimsy as an emotional register, screenshot-shaped and corpus-dependent.
+- *Corpus Confessions* — monthly reader-submission issue: anonymous saved-but-abandoned intentions ("I bookmarked a German course in 2023. I still don't speak German."); readers co-write the magazine, keeping the writing budget flat.
+
+## Alternatives considered
+
+- **Conventional tech blog** — rejected: requires writers and has no corpus advantage.
+- **Newsletter-only curation** — folded into The One Save daily edition.
+
+## Open questions blocking adoption (re-posed 2026-11-06 as option-based rounds)
+
+Interview reformatted per [the interview-protocol rule](../rules/interview-questions-ship-with-lettered-options-plus-a-procee.md): every question now ships lettered options + an interviewer lean, and all 14 ideas go through a "proceed? / notes / additional ideas?" scorecard (1b). Awaiting the user's letter answers:
+
+- **1a** Narrator voice: A curator "I" / B mascot product-search as recurring narrator / C editorial "we" / D hybrid (mascot daily, curator deep pieces).
+- **1b** Idea scorecard over all 14 ideas (proceed? / notes — e.g. "2 yes but frozen-walk, 7 kill") + user's own additional ideas.
+- **2a** The Floor privacy line: A log aggregated/anonymized and publish / B no query logging, substitute "newest 100 saves" / C log but publish only themes/clusters.
+- **2b** Abandonware obituary tone: A neutral intelligence brief / B editorial spicy / C death report + successor matchmaking.
+- **3a** Writing budget: A zero-writing autopilot / B one evening per week (drafts auto-generated, human edits) / C full editorial.
+- **3b** Primary share destination: A X/HN screenshots / B LinkedIn / C private send-to-a-friend / D one canonical card that crops everywhere.
+- **G** Who it serves first: A existing users (retention) / B strangers from shares (acquisition) / C sequenced — habit first, acquisition after ~4 issues.
+
+Note: the former "semantic walks live vs frozen at publish" question is folded into the 1b scorecard as per-idea notes.
+
+## Consequences if adopted
+
+- New content surfaces + a draft-generation pipeline over the corpus.
+- Possible search-query logging → explicit privacy decision needed (2a).
+- Partially extends/reverses the search-only direction set 2026-11-01.
 `,
   "decisions/adopt-agentos-sdk-dev-visual-design-system.md": `---
 type: Decision
@@ -214,6 +333,89 @@ A cross-encoder scores the query and each candidate *together*, so it captures r
 - **Cost**: small per-query rerank call; acceptable for a search/RAG workload.
 - **Content cap raised** as a follow-on: \`bookmark-text.ts\` 1500 → 6000 chars (the 1500 cap only existed for MiniLM's 512-token limit; Voyage voyage-4-large takes 32k). Re-embedded all 2,277 bookmarks.
 `,
+  "decisions/adopt-dark-theme-via-semantic-token-swap-on-html-dark-revers.md": `---
+type: Decision
+title: Adopt dark theme via semantic token swap on html.dark (reverses earlier deferral)
+description: Context
+tags: [theming, dark-mode, design-system, css, tailwind]
+status: accepted
+timestamp: "2026-11-06T19:17:28.285Z"
+---
+
+# Adopt dark theme via semantic token swap on html.dark (reverses earlier deferral)
+
+## Context
+
+The [instrument-grade design decision](shift-visual-design-to-instrument-grade-precision.md) explicitly deferred dark mode as a "future mode". Meanwhile, components had accumulated hardcoded colors (\`text-white\`, \`bg-white\`, raw \`oklch(... / alpha)\` values in InfoTip, WaveLoader, homepage pulse/mark, admin/auth buttons), which made any theme flip impossible without a sweep.
+
+## The choice
+
+Dark theme is **adopted** (commit \`c06dfe4\`, 2026-11-06), implemented as a **class-driven semantic token swap**, not per-component \`dark:\` utilities:
+
+- All colors are semantic vars (\`--canvas\`, \`--ink\`, \`--accent\`, …). Light values live in \`:root\`, dark values in \`html.dark\` (green-tinted neutrals ~hue 165; accent lightened to \`oklch(0.72 0.15 264.2)\` so #0021FF stays AA-legible on dark). One class on \`<html>\` flips the entire site — every surface (search, listings, collections, llms views, admin) adapts automatically.
+- \`@theme inline\` maps Tailwind utilities to the vars; the \`inline\` keyword is required so utilities resolve at the element rather than freezing the \`:root\` light palette.
+- Pre-paint inline script in \`src/app.html\` applies stored \`localStorage.theme\` (else OS \`prefers-color-scheme\`) before first paint — no flash — and syncs the \`theme-color\` meta (light \`#F9FBFA\`, dark \`#1A2221\`).
+- Header toggle in \`src/routes/+layout.svelte\` (sun/moon, \`aria-pressed\`) flips the class, persists to \`localStorage\`, re-syncs the meta.
+- \`@custom-variant dark\` is wired to the class, so \`dark:\` utilities remain available if ever needed.
+
+## Alternatives considered
+
+- **Tailwind \`dark:\` utilities per component** — rejected: duplicates every color decision across dozens of files and drifts from the token system.
+- **Media-query-only (no toggle)** — rejected: users should be able to override OS preference; the toggle is cheap once tokens exist.
+- **Svelte-level theme state / re-render** — rejected: CSS var swap is instant, SSR-safe, and needs no hydration to take effect.
+
+## Rationale
+
+Token swap converts dark mode from a per-component chore into a one-line class flip; it also forced the healthy cleanup of all hardcoded colors. The deferral in the instrument-grade ADR is thereby reversed.
+
+## Consequences
+
+- **Every future color must go through semantic tokens** — hardcoded \`oklch\`/\`white\`/\`black\` reintroduces light-only bugs (see the companion rule).
+- Raw alpha/tints must be derived via \`color-mix(in oklab, var(--token) N%, transparent)\` rather than literal alpha colors.
+- \`color-scheme\` is set per theme, so native scrollbars/inputs follow automatically.
+- Accent contrast on dark required changing admin/auth buttons from \`text-white\` to theme-aware \`text-canvas\`.
+`,
+  "decisions/adopt-full-search-engine-and-llm-discovery-infrastructure.md": `---
+type: Decision
+title: Adopt full search-engine and LLM discovery infrastructure
+description: Context
+tags: [seo, discoverability, llm, agents, sitemap, rss, json-ld, robots-txt]
+status: accepted
+timestamp: "2026-11-10T11:31:20.363Z"
+---
+
+# Adopt full search-engine and LLM discovery infrastructure
+
+## Context
+
+A 2026-11-10 audit, driven by the seo-visibility-expert skill (\`E:\\skills.te9.dev\\seo-visibility-expert\\SKILL.md\`) and the specification.website checklist, found productsear.ch with strong LLM plumbing ([pages/concepts/llm-content-negotiation](../pages/concepts/llm-content-negotiation.md), \`/skill.md\`, receipt-card OG images) but **zero search-engine infrastructure**: no robots.txt, no sitemap.xml, no llms.txt, no RSS, no meta descriptions, no canonical URLs, no JSON-LD — plus a static \`<title>\` in \`src/app.html\` that shadowed every page's real title in raw-HTML crawls. Search engines had nothing to index properly and AI agents had no machine-readable site map.
+
+## Choice
+
+Ship the full discovery layer in one pass (commit \`76623ed\`, 23 files, pushed to \`main\` → Railway):
+
+- **Crawl/index control**: \`static/robots.txt\` with an explicit 17-bot AI-crawler group (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, …) sharing the same private-path Disallows as \`*\`; \`X-Robots-Tag: noindex, nofollow\` from \`src/hooks.server.ts\` on \`/admin\`, \`/api/auth\`, \`/api/digest\`, \`/digest\`.
+- **Discovery surfaces**: dynamic [pages/entities/dynamic-xml-sitemap-endpoint](../pages/entities/dynamic-xml-sitemap-endpoint.md) (6 static paths + 30 collections + all ~4.4k listings with lastmod); [pages/entities/llms-txt-agent-index](../pages/entities/llms-txt-agent-index.md) (llmstxt.org index with live corpus stats); [pages/entities/feed-xml-rss-endpoint](../pages/entities/feed-xml-rss-endpoint.md) (The Drum as RSS 2.0); \`/.well-known/security.txt\` (RFC 9116).
+- **Announcement channels (redundant by design)**: \`Sitemap:\` line in robots.txt; HTTP \`Link:\` header on every HTML response (llms.txt + sitemap + RSS) so clients that never parse HTML still find them; \`<link rel="llms-txt">\` + \`<link rel="alternate" type="application/rss+xml">\` in head.
+- **Per-page metadata**: meta description + canonical + OG tags on all 7 public pages (descriptions embed live corpus counts); JSON-LD via the new [pages/entities/jsonld-svelte-component](../pages/entities/jsonld-svelte-component.md) — WebSite + SearchAction (Google sitelinks searchbox; the high-value schema for a search app) + WebApplication on \`/\`, CollectionPage + ItemList on collections, ItemPage on listings; static app.html title removed; branded \`+error.svelte\` returning real 404 status (no soft-404s); homepage OG card \`/api/og/home\` so root-URL shares unfurl a designed image too.
+
+## Alternatives considered
+
+- **Google Search Console submission alone** — necessary but insufficient: nothing on-site would tell crawlers what exists or what to skip. Rejected.
+- **Rely on the existing \`?view=llm\` twins** — serves agents that already know the URL, but gives no discovery path for crawlers or new agents. Rejected.
+- **Statically generated sitemap.xml** — would go stale as the nightly ingestion adds listings; a dynamic route with fail-soft DB access was chosen instead.
+
+## Rationale
+
+The site's product IS findability — a search app invisible to search engines and agents undercuts its own premise. SearchAction schema is uniquely high-leverage here (it powers the sitelinks searchbox). Announcement is deliberately redundant because different clients read different channels: crawlers read robots.txt, non-HTML-parsing agents read the HTTP Link header, share fetchers read \`<link>\` tags. Private paths are blocked at BOTH layers because robots.txt prevents crawling but **not indexing** — the \`X-Robots-Tag\` header covers indexing.
+
+## Consequences
+
+- **User follow-ups (cannot be done from the repo)**: (1) verify the domain in Google Search Console and submit \`https://productsear.ch/sitemap.xml\` — the single biggest ranking lever; (2) replace the placeholder \`mailto:security@productsear.ch\` in security.txt with a mailbox that is actually read; (3) apple-touch-icon still TODO — the mascot PNG is portrait (163×256), not square-croppable.
+- Sitemap / llms.txt / RSS are fail-soft: DB errors degrade the file, never 500.
+- Feed/sitemap/llms responses cache 30–60 min publicly; bump a \`?v=N\` cache-bust on og:image URLs when card copy changes ([learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o](../learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md)).
+- See [pages/concepts/search-and-llm-discovery-layer](../pages/concepts/search-and-llm-discovery-layer.md) for the layer's invariants.
+`,
   "decisions/adopt-product-search-bookmark-ribbon-mascot-as-the.md": `---
 type: Decision
 title: Adopt product-search bookmark-ribbon mascot as the brand character
@@ -292,6 +494,255 @@ Content negotiation at the hook layer — one canonical URL, two faces:
 - Rendered output uses \`{@html}\`: the markdown is server-owned (see the sanitizer rule — no sanitizer needed) **but** documents may echo user input (e.g. the search query), so builders must HTML-escape echoes at construction time (self-XSS vector, fixed this round).
 - Cross-check \`Accept\` handling in prod with \`curl -H\` — verified: curl gets markdown, browser fetch gets the styled page.
 `,
+  "decisions/corpus-feed-anatomy-stream-stack-ambition-path-accepted-the-.md": `---
+type: Decision
+title: "Corpus feed anatomy: stream + stack; Ambition Path accepted; The Pulse pitched (proposed)"
+description: Context
+tags: [[feed, listings, item-types, stream, ambition-path, the-pulse, brainstorm, proposed]]
+status: proposed
+supersedes: reshape-the-corpus-feed-as-a-listings-feed-of-item-types-pit
+timestamp: "2026-11-06T19:08:35.419Z"
+---
+
+# Corpus feed anatomy: stream + stack; Ambition Path accepted; The Pulse pitched (proposed)
+
+## Context
+
+Round 4 of the corpus-feed brainstorm (2026-11-06). Supersedes the round-3 state record, which superseded the magazine-feed proposal — one running ledger of interview state, so future sessions resume the interview rather than re-litigate the framing. The user's round-4 answer: *"q3 - c + the idea i want to keep."*
+
+## Newly settled this round
+
+- **Feed anatomy = C: stream + stack.** One mixed stream interleaving all item types; every card links to its listing's full post-stack page. Rationale (assistant lean the user adopted): the stream drives return visits, the stack drives depth. This implies **two surfaces**: the stream itself and a per-listing post-stack page.
+- **Ambition Path: accepted as an item type** (was "awaiting in/out/tweaked"). A feed item chaining multiple listings into one ordered route toward a named ambition — *"From spreadsheet chaos to shipping your first SaaS — the 5 listings that matter, in order"* — generated from archetype + semantic clusters. A bigger share artifact than a single post (people share destinations, not steps).
+
+## Confirmed item-type set (4)
+
+1. **Target-User Pitch** — machine-drafted from \`bookmark_analysis.who\`, synthetic persona voices (user chose A round 3; see [[learnings/corpus-schema-facts-raindrop-created-at-analysis]])
+2. **One Save**
+3. **Two Futures** — two-column before/after micro-story per listing
+4. **Ambition Path** — new this round
+
+## New idea pitched this round — "The Pulse" (awaiting in/out/tweaked)
+
+A weekly feed item generated purely from corpus data — pitched as the realization of the **~20% unexpected/trend surprise quota** (currently no accepted item type covers it; flagged as a criteria gap):
+
+- **Archetype drift** — "AI-agent saves +40% this month" from the 30-archetype × timestamp data
+- **Inactive-repo obituaries folded in** — from the repo-scan activity split (1,751 repos with no push in 30+ days; see [[pages/artifacts/digital-products-repos-activity-split-csvs]])
+- **Rising domains nobody's talking about yet**
+
+Framing: "market intelligence from a newsroom that happens to be a database." Effectively condenses the old Signal Desk formats (magazine ADR idea group 2) into one weekly item type.
+
+## Open branches (interview state after round 4)
+
+- **Stream ordering (Q4, asked, unanswered)**: A pure recency / B rotation algorithm — guarantees type/angle variety daily, Pulse on Mondays (assistant lean; makes the "multiple angles" promise mechanical and gives return visits a rhythm) / C personalized relevance — needs tracking, cold-start is weak.
+- **The Pulse: in / out / tweaked** — asked alongside Q4. If rejected, the 20%-surprise criteria gap reopens.
+- Parked/carried: persona-attribution disclosure line; 2a The Floor privacy; 2b obituary tone; 3a writing budget; 3b share destination; G audience sequencing. Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- Stream + stack requires a per-listing post-stack page surface in addition to the feed stream.
+- Draft-generation pipeline over corpus analysis fields (pitches, futures, ambition routes, Pulse statistics) — consistent with the zero-writing-budget direction.
+- Still extends/reverses the search-only direction set 2026-11-01 (see [[decisions/remove-ask-mode-productsear-ch-becomes-search-only]]).
+- Unbuilt — no code yet; this record tracks proposal state only.
+`,
+  "decisions/detect-llm-clients-by-user-agent-allowlist-not-accept-header.md": `---
+type: Decision
+title: Detect LLM clients by user-agent allowlist, not Accept header alone, for raw-markdown negotiation
+description: Context
+tags: [llms-view, content-negotiation, user-agent, api, llm-clients]
+status: accepted
+timestamp: "2026-11-06T14:35:35.979Z"
+---
+
+# Detect LLM clients by user-agent allowlist, not Accept header alone, for raw-markdown negotiation
+
+## Context
+
+The original negotiation (see [Content-negotiate llms views](content-negotiate-llms-views-raw-text-markdown-for.md)) switched on the \`Accept\` header only: raw \`text/markdown\` iff \`Accept\` lacked \`text/html\`. Live checks showed the gap: **most LLM/agent fetchers mimic browsers** — ChatGPT-User, Claude, Perplexity, GPTBot and friends send \`Accept: text/html\`, so they silently received the styled HTML console view instead of the raw document they came for.
+
+## The choice
+
+\`wantsRawMarkdown()\` (\`src/lib/server/llms.ts\`) now matches **user agents** as well as headers:
+
+- \`MARKDOWN_USER_AGENTS\` allowlist: known LLM/agent clients (ChatGPT, Claude, Perplexity, GPTBot, …) plus CLI/script clients (curl, wget, python, httpx, …) → raw markdown immediately, even with \`Accept: text/html\`.
+- Real browser UAs are **never** in the allowlist, so the humans|llms tab switch still renders the styled view.
+
+Same commit also added markdown as an API output format (\`GET /api/search?q=…&format=md\` or \`Accept: text/markdown\`) and a prominent "Search the API" advertisement section at the top of every \`?view=llm\` document — see [api-search-endpoint](../pages/entities/api-search-endpoint.md) and [llm-content-negotiation](../pages/concepts/llm-content-negotiation.md).
+
+## Alternatives considered
+
+- **Accept-header-only (status quo)** — rejected: empirically fails for the majority of LLM fetchers.
+- **Serve raw markdown to everyone** — rejected: destroys the human console view and the dual-surface identity.
+- **Custom header/param requirement (\`raw=1\`)** — kept as an escape hatch, but LLM clients won't know to send it without reading docs first; detection must be automatic.
+
+## Rationale
+
+UA matching is the only signal that distinguishes an LLM fetcher pretending to be a browser from an actual browser. The allowlist is fail-safe in both directions: unknown UAs fall back to header-based negotiation, and excluding real browser UAs guarantees humans never lose the styled view.
+
+## Consequences
+
+- New LLM clients must be added to \`MARKDOWN_USER_AGENTS\` when discovered (live checks caught this gap; expect more).
+- CLI tools (curl, wget, python) also get raw markdown on \`?view=llm\` URLs — intentional, matches how humans script against the site.
+- Deployed and verified live on production 2026-11-06 (commit \`fb62e85\`, Railway).
+`,
+  "decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time.md": `---
+type: Decision
+title: "Drum draw cadence: once daily at 07:00 Amsterdam time"
+description: Context
+tags: [feed, the-drum, cron, cadence, timezone]
+status: accepted
+supersedes: decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to
+timestamp: "2026-11-12T15:44:58.115Z"
+---
+
+# Drum draw cadence: once daily at 07:00 Amsterdam time
+
+## Context
+
+The Drum's draw cadence since [[decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to]] was **1 item / 2 days** (admin-configurable, 1–720h range), with the GitHub Actions draw cron (\`feed-draw.yml\`) firing daily at 09:07 UTC and no-oping until the cadence gate said DUE.
+
+## Choice
+
+The drum draws **once a day, in the morning at 07:00 Amsterdam time** (\`Europe/Amsterdam\`, DST-aware).
+
+## Alternatives considered
+
+- Keep the 2-day cadence: too slow for a daily appointment surface; the owner wants a morning edition.
+- Multiple draws per day: more items than the owner can review through the email approval gate.
+
+## Rationale
+
+A predictable morning rhythm; the draw directly feeds the approval email (companion decision) so the day's item lands in the inbox first thing.
+
+## Consequences
+
+- The schedule must pin \`Europe/Amsterdam\`, not a fixed UTC hour — Amsterdam shifts UTC+1/UTC+2 with DST, so a fixed UTC time would drift an hour twice a year (GitHub Actions cron is UTC-only; the offset must be computed or the workflow adjusted seasonally).
+- Cadence settings (\`feed_settings\` / admin console) move from the 2-day default to the daily 07:00 schedule; the "next draw in …" countdown now targets a daily 07:00 clock time.
+`,
+  "decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md": `---
+type: Decision
+title: "Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)"
+description: Context
+tags: [feed, the-drum, cron, cadence, timezone, github-actions, railway]
+status: accepted
+supersedes: decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time
+timestamp: "2026-11-12T15:58:17.797Z"
+---
+
+# Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)
+
+## Context
+
+Within the same session that adopted a daily 07:00 Amsterdam morning slot ([decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time]), the user overrode the clock time: "no make that 6:00 amsterdam time". The daily cadence (24h) stands; only the draw time moves an hour earlier. Implementation shipped in commits \`e4ecd86..1b8bb66\`.
+
+## Choice
+
+The drum draws **once a day at 06:00 Amsterdam time**. Because GitHub Actions cron is UTC-only, the workflow pins **05:03 UTC** (off the top of the hour to dodge minute-cron contention) = **06:03 CET** in winter. During CEST (summer) the same UTC slot fires at **07:03 Amsterdam** — the one-hour drift is accepted and documented in the workflow header comment rather than chased with seasonal edits.
+
+Concretely: \`feed_settings\` cadence 48h → **24h** (old value backed up before the update), \`DEFAULT_CADENCE_HOURS\` changed in code, \`.github/workflows/feed-draw.yml\` cron 09:07 → **05:03 UTC**.
+
+## Alternatives considered
+
+- Keep 07:00 — overridden by the user.
+- DST-aware schedule (two cron entries or seasonal edits): GitHub Actions has no timezone-aware cron; a second entry would double-fire half the year. A fixed UTC slot with a documented CET/CEST split is simpler and predictable.
+
+## Rationale
+
+The inbox is the primary review surface (email-approval gate), so draw time = email time; the owner wants the morning edition before the day starts. The rotation clock sat at 2026-11-09 (a draw immediately due), which made the retiming testable the same day.
+
+## Consequences
+
+- Secrets \`DRUM_APPROVAL_SECRET\` + \`DRUM_APPROVAL_EMAIL\` must be **identical across Railway, GitHub Actions, and local \`.env\`** — tokens minted by the cron-run draw have to verify against the production endpoint that the emailed links hit.
+- The "next draw in …" countdown and the admin console read the same cadence clock; a manual draw occupies the day's slot (the verified workflow_dispatch run correctly no-oped with "not due, skipping").
+- Summer-time draws land at 07:03 Amsterdam until the slot is manually re-pinned in October.
+`,
+  "decisions/drum-draw-schedule-made-miss-proof-cron-redundancy.md": `---
+type: Decision
+title: Drum draw schedule made miss-proof (cron redundancy)
+description: Context
+tags: [feed, the-drum, cron, github-actions, cadence, resilience, email-approval]
+status: accepted
+timestamp: "2026-11-13T09:57:16.982Z"
+---
+
+# Drum draw schedule made miss-proof (cron redundancy)
+
+## Context
+
+On 2026-11-13 the user asked for the Drum approval email at **06:00 Amsterdam time every day — "so also still for today"**. Two problems made a single daily cron insufficient:
+
+- GitHub's scheduler had **silently skipped** the scheduled run that followed the Nov 12 cron change (see [[learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr]], whose watch item read: *"if the morning email also misses, add a second daily draw attempt so the morning email can't be missed"*).
+- The 24h cadence clock (measured from the last draw) had drifted off the morning anchor, so the next cron check would not be precisely due at 06:00.
+
+## Choice
+
+\`.github/workflows/feed-draw.yml\` (commit \`b9ccb22\`) now fires **four cadence-gated attempts daily**:
+
+- **Morning window**: \`3 4,5,6 * * *\` — 04:03, 05:03, 06:03 UTC. The cadence gate draws only on the first attempt past the 24h clock (normally 05:03 UTC = 06:03 Amsterdam CET); redundant attempts no-op as "not due".
+- **Evening catch-up**: \`3 16 * * *\` — 16:03 UTC (17:03 Amsterdam), fires only if the entire morning window missed, so the drum never silently loses a day.
+- **Concurrency group** \`feed-draw\` (\`cancel-in-progress: false\`) serializes overlapping attempts.
+
+Same session: today's approval mail was sent immediately via a manual draw (the 06:00 slot had already passed), and the cadence anchor was **rewound** so the drum came due exactly at tomorrow's 05:03 UTC check — permanently re-anchoring the 24h clock to the morning slot.
+
+## Alternatives considered
+
+- **Keep the single 05:03 UTC cron** — rejected: GitHub's scheduler demonstrably skips scheduled runs (the Nov 12 post-change run never appeared); one silent skip = one lost morning edition.
+- **DST-aware / seasonal cron entries** — the earlier timing ADR ([[decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif]]) rejected a second entry for fear of double-firing. That objection **dissolves now**: the cadence gate makes every extra attempt idempotent, so double-firing is the resilience mechanism, not a bug.
+
+## Rationale
+
+The email-approval gate makes the owner's inbox the primary review surface, so a silently missed cron equals a silently missed drum. Redundancy is free once draws are idempotent — the gate already no-ops attempts that are not due, and only the first past-due attempt draws.
+
+## Consequences
+
+- The drum can never silently lose a day unless all four attempts miss (the evening catch-up covers a fully missed morning).
+- Timing unchanged: primary slot stays 05:03 UTC = 06:03 Amsterdam CET winter / 07:03 CEST summer — the DST drift remains accepted per the timing ADR, which this decision complements (does not supersede).
+- Pushing the workflow file also re-registers the schedules with GitHub, itself addressing the lagged-registration skip.
+- The health-check tool remains \`workflow_dispatch\`: a manual run correctly reports "not due, skipping" when the gate is satisfied.
+`,
+  "decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md": `---
+type: Decision
+title: Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes
+description: Context
+tags: [feed, the-drum, approval, email, editorial-workflow]
+status: accepted
+supersedes: decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-
+timestamp: "2026-11-12T15:44:58.114Z"
+---
+
+# Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes
+
+## Context
+
+The Drum's human gate lived entirely in the admin console (\`/admin/feed\`): draft → inline editor → per-item approval toggle → publish, with gate-off items publishing automatically (see [[decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-]]). Reviewing a draw required logging in, and an unreviewed bad draw could go live — one did this session: a LinkedIn search-results listing ("leerkrachten basisonderwijs groningen - Google Zoeken") was drawn and published, then had to be removed from DB + site by hand.
+
+## Choice
+
+Every newly drawn Drum item is **first emailed to the owner (creatuluw@gmail.com)** containing the item preview plus three action buttons:
+
+- **Approve** — publish the item
+- **Generate new** — discard it and redraw
+- **Skip this one** — discard it, advance the rotation
+
+Nothing publishes without an explicit approval click from that email.
+
+## Alternatives considered
+
+- Keep auto-publish with post-hoc admin toggles (round-12 behavior): bad items go live before anyone sees them, and must be retracted after the fact.
+- Admin-console-only approval: adds a login step and hides the preview behind the queue UI.
+
+## Rationale
+
+Inbox-native, zero-login review with the preview inline. Bad drafts die before publication instead of being retracted afterward; the owner stays in the loop without touching the admin console.
+
+## Consequences
+
+- The draw pipeline needs a pending/unpublished state per drawn item until an email action lands.
+- The three email buttons must hit approval endpoints that are safe to expose in mail (secreted token or authenticated link).
+- Ties into the daily Europe/Amsterdam draw (retimed to 06:00 later the same day — see the companion cadence decision).
+- The admin console keeps the queue/inline editor as the secondary editorial surface (publish/retract/delete).
+- The converged spec at \`docs/specs/the-drum.md\` needs its approval section updated to the email-first gate.
+`,
   "decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm.md": `---
 type: Decision
 title: "Dual-view surfaces: humans | llms tabs with ?view=llm on every route"
@@ -331,6 +782,39 @@ URL pattern: \`?view=llm\` query parameter on each route (composing with existin
 
 - Every new route/page must render **both** views from the same data — plan the markdown rendering alongside the GUI, not as an afterthought.
 - Extends [[url-driven-search-state]] with a \`view\` dimension.
+`,
+  "decisions/elegant-shared-og-cards-one-card-builder-in-lib-server-og-pl.md": `---
+type: Decision
+title: "Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint"
+description: Context
+tags: [og-images, the-drum, frontend, resvg, share-cards]
+status: accepted
+timestamp: "2026-11-07T12:12:53.577Z"
+---
+
+# Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint
+
+## Context
+
+The first real Bluesky unfurl of a receipt card showed a nearly blank image — a pill, a hairline, and a blue sliver. Root cause: the committed \`static/fonts/*.ttf\` were EOT garbage from the gstatic legacy-UA trick (the known gotcha), and the real TTFs an earlier session pulled locally were never committed — production rendered shapes but zero text. Separately, corpus-readout Drum items share the \`/feed\` URL, which had **no og:image at all**, so those shares unfurled with nothing.
+
+## Choice
+
+- Redesign the card and ship it as a **shared builder** \`src/lib/server/og\`, used by both OG routes. The listing route (\`/api/feed/og/listing/[id]\`) renders from it, and a new **\`/api/feed/og/drum\`** endpoint gives \`/feed\` shares their own card ("The corpus drafts. The drum keeps time."), with full \`og:\`/\`twitter:\` meta added to the feed page.
+- **Two-voice typography**, mirroring the site: Hanken Grotesk (60px SemiBold headline, tight tracking, standfirst) + Martian Mono (StdRg + StdBd, OFL, pulled from Evil Martians' official repo) carries the type chip, domain, and brand footer.
+- **Composition**: hairline type chip → one precise accent tick in #0021FF → big headline → ink-soft standfirst → hairline footer (domain left, \`productsear.ch · the drum\` in accent, right). The heavy full-height blue stripe is gone; the mascot (~220px, RGBA-verified) anchors the right band.
+- Chip text maps slugs through the \`FEED_TYPE_BY_SLUG\` display-name registry — the OG query's raw \`f.type\` slug produced \`IMPRESS-THE-BOSS\`; the feed page's display name reads **IMPRESS THE BOSS**.
+
+## Alternatives considered
+
+- Duplicate per-route renderers — rejected: the two card designs would drift apart.
+- Leave \`/feed\` without og:image — rejected: every corpus-readout drum share unfurled bare.
+
+## Consequences
+
+- The real TTFs are committed (root cause closed) — commit \`faf3818\`. Bluesky/its CDN may cache the old broken image per URL for a while.
+- Future card changes happen in one place; both cards stay typographically consistent.
+- Extends the renderer ADR [[decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace]] — resvg stays; this decision covers the card design, shared module, and route coverage.
 `,
   "decisions/embedding-provider-voyage-voyage-4-large-1024-dim.md": `---
 type: Decision
@@ -415,6 +899,583 @@ Measured: MotionClone moved rerank #32 → **#20-21**, stable across 4 runs (~1s
 - Extends (does not replace) [[adopt-cross-encoder-reranking-voyage-rerank-2-5]]; the pool-then-rerank-fallback shape is unchanged ([[pool-then-rerank-with-graceful-fallback-for]]).
 - Committed as \`decb723\`.
 `,
+  "decisions/feed-round-10-tombola-selection-corpus-derived-origin-card-p.md": `---
+type: Decision
+title: "Feed round 10: Tombola selection corpus-derived; Origin card parked; The Floor pitched (aggregated search misses)"
+description: Context
+tags: [[feed, listings, item-types, the-tombola, the-floor, disclosure, origin-card, brainstorm, proposed]]
+status: proposed
+supersedes: feed-round-9-cadence-1-item-2-days-admin-configurable-the-to
+timestamp: "2026-11-06T19:24:54.611Z"
+---
+
+# Feed round 10: Tombola selection corpus-derived; Origin card parked; The Floor pitched (aggregated search misses)
+
+## Context
+
+Round 10 of the corpus-feed brainstorm (2026-11-06). Answers the round-9 grill Q9 — the user's answer: *"q9 - b"*. See [[decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to]] for the cadence + Tombola-in context.
+
+## Newly settled this round
+
+- **Tombola selection: corpus-derived (B).** The draw is scored automatically — archetype drift + Pulse signals rank the last 10 saves and pick the winner. Same brain as the Pulse, **zero new plumbing**: no manual admin toil (A) and no external trend ingestion (C). The Tombola shares the feed brain; no separate scoring dependency.
+- **The Origin card: parked** (no in/out verdict). Joins the parked stack rather than resolving.
+- **Rotation math surfaced:** 9 types × 1 item/2 days ≈ each type surfaces every ~2.5–3 weeks — the calendar/scheduling branch of the feed brain will matter soon.
+
+## New pitch — "The Floor" (awaiting in/out/parked), re-pitched with concrete format
+
+The **last unclaimed meaty type** (was parked; now actively pitched as type #10 candidate): a **monthly item built from aggregated search misses** — *"This month, 214 searches fell below the relevance floor. 40% wanted what we can't describe yet."*
+
+- **Themes only, never raw queries** — privacy-safe by construction (the round's standing The Floor privacy line, now baked into the format).
+- **Transparency-as-content**: shows the machine has holes, invites readers to fill them, and quietly doubles as the **ingestion radar** for what the corpus should collect next.
+- Shares well because admitting misses is disarming.
+
+## Grill Q10 (asked, unanswered) — how do synthetic voices disclose?
+
+- **A) Overt label on every card** — "drafted from the corpus — no human wrote this"; bulletproof honesty, dulls the magic.
+- **B) Type tags + one methodology page** — cards already carry their type name; add one "how this feed works" page explaining drafts are corpus-derived *(assistant lean — honest without stamping every card)*
+- **C) Nothing** — read as editorial voice; lightest, but one Bluesky callout could cost the credibility the whole concept runs on.
+
+## Open branches (interview state after round 10)
+
+- **Q10 disclosure** — asked, awaiting A/B/C + The Floor verdict.
+- Carried parked: persona attribution · accounts (personalization post-accounts) · share expansion · Marginalia · Confessions · **Origin card (newly parked this round)**.
+- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- The Tombola needs **no external trend source and no admin picking loop** — its scorer reuses the archetype-drift + Pulse signals already in the feed brain.
+- The Floor, if accepted, becomes item type #10 and adds a monthly aggregation job over search-miss data (themes only) — transparency content that also feeds corpus strategy.
+- The Q10 choice sets the disclosure baseline for **every** card the feed ships — it is the trust posture of the whole synthetic-voice concept.
+- No code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us.md": `---
+type: Decision
+title: "Feed round 11: The Floor in (type #10), Impress the Boss in as user-originated type #11; The Drum pitched (countdown mechanic)"
+description: Context
+tags: [feed, listings, item-types, the-floor, impress-the-boss, the-drum, disclosure, methodology-page, brainstorm, proposed]
+status: proposed
+supersedes: feed-round-10-tombola-selection-corpus-derived-origin-card-p
+timestamp: "2026-11-06T19:27:39.566Z"
+---
+
+# Feed round 11: The Floor in (type #10), Impress the Boss in as user-originated type #11; The Drum pitched (countdown mechanic)
+
+## Context
+
+Round 11 of the corpus-feed brainstorm (2026-11-06). The user answered the round-10 grill with *"the idea: yes keep it"* (The Floor verdict) and *"q10-b"* (disclosure choice), then originated a brand-new type themselves. See [[decisions/feed-round-10-tombola-selection-corpus-derived-origin-card-p]] for the The-Floor pitch + Q10 disclosure context.
+
+## Newly settled this round
+
+- **The Floor: IN — item type #10.** Themes-only, privacy-safe monthly aggregation of search misses; format as pitched in round 10.
+- **Disclosure baseline: B — type tags + one methodology page.** Cards carry their type name; a single "how this feed works" page explains drafts are corpus-derived. This is now the **trust posture of every card the feed ships** (overt per-card labels A rejected; silence C rejected — one Bluesky callout could cost the credibility the concept runs on).
+- **Impress the Boss: IN — item type #11, user-originated.** An item that shows the **actual result/artifact** a listing/tool/app/package/primitive produces, framed for the job role that benefits — *"the proof a person in this role could put in front of their boss."* Promises proof, not vibes. First user-originated type in the roster.
+- **Feed inventory: 11 types** — One Save · Target-User Pitch · Two Futures · Ambition Path · The Pulse · Receipt cards · Resurrections · The Walk · The Tombola · The Floor · Impress the Boss.
+- **Rotation math updated:** 11 types × 1 item/2 days ≈ each type surfaces every ~3 weeks.
+
+## New pitch — "The Drum" (awaiting in/out/parked)
+
+Not a type — a **return mechanic**: every feed card and the \`/feed\` header carry a live countdown to the next draw (*next item in 31:22:08*), styled as the [[pages/entities/product-search-mascot-illo-character-pack]]'s raffle drum. The 1-item-per-2-days cadence becomes an *appointment*: readers learn when the drum opens, and the Tombola draw gets an audience moment. Cheap to build, directly serves the comeback goal.
+
+## Grill Q11 (asked, unanswered) — where do Impress-the-Boss artifacts come from?
+
+- **A) Real output** — we run/use each tool and capture genuine artifacts. Most credible; expensive; some tools won't run.
+- **B) Sourced** — pull real screenshots/demos from the tool's own docs. Cheap; goes stale; gray zone.
+- **C) Drafted mock** — pipeline generates a plausible artifact, labeled illustrative. Scales; "fake demo" smell.
+- **D) Hybrid, labeled** — real when feasible, sourced/mocked otherwise; every artifact card carries an origin tag *(assistant lean — credibility where it counts, honesty where it doesn't)*.
+
+## Open branches (interview state after round 11)
+
+- **Q11 artifact source** — asked, awaiting A/B/C/D + The Drum verdict.
+- Carried parked: accounts (personalization post-accounts) · share expansion · Marginalia · Confessions · Origin card · methodology page detail.
+- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- The methodology page becomes a required deliverable (new surface) — it is the disclosure contract for all 11 types.
+- Impress the Boss needs an artifact-capture/pipeline decision (Q11) before it can be built — it is the only type whose content is *output of other software*, not corpus narration.
+- The Drum, if accepted, adds a live countdown component to every card + \`/feed\` header and gives the cadence an appointment framing.
+- No code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-round-12-editorial-workflow-in-corpus-drafted-admin-app.md": `---
+type: Decision
+title: "Feed round 12: editorial workflow in (corpus-drafted, admin-approved); artifact source D hybrid+origin tags; The Drum in; The Digest pitched (utobo email)"
+description: Context
+tags: [[feed, listings, editorial-workflow, admin-gate, the-drum, the-digest, impress-the-boss, artifact-origin-tags, utobo, brainstorm, proposed]]
+status: proposed
+supersedes: feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us
+timestamp: "2026-11-06T19:29:47.720Z"
+---
+
+# Feed round 12: editorial workflow in (corpus-drafted, admin-approved); artifact source D hybrid+origin tags; The Drum in; The Digest pitched (utobo email)
+
+## Context
+
+Round 12 of the corpus-feed brainstorm (2026-11-06). The user answered the round-11 grill with *"q11-d"* (Impress-the-Boss artifact source) and *"the drum: i like it"* (The Drum verdict), and **originated a new architectural piece themselves**: the admin editorial gate. See [[decisions/feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us]] for the Q11/The-Drum context.
+
+## Newly settled this round
+
+- **Editorial workflow: IN — user-originated.** The system **drafts the item page with automated/drafted results**; admins **edit, augment, then approve → publish**. The feed becomes *corpus-drafted, human-approved*: an editorial workflow layer sits between pipeline and live card. This defines the publish pipeline for every feed item.
+- **Q11 artifact source: D) Hybrid, labeled.** Impress-the-Boss artifacts are real output when feasible, sourced/mocked otherwise; every artifact card carries an **origin tag** (real | sourced | illustrative). A was rejected as too expensive, C alone as "fake demo" smell.
+- **The Drum: IN.** The 48h countdown return mechanic pitched in round 11 is accepted — live countdown to the next draw on every card + the \`/feed\` header, styled as the mascot's raffle drum.
+- **Rotation status unchanged:** 11 types × 1 item/2 days; the Drum now frames that cadence as an appointment.
+
+## New pitch — "The Digest" (awaiting in/out/parked)
+
+Not a type — the **distribution layer**: a recurring email via utobo (the existing email stack, [[pages/entities/utobo-email-transactional-email-service]]) carrying the latest feed items since last send, ending with the drum countdown. Rationale: homepage cards vanish when someone searches — an inbox is the one place nothing can make them disappear; email turns the 48h cadence into a habit loop for readers who don't return on their own.
+
+## Grill Q12 (asked, unanswered) — what passes the admin gate?
+
+- **A) Everything** — no feed item publishes without admin approval (~15 review sessions/month); quality ceiling is total.
+- **B) High-stakes only** — Impress the Boss, Pitches, Two Futures get the gate; data types (Pulse, Tombola, Resurrections, Floor) auto-publish — review judgment calls, not math.
+- **C) Gate + deadline** — everything drafts to admin but auto-publishes after 48h if untouched, so the drum never stalls *(assistant lean — cadence survives busy weeks)*.
+
+## Open branches (interview state after round 12)
+
+- **Q12 gate scope** — asked, awaiting A/B/C + The Digest verdict.
+- Carried parked: accounts · share expansion · Marginalia · Confessions · Origin card · methodology page detail.
+- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- The feed needs an **admin approval surface**: item-page draft state, edit/augment UI, approve→publish action (admin console extension).
+- Q12 (gate scope) must be answered before the pipeline can be wired — it decides which types bypass the human gate.
+- The Drum adds a live countdown component to every card + \`/feed\` header.
+- The Digest, if accepted, rides the existing utobo sending domain — no new email infrastructure.
+- No code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-.md": `---
+type: Decision
+title: "Feed round 12 wrap: approvals are per-item admin toggles; The Digest in as admin-toggled dark launch (off by default); The Backlog pitched (launch pre-draft)"
+description: Context
+tags: [feed, listings, editorial-workflow, admin-gate, the-digest, the-backlog, dark-launch, default-states, brainstorm, proposed]
+status: proposed
+supersedes: feed-round-12-editorial-workflow-in-corpus-drafted-admin-app
+timestamp: "2026-11-06T19:32:55.391Z"
+---
+
+# Feed round 12 wrap: approvals are per-item admin toggles; The Digest in as admin-toggled dark launch (off by default); The Backlog pitched (launch pre-draft)
+
+## Context
+
+Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-12 grill ([[decisions/feed-round-12-editorial-workflow-in-corpus-drafted-admin-app]]) — the user answered Q12 and gave The Digest verdict, and the assistant pitched round 13.
+
+## Newly settled this turn
+
+- **Q12 gate scope: per-item approvals, set in the admin.** The approval gate is not a global rule or type-class split — it is a **dial per item**: admins set approval on/off for each item in the admin console. Every A/B/C option from round 12 is superseded by this user-originated answer; the review surface is per-item toggles rather than a scope policy.
+- **The Digest: IN — with a modified launch shape.** The utobo email distribution layer is accepted, but its **UI, mechanics, and state are all admin-toggled and off by default** — it ships dark, activated from the admin when wanted. This is the first feature with an explicit dark-launch contract.
+- **Emerging convention (noted, not yet formalized):** feed subsystems arrive behind admin switches; "which feed features are on vs. dark at launch" was spun out as its own parked ledger branch (default states) to be settled separately.
+- **Ledger inventory:** 11 item types + The Drum + The Digest + editorial workflow.
+
+## New pitch — "The Backlog" (awaiting in/out/parked)
+
+A **launch mechanic, not a type**: before the feed goes live, the pipeline pre-drafts the first ~30 items (mixed types, newest corpus data) into the admin approval queue, so day one already shows a lived-in feed — 6+ weeks of rhythm, stacks with items attached, homepage cards populated. Rationale: feeds die of emptiness at birth; the Backlog kills the cold start before it exists.
+
+## Grill Q13 (asked, unanswered) — who orders the stream?
+
+- **A) Fixed round-robin** — types cycle mechanically, no brain.
+- **B) Admin-curated queue** — upcoming items in a drag-orderable queue; pipeline auto-fills gaps by rotation *(assistant lean — matches the admin-first pattern: drafts arrive, admin arranges, cadence never stalls)*.
+- **C) Ceremony anchors** — fixed weekly slots (Pulse Mondays, Tombola Fridays) + round-robin filler.
+
+## Open branches (interview state after this turn)
+
+- **Q13 stream ordering** — asked, awaiting A/B/C + The Backlog verdict.
+- **Default states** — new parked branch: which feed features are on vs. dark at launch.
+- Carried parked: accounts · share expansion · Marginalia · Confessions · Origin card (fourth nudge) · methodology detail · rotation calendar.
+- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- Admin console grows a **per-item approval toggle** (item-level switch, not a type policy) — refines the round-12 approval-surface requirement.
+- The Digest ships dark: admin-facing activation switches for UI, mechanics, and send state; no reader-visible surface until enabled.
+- The Backlog, if accepted, means the pipeline must draft a bulk initial batch into the approval queue as a launch step, not just steady-state.
+- Q13 decides whether the pipeline needs a drag-orderable admin queue (B) or just rotation logic (A/C).
+- No code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-round-13-stream-order-fixed-round-robin-the-backlog-in-.md": `---
+type: Decision
+title: "Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)"
+description: Context
+tags: [[feed, listings, stream-order, round-robin, the-backlog, inline-editor, accounts, editorial-workflow, same-day-last-year, brainstorm, proposed]]
+status: proposed
+supersedes: feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-
+timestamp: "2026-11-06T19:35:36.941Z"
+---
+
+# Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)
+
+## Context
+
+Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-12-wrap grill ([[decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-]]) — the user answered Q13 (A), gave The Backlog verdict, and added a workflow requirement (inline editor).
+
+## Newly settled this turn
+
+- **Q13 stream order: A) fixed round-robin.** Types cycle mechanically through the stream — no admin drag-queue (B rejected), no ceremony anchor slots (C rejected).
+- **The Backlog: IN — evolved from the round-12 launch pitch into an ongoing mechanic.** Drafts are generated per type **as draws come up** (the launch pre-draft folds into this), and items whose approval gate is off **publish automatically**. The pipeline now has a no-gate auto-publish path, not just an everything-queues path.
+- **Inline editor on every post.** Admins edit/add to a post in place before approve/publish. The editorial workflow is now complete: draft → inline edit → approve (or auto) → live.
+- **Accounts = phase 2.** Inferred from the user's earlier statement that personalization comes "if people have an account later"; the assistant marked it and offered an objection window. **Marginalia + Confessions park with accounts** (they need user-authored content).
+- **Ledger inventory:** 11 item types + The Drum + The Digest + The Backlog + editorial workflow.
+
+## New pitch — "Same Day Last Year" (type #12, awaiting in/out/parked)
+
+The timestamp ritual: *"One year ago today, this got saved. Here's what happened since."* Nostalgia register — the counterpoint to Resurrections' guilt: it shows time doing its work rather than shaming the user. Zero generation cost (a date query plus a draft) and the corpus guarantees inventory every single day.
+
+## Grill Q14 (asked, unanswered) — what is this thing called?
+
+Converging identity fork (the last one):
+
+- **A) The Feed** — plain, functional
+- **B) The Drum** — the mechanic becomes the brand: the drum opens every 2 days, the tombola draws from it, the mascot turns the handle *(assistant lean — poetic, ownable, ties cadence + draw + mascot into one word)*
+- **C) Listings Feed** — descriptive, SEO-safe, boring
+- **D) Your own name**
+
+## Open branches (interview state after this turn)
+
+- **Q14 naming fork** — asked, awaiting A/B/C/D + the Same Day Last Year verdict.
+- Parked carried: share expansion · Origin card (fourth nudge) · methodology detail · default states · accounts (→ phase 2, with Marginalia + Confessions).
+- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- The pipeline builds a per-type draft generator scheduled by the draw cadence (1 item/2 days, admin-configurable per round 9), with an auto-publish path for gate-off items — extends the round-12 per-item approval toggles.
+- The admin console needs an inline editor on every post card (edit/add content before approval).
+- Stream rendering is deterministic rotation over the types; no admin ordering queue.
+- Marginalia + Confessions stay unbuildable until accounts ship (phase 2).
+- No code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-round-14-same-day-last-year-out-the-feed-is-named-the-d.md": `---
+type: Decision
+title: "Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)"
+description: Context
+tags: [feed, the-drum, naming, same-day-last-year, convergence-slate, brainstorm, proposed]
+status: proposed
+supersedes: feed-round-13-stream-order-fixed-round-robin-the-backlog-in-
+timestamp: "2026-11-06T19:37:30.055Z"
+---
+
+# Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)
+
+## Context
+
+Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-13 grill ([[decisions/feed-round-13-stream-order-fixed-round-robin-the-backlog-in-]]) — the user answered **Q14: B) The Drum** and gave the **Same Day Last Year** pitch verdict.
+
+## Newly settled this turn
+
+- **Same Day Last Year: OUT** — the type-#12 pitch is rejected outright (not parked). Every major fork and every pitched type now has a final verdict; the type roster is closed at **11 item types**.
+- **The name lands: The Drum** (Q14 → B). The mechanic becomes the brand — "the mechanic is the masthead": the drum opens every 2 days, the tombola draws from it, the mascot turns the handle. The feature is no longer "the corpus feed"; its identity is **The Drum**.
+
+## The convergence slate (locked as the working spec, pending final verdict)
+
+- **Identity & placement**: lives at \`/feed\`, linked in nav; homepage center space shows the 3 latest cards, which vanish the moment a search starts. The mascot turns the drum handle; the countdown ("next draw in 31:22:08") is the appointment mechanic.
+- **Cadence & ordering**: 1 item every 2 days, admin-configurable (round 9); fixed round-robin across the 11 types (round 13); The Backlog pre-seeds drafts so day one is lived-in; items with the approval gate off publish automatically.
+- **The 11 item types** (all machine-drafted, human-gated): One Save · Target-User Pitch · Two Futures · Ambition Path · The Pulse (20% archetype drift/repo obituaries) · Receipt cards (share primitive: claim + proof) · Resurrections · The Walk (embedding-hop trail) · The Tombola (draw from last 10) · The Floor (20% aggregated search misses) · Impress the Boss (real artifact output, hybrid + origin tags).
+- **Structure & workflow**: stream + stack (every card links to its listing's stack — the depth surface); draft → inline editor → per-item approval toggle → publish; Impress-the-Boss artifacts real when feasible, sourced/mocked otherwise, always origin-tagged; trust via type tags + one "how this Drum works" methodology page.
+- **Distribution & sharing**: Receipt cards render server-side; Bluesky share button in v1 (round 6); The Digest email via [[pages/entities/utobo-email-transactional-email-service]] — dark by default, admin-activated.
+- **Admin console owns**: cadence, per-item approvals, feature toggles (Digest off by default), the queue — see [[pages/entities/admin-console-admin]].
+- **Phase 2 (parked)**: accounts → rotation personalization, Marginalia, Confessions, share expansion.
+- **Criteria scorecard**: 80% novel primitives ✓ · sharing designed-in ✓ · emotion/real-life/improvement/ambition rotation ✓ · tech insights ✓ · 20% unexpected data content ✓.
+
+## Grill Q15 (asked, unanswered) — final verdict
+
+- **A) Converged** — write the formal spec, then an implementation plan
+- **B) One more diverge round** — throw a new angle at it
+- **C) Tweaks** — name what moves
+
+## Open branches (interview state after this turn)
+
+- **Q15 final verdict** — asked, awaiting A/B/C. Nothing is implementation-committed until it lands.
+- Parked carried: share expansion · Origin card · methodology detail · default states · accounts (→ phase 2, with Marginalia + Confessions).
+- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-proceed]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branch]].
+
+## Consequences if adopted
+
+- The feature spec is consolidated on [[pages/entities/the-drum-feed]]; implementation planning starts from it on verdict A.
+- No code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-round-6-bluesky-only-share-receipt-cards-accepted.md": `---
+type: Decision
+title: "Feed round 6: Bluesky-only share; Receipt cards accepted"
+description: Context
+tags: [[feed, listings, item-types, receipt-cards, bluesky, share, resurrections, brainstorm, proposed]]
+status: proposed
+supersedes: feed-stream-runs-on-rotation-personalization-post-accounts-t
+timestamp: "2026-11-06T19:16:36.555Z"
+---
+
+# Feed round 6: Bluesky-only share; Receipt cards accepted
+
+## Context
+
+Round 6 of the corpus-feed brainstorm (2026-11-06). Continues the round-5 ledger. The user's round-6 answer to grill Q5 (unit of sharing): *"q5 - lets first only add a bluesky share button + keep the idea"* — a deliberate scope-down rather than picking A/B/C wholesale.
+
+## Newly settled this round
+
+- **Receipt cards: accepted** ("keep the idea"). Every feed item auto-renders a shareable card in the riso/instrument-grade identity — claim on top, proof underneath (the listing plus 2 nearest neighbors).
+- **Share primitive v1 = a single Bluesky share button.** User-scoped: no copy-image/copy-link, no other networks at launch. The generated card still earns its build cost as the OG preview on the shared link. Q5's original A/B/C (card image vs link vs both) is parked inside the share-expansion branch rather than answered.
+- **All stated criteria gaps now closed:** 80% novel ✓ · 20% surprise ✓ (The Pulse) · rotation coverage ✓ · sharing ✓ (Bluesky button) · return mechanics ✓ (One Save + rotation rhythm).
+
+## Confirmed item-type set (6)
+
+1. **One Save**
+2. **Target-User Pitch** — synthetic personas from \`bookmark_analysis.who\`
+3. **Two Futures**
+4. **Ambition Path**
+5. **The Pulse** — weekly corpus statistics
+6. **Receipt cards** — share primitive + card renderer
+
+## New idea pitched this round — "Resurrections" (awaiting in/out/parked)
+
+Promoted from the round-1 unclaimed menu to a concrete pitch: the corpus surfaces a save untouched for 300+ days — *"Saved 14 months ago, never returned to. Here's why it deserves a second life."* One short pitch + a Two-Futures-style glimpse of what it enables. Emotional hook: guilt + hope; every reader recognizes their own graveyard. Cheapest type to generate — a date query plus a draft, no new data dependencies.
+
+**Grill Q6 (asked, unanswered) — how much feed ships in v1?**
+- A) All types at launch — full arsenal, heavier build, slower to ship
+- B) 3 core types first — One Save + Target-User Pitch + Two Futures; Pulse, Path, Receipts layer in weekly (assistant lean — the spine proves the format fast)
+- C) 2 types only — One Save + Pulse; angle-types after real readers exist
+
+Plus: is Resurrections in, out, or parked?
+
+## Open branches (interview state after round 6)
+
+- **Q6 v1 scope** — asked, awaiting A/B/C + Resurrections verdict.
+- **Share expansion** (new, parked this round): copy-image/link, other networks — the deferred A/B/C unit-of-sharing question lives here.
+- Carried parked: persona attribution · accounts (personalization post-accounts) · rotation calendar. Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- Share surface is one Bluesky intent button per feed item at v1 — no image asset pipeline, no multi-network config until the expansion branch reopens.
+- Draft-generation pipeline now spans six item types; Resurrections would be a seventh with the cheapest generation cost of all.
+- Still unbuilt — no code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-round-7-v1-ships-all-7-item-types-the-walk-pitched.md": `---
+type: Decision
+title: "Feed round 7: v1 ships all 7 item types; The Walk pitched"
+description: Context
+tags: [feed, listings, item-types, resurrections, the-walk, brainstorm, proposed]
+status: proposed
+supersedes: feed-round-6-bluesky-only-share-receipt-cards-accepted
+timestamp: "2026-11-06T19:18:27.965Z"
+---
+
+# Feed round 7: v1 ships all 7 item types; The Walk pitched
+
+## Context
+
+Round 7 of the corpus-feed brainstorm (2026-11-06). Answers the round-6 grill Q6 (how much feed ships in v1). The user's answer: *"q6 - a + keep the idea"* — option A plus confirming the pending Resurrections pitch.
+
+## Newly settled this round
+
+- **v1 scope = full arsenal: every item type ships at launch.** No phased rollout of types (Q6's B/C rejected). Rationale: the draft pipeline is mostly the same machinery for every type, so the marginal cost of each additional type is low — the build cost is in the machinery, not the types.
+- **Resurrections: in** (7th type). Saved-but-never-returned-to links get a second-life pitch; cheapest type to generate (a date query plus a draft).
+
+## Confirmed item-type set (7)
+
+1. **One Save** — the daily featured save
+2. **Target-User Pitch** — synthetic personas from \`bookmark_analysis.who\`
+3. **Two Futures**
+4. **Ambition Path**
+5. **The Pulse** — weekly corpus statistics
+6. **Receipt cards** — share primitive + card renderer (Bluesky-only share at v1)
+7. **Resurrections** — 300+ days untouched, deserves a second life
+
+## New idea pitched this round — "The Walk" (awaiting in/out/parked)
+
+Feed item type **and** navigation mechanic, descended from the round-1 "Semantic Walk" candidate: a trail of 3–5 listings connected by **embedding hops** — *"Five steps from a Rust CLI to a marriage manual."* Every stack page ends with **"keep walking →"** into its own semantic neighborhood. Positioning: the serendipity engine that turns the feed from a queue into an endless corridor — and the one mechanic competitors literally cannot rebuild without the vector index.
+
+**Grill Q7 (asked, unanswered) — where does the feed live?**
+
+- A) Own route (\`/feed\`) — clean magazine identity, linked from nav
+- B) Homepage-first — the feed takes over the homepage below the search hero
+- C) Route + homepage teaser — \`/feed\` canonical, homepage carries a compact "latest from the feed" block *(assistant lean — search keeps its throne, the feed gets a daily doorway)*
+
+Plus: is The Walk in, out, or parked?
+
+## Open branches (interview state after round 7)
+
+- **Q7 feed placement** — asked, awaiting A/B/C + The Walk verdict.
+- Carried parked: persona attribution · accounts (personalization post-accounts) · rotation calendar · share expansion (copy-image/link, other networks).
+- Still unclaimed from the round-1 menu: Semantic Walk · Marginalia · Ribbon's Diary · Confessions · The Floor. Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- Draft-generation pipeline spans **seven** item types at v1 — build order is no longer phased by type.
+- The Walk, if accepted, adds a vector-index-dependent navigation surface beyond the feed itself (stack pages get "keep walking →").
+- Still unbuilt — no code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-.md": `---
+type: Decision
+title: "Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched"
+description: "Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched"
+tags: [[feed, listings, item-types, homepage, the-walk, ribbons-diary, brainstorm, proposed]]
+status: proposed
+supersedes: feed-round-7-v1-ships-all-7-item-types-the-walk-pitched
+timestamp: "2026-11-06T19:20:18.124Z"
+---
+
+# Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched
+
+# Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched
+
+## Context
+
+Round 8 of the corpus-feed brainstorm (2026-11-06). Answers the round-7 grill Q7 (where does the feed live — see [[decisions/feed-round-7-v1-ships-all-7-item-types-the-walk-pitched]]) plus the pending Walk verdict. The user's answer, with a homepage screenshot: *"q7 - /feed + we add the most recent 3 items from the feed in cards in the center of the available space, when a user starts a search then the cards disappear"* — and *"the idea stays"* confirming The Walk.
+
+## Newly settled this round
+
+- **Feed placement: \`/feed\` canonical + homepage teaser (Q7 option C, upgraded).** The homepage keeps search as the hero; the empty canvas below the TRY chips carries the **3 most recent feed items as cards, centered in the available space**. The cards **disappear the moment a user starts a search** — the feed borrows the homepage's empty space, never competes with the search hero.
+- **The Walk: in.** Confirmed as item type **and** stack-page mechanic — every stack page ends with "keep walking →" into its own embedding-hop semantic neighborhood. The confirmed item-type set grows from 7 to **8**: One Save · Target-User Pitch · Two Futures · Ambition Path · The Pulse · Receipt cards · Resurrections · The Walk.
+- v1 still ships every type (round-7 scope decision unchanged).
+
+## Functional gap spotted
+
+All 8 confirmed types look **backward** — nothing surfaces **new arrivals** (~+423 listings/month have no feed moment).
+
+## Re-pitch — "The Ribbon's Diary" (awaiting in/out/parked)
+
+Originally pitched in round 2; re-surfaced this round as the new-arrivals fix: the product-search mascot narrates the week's arrivals in first person — *"This week I watched 9 agent frameworks and a bread-making scraper get saved. One of these is not like the others."* Whimsy register, brandable, corpus-drafted.
+
+## Grill Q8 (asked, unanswered) — how much feed per day?
+
+- A) 1 item/day — slow and precious; each card feels like an event
+- B) 3–5 items/day — small mixed batch, rotation guarantees type variety (assistant lean)
+- C) Trickle + ceremonies — 1/day plus weekly rituals: Pulse Mondays, Diary Fridays, Resurrections Sundays
+
+## Open branches (interview state after round 8)
+
+- **Q8 cadence** — asked, awaiting A/B/C + Ribbon's Diary verdict.
+- Carried parked: persona attribution · accounts (personalization post-accounts) · rotation calendar · share expansion.
+- Still unclaimed from the round-1 menu: Marginalia · Confessions · The Floor.
+- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- Homepage gets its first feed-coupled surface: 3 latest cards centered below the TRY chips, dismissed on search start — implementation must hook the card block's visibility to search start (no code yet; this record tracks proposal state only).
+- The Walk adds a vector-index-dependent navigation surface (stack pages get "keep walking →").
+- Ribbon's Diary, if accepted, gives ~+423 listings/month a feed moment and becomes the mascot-narrated type.
+- The Q8 cadence choice sets draft-generation throughput and the rotation-calendar shape.
+`,
+  "decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to.md": `---
+type: Decision
+title: "Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in as type #9; The Origin card pitched"
+description: Context
+tags: [feed, listings, item-types, the-tombola, cadence, admin-console, origin-card, brainstorm, proposed]
+status: proposed
+supersedes: feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-
+timestamp: "2026-11-06T19:23:36.322Z"
+---
+
+# Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in as type #9; The Origin card pitched
+
+## Context
+
+Round 9 of the corpus-feed brainstorm (2026-11-06). Answers the round-8 grill Q8 (cadence — see [[decisions/feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-]]) plus the pending Ribbon's Diary verdict. The user's answer: *"q8 - 1 item every 2 days, but make it a setting in the admin"* — and *"the idea -> make it: last 10 tombola - where we narrate 1 item from the last 10 most relevant to current trends or sentiments"*.
+
+## Newly settled this round
+
+- **Cadence: 1 item every 2 days, admin-configurable.** The feed's generation rate is not a hardcoded constant — it becomes a **setting in the admin console** ([[pages/entities/admin-console-admin]]), so cadence can be tuned without a deploy. This resolves Q8 with a slower-than-proposed rate (option A's "slow and precious" register, halved to 1/2days).
+- **The Tombola: in, as item type #9** (Ribbon's Diary reshaped, not accepted as pitched). The mascot-narrated new-arrivals mechanic is now a **draw**: pick from the **last 10 saves**, narrate the **one most in tune with current trends or sentiments**. The mascot gets a raffle drum. The round-8 functional gap (new arrivals have no feed moment) is covered.
+- **Feed inventory (9 types):** One Save · Target-User Pitch · Two Futures · Ambition Path · The Pulse · Receipt cards · Resurrections · The Walk · The Tombola. v1 still ships every type (round-7 scope unchanged).
+
+## New pitch — "The Origin card" (awaiting in/out/parked)
+
+A **stack-spine primitive, not a feed type**: every listing's stack page opens with a provenance card — *saved on 2025-03-14, classified AI Coding Agent + RAG & Search, 8 feed items written about it since.* The receipt-of-intent that anchors every stack, gives each listing a story even with zero feed items, and makes any stack URL shareable on its own. The thing all 9 types implicitly point back to.
+
+## Grill Q9 (asked, unanswered) — what scores the Tombola draw?
+
+- **A) Manual** — admin picks the winner each draw; full control, recurring toil
+- **B) Corpus-derived** — archetype drift + Pulse signals score the last 10 automatically *(assistant lean — self-contained, no new dependencies, same brain as the Pulse)*
+- **C) External trends** — ingest HN/Bluesky/Google Trends to score; freshest signal, new plumbing
+
+## Open branches (interview state after round 9)
+
+- **Q9 tombola selection brain** — asked, awaiting A/B/C + Origin card verdict.
+- Carried parked: persona attribution · accounts (personalization post-accounts) · share expansion · Marginalia · Confessions · The Floor.
+- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- The feed gains a runtime-configurable cadence knob in the admin console — draft-generation throughput becomes an ops setting, not a code constant.
+- The Tombola adds a **trend/sentiment scoring requirement** to the feed brain; the Q9 choice determines whether that scorer is manual, corpus-internal, or needs external trend plumbing.
+- The Origin card, if accepted, makes every stack page start with provenance — a new stack-page primitive independent of feed item types, and the shareability anchor for stack URLs.
+- No code yet; this record tracks proposal state only.
+`,
+  "decisions/feed-stream-runs-on-rotation-personalization-post-accounts-t.md": `---
+type: Decision
+title: Feed stream runs on rotation (personalization post-accounts); The Pulse accepted; Receipt cards pitched (proposed)
+description: Context
+tags: [feed, listings, item-types, rotation, the-pulse, receipt-cards, accounts, brainstorm, proposed]
+status: proposed
+supersedes: corpus-feed-anatomy-stream-stack-ambition-path-accepted-the-
+timestamp: "2026-11-06T19:10:50.639Z"
+---
+
+# Feed stream runs on rotation (personalization post-accounts); The Pulse accepted; Receipt cards pitched (proposed)
+
+## Context
+
+Round 5 of the corpus-feed brainstorm (2026-11-06). Supersedes the round-4 anatomy record — one running ledger of interview state, so future sessions resume the interview rather than re-litigate the framing. The user's round-5 answer: *"q4-b + c if people have an account later"* + *"the idea is good"* (on The Pulse).
+
+## Newly settled this round
+
+- **Stream ordering = B rotation, with C personalization deferred until accounts exist.** A rotation algorithm picks the leading item type each day — variety is mechanical, not ranked. Personalized relevance layering is explicitly deferred to a future **accounts branch** (better-auth is already in the stack, so the dependency exists when needed). Cold-start problem sidestepped: anonymous visitors get the same rotation, no tracking required.
+- **The Pulse: accepted** as an item type (was "awaiting in/out/tweaked"). The weekly corpus-statistics item (archetype drift, inactive-repo obituaries, rising domains) now serves the ~20% unexpected/trend-surprise quota.
+- **Criteria gap narrowed to one:** with The Pulse in, every stated criterion has at least one item type serving it **except sharing** — no share primitive accepted yet. Flagged as tonight's remaining gap.
+
+## Confirmed item-type set (5)
+
+1. **One Save**
+2. **Target-User Pitch** — synthetic personas from \`bookmark_analysis.who\`
+3. **Two Futures**
+4. **Ambition Path**
+5. **The Pulse**
+
+## New idea pitched this round — "Receipt cards" (awaiting in/out/tweaked)
+
+Resurfaces the receipt-cards primitive from the original magazine proposal, now that sharing is the last unserved criterion: every feed item auto-renders a **shareable card** in the riso/instrument-grade visual identity — the claim on top, the proof underneath (the actual listing plus its 2 nearest neighbors as receipts). Not title+image OG-slop: a card that carries the *argument*, so it spreads even when the link isn't clicked. Generated server-side from the same data that wrote the post.
+
+**Grill Q5 (asked, unanswered) — what's the unit of sharing?** A the card image (one-click download/copy, link in caption) / B the link + OG card (classic share, card only as preview) / C both — "copy link" + "copy image" side by side (assistant lean: C — cheap, lets readers choose per platform).
+
+## Open branches (interview state after round 5)
+
+- **Accounts** (new, spawned this round): when/if readers get accounts, personalization layers onto the rotation. better-auth already in stack.
+- **Rotation calendar** (new, parked): which type leads which day.
+- **Receipt cards: in / out / tweaked** — asked as Q5 alongside the unit-of-sharing question.
+- Carried: persona-attribution disclosure line; 2a The Floor privacy; 2b obituary tone; 3a writing budget; 3b share destination; G audience sequencing. Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- Feed ordering is a deterministic rotation algorithm, not a ranked feed — no personalization code until accounts exist.
+- Draft-generation pipeline now spans five item types including weekly Pulse statistics.
+- Sharing primitive undecided — Receipt cards + Q5 answer close the last criteria gap.
+- Still unbuilt — no code yet; this record tracks proposal state only.
+`,
+  "decisions/homepage-content-system-metadata-split-auto-opening-search-d.md": `---
+type: Decision
+title: "Homepage content/system-metadata split: auto-opening search drawer"
+description: **Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text · cross-encoder rera
+tags: [frontend, design, homepage, ux, drawer]
+status: accepted
+timestamp: "2026-11-07T11:19:56.309Z"
+---
+
+# Homepage content/system-metadata split: auto-opening search drawer
+
+**Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text · cross-encoder reranked · relevance-floored InfoTips) and the vital-signs panel (listings / last 30 days / synced / analyzed / latency) — sitting between the search field and the corpus. The user asked for better grouping and scannability, with those labels moved into a bottom drawer that appears while a search executes and hides when results return.
+
+**Choice.** The idle homepage shows only the search field, try chips, and The Drum cards. The methodology tips and vital-signs panel live in a canvas-solid bottom drawer (\`#system-drawer\`) that:
+
+- **auto-opens** the moment a search executes (\`runSearch\` sets \`drawerOpen = true\` on request start) — the WaveLoader pulses in the latency cell, so the drawer doubles as the "engine room" readout mid-flight
+- **auto-hides** the moment results return, also on error (closed in the \`finally\` block)
+- closes on **Escape**; \`prefers-reduced-motion\` users get an instant swap (\`transition:fly\` with zero distance/duration)
+- reopens anytime via a fixed **\`system ▴\` chip** bottom-right (thumb zone, safe-area-aware)
+
+**Alternatives considered.**
+
+- Keep both blocks in the page flow — rejected: buries the query under system metadata.
+- Purely transient drawer with no reopen affordance — rejected: corpus stats and the \`last 30 days\` browse link would be unreachable when idle.
+
+**Rationale.** Separates content from system metadata: the query is the first thing on the page, the drawer gives live progress feedback during search instead of a static panel, and the chip preserves always-available access to the stats.
+
+**Consequences.** \`runSearch\` now drives drawer state; the vital-signs grid keeps its 2×2 + full-width mobile layout and 5-across \`md+\` inside the drawer. The drawer background must stay opaque (\`bg-canvas\`) — translucent versions let the footer ghost through. Implemented in \`src/routes/+page.svelte\`, shipped as commit \`9168e3d\` (2026-11-07).
+`,
   "decisions/hybrid-semantic-search-stack-pgvector-tsvector.md": `---
 type: Decision
 title: "Hybrid semantic search stack: pgvector + tsvector with RRF fusion"
@@ -481,6 +1542,35 @@ _Major decisions and direction shifts (ADRs) will be listed here._
 - [Product-search corpus pipeline is self-contained in productsear.ch](./product-search-corpus-pipeline-is-self-contained-in-products.md) - Context
 - [Rename compendium to collections (routes moved, 308 redirects)](./rename-compendium-to-collections-routes-moved-308-redirects.md) - Context
 - [Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)](./set-up-utobo-as-transactional-email-sender-for-productsear-c.md) - Context
+- [Detect LLM clients by user-agent allowlist, not Accept header alone, for raw-markdown negotiation](./detect-llm-clients-by-user-agent-allowlist-not-accept-header.md) - Context
+- [Add a corpus-narrated magazine feed to productsear.ch (proposed)](./add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos.md) - Context
+- [Reshape the corpus feed as a listings feed of item types: pitches, One Save, Two Futures (proposed)](./reshape-the-corpus-feed-as-a-listings-feed-of-item-types-pit.md) - Context
+- [Corpus feed anatomy: stream + stack; Ambition Path accepted; The Pulse pitched (proposed)](./corpus-feed-anatomy-stream-stack-ambition-path-accepted-the-.md) - Context
+- [Feed stream runs on rotation (personalization post-accounts); The Pulse accepted; Receipt cards pitched (proposed)](./feed-stream-runs-on-rotation-personalization-post-accounts-t.md) - Context
+- [Feed round 6: Bluesky-only share; Receipt cards accepted](./feed-round-6-bluesky-only-share-receipt-cards-accepted.md) - Context
+- [Adopt dark theme via semantic token swap on html.dark (reverses earlier deferral)](./adopt-dark-theme-via-semantic-token-swap-on-html-dark-revers.md) - Context
+- [Feed round 7: v1 ships all 7 item types; The Walk pitched](./feed-round-7-v1-ships-all-7-item-types-the-walk-pitched.md) - Context
+- [Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched](./feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-.md) - Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched
+- [Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in as type #9; The Origin card pitched](./feed-round-9-cadence-1-item-2-days-admin-configurable-the-to.md) - Context
+- [Feed round 10: Tombola selection corpus-derived; Origin card parked; The Floor pitched (aggregated search misses)](./feed-round-10-tombola-selection-corpus-derived-origin-card-p.md) - Context
+- [Feed round 11: The Floor in (type #10), Impress the Boss in as user-originated type #11; The Drum pitched (countdown mechanic)](./feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us.md) - Context
+- [Feed round 12: editorial workflow in (corpus-drafted, admin-approved); artifact source D hybrid+origin tags; The Drum in; The Digest pitched (utobo email)](./feed-round-12-editorial-workflow-in-corpus-drafted-admin-app.md) - Context
+- [Feed round 12 wrap: approvals are per-item admin toggles; The Digest in as admin-toggled dark launch (off by default); The Backlog pitched (launch pre-draft)](./feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-.md) - Context
+- [Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)](./feed-round-13-stream-order-fixed-round-robin-the-backlog-in-.md) - Context
+- [Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)](./feed-round-14-same-day-last-year-out-the-feed-is-named-the-d.md) - Context
+- [The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md](./the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) - Context
+- [Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)](./receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md) - Context
+- [Redesign The Drum /feed around the nine Gestalt principles](./redesign-the-drum-feed-around-the-nine-gestalt-principles.md) - **Context.** The \`/feed\` page (The Drum, [[pages/entities/the-drum-feed]]) had shipped as a functional column of hairline-separated rows: unbounded cards with f
+- [Adapt every public surface for touch/mobile — rethink, don't scale](./adapt-every-public-surface-for-touch-mobile-rethink-don-t-sc.md) - **Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-
+- [Homepage content/system-metadata split: auto-opening search drawer](./homepage-content-system-metadata-split-auto-opening-search-d.md) - **Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text · cross-encoder rera
+- [Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint](./elegant-shared-og-cards-one-card-builder-in-lib-server-og-pl.md) - Context
+- [Adopt full search-engine and LLM discovery infrastructure](./adopt-full-search-engine-and-llm-discovery-infrastructure.md) - Context
+- [Trim sitemap.xml to hub surfaces only — no individual listing URLs](./trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md) - Context
+- [Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes](./drum-items-gate-on-email-approval-preview-approve-generate-n.md) - Context
+- [Drum draw cadence: once daily at 07:00 Amsterdam time](./drum-draw-cadence-once-daily-at-07-00-amsterdam-time.md) - Context
+- [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](./drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) - Context
+- [Drum draw schedule made miss-proof (cron redundancy)](./drum-draw-schedule-made-miss-proof-cron-redundancy.md) - Context
+- [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](./the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md) - Context
 `,
   "decisions/machine-readout-console-identity-for-view-llm.md": `---
 type: Decision
@@ -549,6 +1639,72 @@ productsear.ch owns the search product and the app-owned tables (\`bookmark_embe
 - **sync-raindrop.js is upsert-only** (\`ON CONFLICT (raindrop_id) DO UPDATE\`) — verified it never deletes, so synthetic negative-id rows (manual ingests) survive syncs.
 - Workflow needs an optional \`ZAI_API_KEY\` secret in GitHub (analyze falls back to the Railway LLM gateway without it). Pushing \`.github/workflows/\` changes requires the \`workflow\` scope on the git token.
 - Pipeline scripts need \`jsdom\`, \`@mozilla/readability\`, \`turndown\` (added to package.json).
+`,
+  "decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md": `---
+type: Decision
+title: "Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)"
+description: Context
+tags: [feed, the-drum, og-images, receipt-cards, rendering, slice-d]
+status: accepted
+timestamp: "2026-11-06T20:33:40.064Z"
+---
+
+# Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)
+
+## Context
+
+Slice D of [the-drum](../pages/entities/the-drum-feed.md) needed **receipt cards** — 1200×630 OG PNGs so Bluesky shares of feed cards unfurl into a designed image. \`@vercel/og\` (satori + resvg bundled) was installed first as the obvious choice.
+
+## The choice
+
+**Hand-built SVG rendered to PNG by \`@resvg/resvg-js\`** at \`/api/feed/og/listing/[id]\`, with self-hosted Hanken Grotesk TTFs (OFL, license note in \`static/fonts/LICENSE.txt\`) for deterministic text rendering. \`@vercel/og\` was uninstalled.
+
+## Alternatives considered and why they failed
+
+- **\`@vercel/og\`** — broken outside Vercel's runtime: (1) its \`hb.wasm\` (shipped in the \`harfbuzzjs\` package) must sit at the process CWD, and even after copying it, (2) the bundled ESM does dynamic \`require\`s that fail in plain Node. Two fatal blockers on Railway's \`adapter-node\`.
+- **sharp** — not a direct dependency; would add a heavy native dep just for this.
+
+## Rationale
+
+\`@resvg/resvg-js\` is a native (NAPI) renderer with no wasm games, accepts an SVG string plus \`fontFiles\`, and renders deterministically — exactly what a server OG endpoint needs on any host. SVG is hand-built (satori's element *objects*, not JSX, would be needed in plain \`.mjs\`; the route just builds SVG strings with an escape helper and a width-based word-wrap assuming Hanken Grotesk ~0.52em/char).
+
+## Consequences
+
+- The route uses **hex colors hardcoded from the site identity** (\`#F9FBFA\` canvas, \`#0021FF\` accent, etc.) — deliberate: an OG image is an asset, not app CSS, so the semantic-token rule doesn't reach into SVG (noted in the file header).
+- This \`@resvg/resvg-js\` version wants **\`fontFiles\` paths, not buffers** — fonts are read from \`static/fonts/\` at render time.
+- Fonts ship in-repo (\`static/fonts/HankenGrotesk-{Regular,SemiBold}.ttf\`, ~57KB each), fetched from Google Fonts via the css2 TTF trick (see [the gstatic TTF learning](../learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user-agent.md)) — no runtime CDN dependency, deterministic rendering.
+- Stack pages (\`/listings/[id]\`, feed cards) emit the right \`og:image\`/\`twitter:card\` meta so Bluesky unfurls work.
+
+Commit \`2a72c2a\`.
+`,
+  "decisions/redesign-the-drum-feed-around-the-nine-gestalt-principles.md": `---
+type: Decision
+title: Redesign The Drum /feed around the nine Gestalt principles
+description: "**Context.** The \`/feed\` page (The Drum, [[pages/entities/the-drum-feed]]) had shipped as a functional column of hairline-separated rows: unbounded cards with f"
+tags: [design, frontend, feed, the-drum]
+status: accepted
+timestamp: "2026-11-06T20:56:48.699Z"
+---
+
+# Redesign The Drum /feed around the nine Gestalt principles
+
+**Context.** The \`/feed\` page (The Drum, [[pages/entities/the-drum-feed]]) had shipped as a functional column of hairline-separated rows: unbounded cards with floating meta, ~8 text styles per card, ~130-char line lengths, no reading rhythm. The user directed a redesign grounded in the nine Gestalt principles (gestaltprinciples.com) so the page would "read and enjoy better".
+
+**Choice.** Each violated principle was mapped to a concrete structural treatment:
+
+- **Common Region / Closure** → every card is a bounded surface (\`bg-surface\` + border + radius); the header readout became a vital-signs-style panel; a hairline closes each card's action zone.
+- **Continuity** → a continuous **timeline spine with accent nodes** runs the stream — "the drum keeps time" made literal.
+- **Figure-Ground** → headline promoted to 22px semibold, the unambiguous figure; domain/body recede to ground; domain sits directly under its headline.
+- **Proximity** → chip+date pair kept tight; share actions grouped into one separated row (open stack ↔ share on bluesky; digest input ↔ methodology link).
+- **Symmetry & Order / Prägnanz** → constrained ~72ch measure, fewer text styles, and the dangling "listing added —" em-dash noise dropped.
+- **Similarity** → identical chips and identical action pairs on every card.
+- **Common Fate** → cards animate as units (kept).
+
+**Alternatives considered.** Cosmetic tweaks (spacing, font sizes) — rejected: the problems were structural (no regions, no rhythm), not sizing. Full page rebuild — unnecessary; token architecture and card semantics were preserved.
+
+**Rationale.** Verified in the dark theme via headless-Chrome screenshots before/after; check + build green; committed \`b75116c\` and pushed. The light theme shares the same token architecture, so it carries over.
+
+**Consequences.** This bounded-card-on-a-spine language is now the reference style for Drum feed surfaces. The homepage's 3 latest Drum cards were deliberately NOT restyled in the same pass — they are a candidate follow-up until the homepage matches. The method used (principle-by-principle diagnosis → treatment mapping) is captured as a reusable rule.
 `,
   "decisions/remove-ask-mode-productsear-ch-becomes-search-only.md": `---
 type: Decision
@@ -666,6 +1822,52 @@ Registry \`repository\` fields resolve dev-tool products to repos exactly and fo
 - \`scan.js\` has phases A→B→N→C2 and no C1.
 - Search-phase queries must **strip the domain token** — the first C2 run wasted ~⅓ of the 30/min budget querying \`producthunt in:name\` for PH entries.
 - Raw matches need post-hoc quality classification (see [[corroborate-product-to-repo-matches-with-multi-signal-checks]]).
+`,
+  "decisions/reshape-the-corpus-feed-as-a-listings-feed-of-item-types-pit.md": `---
+type: Decision
+title: "Reshape the corpus feed as a listings feed of item types: pitches, One Save, Two Futures (proposed)"
+description: Context
+tags: [feed, listings, item-types, pitches, brainstorm, proposed]
+status: proposed
+supersedes: [add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos]
+timestamp: "2026-11-06T19:04:19.398Z"
+---
+
+# Reshape the corpus feed as a listings feed of item types: pitches, One Save, Two Futures (proposed)
+
+## Context
+
+Rounds 2–3 of the corpus-feed brainstorm (2026-11-06). The user answered round 1 (narrator voice → **A, corpus-drafted**) and in round 2 reframed the deliverable. Quote: *"the listings feed will be a feed with different types of content from multiple angles and ideas to which a user can better understand how it can change or enrich their life and ambitions."* This reshapes the prior framing (see the superseded magazine-feed proposal below): **not a magazine of articles, but a feed of typed content items clustered around listings.**
+
+## The choice
+
+- The surface is a **listings feed composed of typed content items**, not magazine articles. Each listing gets multiple angle-posts showing how it can change or enrich a life.
+- **Confirmed item types (user, 2026-11-06):**
+  - **Target user pitches** — posts under the feed where the target users of a listing talk about it, to promote it and motivate other target users to look. Machine-drafted from the corpus: the \`bookmark_analysis.who\` field already records who each save was for (see [[learnings/corpus-schema-facts-raindrop-created-at-analysis]]), so pitch drafts are template-generated — no writing staff. **Voices are synthetic personas** (user picked A, round 3): drafted from analysis data ("For the freelance designer drowning in revisions…"), not real reader quotes.
+  - **One Save** — repurposed from "daily edition" (its framing in the superseded proposal) to a **feed item type**.
+  - **Two Futures** — confirmed (user, round 3): machine-drafted two-column micro-story per listing, "Your Tuesday without it vs. with it" (concrete morning/deadline/weekend snapshots, before/after). Screenshot-shaped; only possible because the corpus knows what each tool actually does.
+
+The 14 ideas from the superseded magazine proposal remain the candidate item-type pool (Semantic Walk, Resurrections, Signal Desk formats, etc.).
+
+## Alternatives considered
+
+- **Magazine with articles** (the prior proposal) — replaced by the user's item-type-feed framing; see the superseded ADR for the full idea menu and interview rounds.
+- **Pitch voices**: A synthetic personas (chosen) / B real reader voices only — pitch slots empty until users submit / C hybrid — labeled synthetic drafts ship day one, real quotes replace them with visual priority. Assistant lean was C; user chose A.
+- **Feed anatomy** — now the live grill question (Q3, see below).
+
+## Open branches (interview state after round 3)
+
+- **Feed anatomy (Q3, asked, unanswered)**: A one mixed stream (all item types interleave, recency/relevance-ranked, social-feed style) / B listing-centered (browse listings; each carries its stack of pitch/two-futures/one-save posts) / C stream + stack — one mixed stream, every card links to the listing's full post-stack page (assistant lean: C — stream drives return visits, stack drives depth).
+- **Ambition Path (pitched round 3, awaiting in/out/tweaked)**: a feed item type chaining multiple listings into one ordered route toward a named ambition — *"From spreadsheet chaos to shipping your first SaaS — the 5 listings that matter, in order"* — generated from archetype + semantic clusters in the corpus. Bigger share artifact than a single post (people share destinations, not steps). Not yet accepted.
+- **Persona attribution (parked, flagged round 3)**: invented pitch voices will occasionally get called out online; the feed needs a one-line "drafted from the corpus, not a human" disclosure convention. Parked, not grilled.
+- Carried over from the superseded proposal, still unanswered: writing budget (3a), primary share destination (3b), audience-first sequencing (G), The Floor privacy line (2a). Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+
+## Consequences if adopted
+
+- A draft-generation pipeline over corpus analysis fields (\`who\` → pitches) — consistent with the zero-writing-budget direction.
+- Voice is corpus-drafted and explicitly synthetic; disclosure/attribution for persona voices is a known follow-up (persona attribution branch).
+- Still extends/reverses the search-only direction set 2026-11-01 (see [[decisions/remove-ask-mode-productsear-ch-becomes-search-only]]).
+- Unbuilt — no code yet; this record tracks the proposal shape so future sessions resume the interview, not re-litigate the framing.
 `,
   "decisions/serve-the-llm-usage-guide-at-skill-md-and-distill.md": `---
 type: Decision
@@ -830,6 +2032,108 @@ During the compendium-page design interview (Q1), we settled how bookmark archet
 - Archetype taxonomy is now versioned data, not code — updating the classifier means re-running the backfill.
 - Related schema homework: [corpus schema facts](../learnings/corpus-schema-facts-raindrop-created-at-analysis.md).
 `,
+  "decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md": `---
+type: Decision
+title: The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md
+description: Context
+tags: [[feed, the-drum, convergence, spec, brainstorm]]
+status: accepted
+timestamp: "2026-11-06T19:38:56.880Z"
+---
+
+# The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md
+
+## Context
+
+The 15-turn Drum brainstorm (feed rounds 1–14, see prior feed-round decisions) ended with a convergence slate locked pending final verdict on Q15. All criteria were served and every major fork had a verdict.
+
+## The verdict
+
+User answered **Q15-A: converged**. The full slate is written up as the formal spec at \`docs/specs/the-drum.md\`.
+
+Final locked slate (summary):
+
+- **Name:** The Drum; mascot turns the handle; \`/feed\` canonical route + homepage shows 3 latest cards (vanish on search start)
+- **Cadence:** 1 item / 2 days, admin-configurable; fixed round-robin over 11 types; countdown appointment mechanic
+- **11 item types:** One Save · Target-User Pitch (synthetic personas) · Two Futures · Ambition Path · The Pulse (20%) · Receipt cards · Resurrections · The Walk · The Tombola (corpus-derived scoring) · The Floor (20%, themes-only) · Impress the Boss (hybrid artifacts + origin tags)
+- **Structure:** stream + stack; stacks are the depth surface, The Walk extends them
+- **Workflow:** pipeline drafts → inline editor → per-item approval toggles → publish (auto for ungated); The Backlog pre-seeds
+- **Trust:** type tags + methodology page; artifact origin tags
+- **Sharing:** Receipt cards + Bluesky button (v1); **The Digest** via utobo, dark by default (admin-toggled)
+- **Phase 2:** accounts → personalization, Marginalia, Confessions, share expansion
+
+## Consequences
+
+- Next step is the implementation plan (data model, generation pipeline, admin queue, routes).
+- Parked items carry forward: Origin card (never verdicted), methodology copy, round-robin canonical order, receipt-card visual spec.
+- Brainstorm protocol that produced this: 1 idea + 1 grill question per turn, decision ledger maintained — proven effective for this user.
+`,
+  "decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md": `---
+type: Decision
+title: The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable
+description: Context
+tags: [the-drum, the-walk, feed, rotation, demotion, clickable-links]
+status: accepted
+timestamp: "2026-11-18T15:30:37.008Z"
+---
+
+# The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable
+
+## Context
+
+productsear.ch/feed showed **three Walk items in a row** (Nov 14/16/17) because the LLM drafting chain was down (Railway gateway 503 "Loading model") and The Floor was starving, so the rotation's catch-and-skip funneled every draw into The Walk — the only generator that cannot fail. The owner also questioned The Walk's reader value: the card shows 5 titles + bare hop distances with no narration of why the hops connect, making it the weakest-narrated card in the magazine.
+
+## The choice
+
+1. **Demote The Walk's frequency**: the generator now enforces a **minimum gap of 20 days** since the last *published* walk (\`WALK_MIN_GAP_DAYS\` in \`src/lib/server/feed/generators/walk.ts\`, gate query on \`max(published_at) WHERE type='walk' AND status='published'\`). When the gap is not met it returns null and the rotation falls through to the next type, per the existing catch-and-skip semantics. Effect: Walk appears at most every ~20 days instead of every ~10 (half frequency). Gate verified live: with the Nov 17 walk published, the generator returns null until ~2026-12-07.
+2. **Walk items become clickable**: the \`/feed\` card renderer (\`src/routes/feed/+page.svelte\`) now wraps \`body.items[].url\` in an external \`<a target="_blank" rel="noopener">\` with the site's hover-accent treatment. This is data-driven rendering, so **the three already-published Walk cards got clickable links with no data migration** — the urls were already stored in \`feed_items.body\`.
+
+## Alternatives considered
+
+- LLM-narrate each hop (why neighbors are adjacent) or personalize the seed from reader context — the stronger fixes for reader value, but they depend on the currently-broken LLM chain; deferred.
+- Cut The Walk entirely — kept, because it is the corpus's serendipity layer (pure pgvector, unique to this site) and the LLM outage made it look worse than it is.
+- Fix the Railway LLM gateway — still outstanding (the five LLM-drafted types remain dead until then); the demotion does not fix that.
+
+## Consequences
+
+- The Walk streak cannot recur: with a 20-day gap, even a total LLM outage yields at most one Walk per 20 days, and the other draws fall through to the data-driven types (pulse/resurrections/tombola).
+- The broader failure mode (LLM outage collapses the rotation onto whatever cannot fail) remains — see [learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec](../../learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md).
+`,
+  "decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md": `---
+type: Decision
+title: Trim sitemap.xml to hub surfaces only — no individual listing URLs
+description: Context
+tags: [seo, sitemap, crawl-budget, discovery]
+status: accepted
+timestamp: "2026-11-10T11:43:26.025Z"
+---
+
+# Trim sitemap.xml to hub surfaces only — no individual listing URLs
+
+## Context
+
+The 2026-11-10 discovery pass ([[decisions/adopt-full-search-engine-and-llm-discovery-infrastructure]]) shipped a dynamic sitemap with one URL per corpus listing — ~4,450 URLs total (6 surfaces + 30 collections + 4,414 listings). Minutes later the user pushed back: individual listing pages are thin, 4,414 of them dilute crawl budget, and \`/archive\` plus \`/collections\` already expose every listing to crawlers via internal links.
+
+## Choice
+
+Trim \`/sitemap.xml\` to **hub URLs only** — 36 total: the 6 static surfaces + the 30 archetype collections. No \`/listings/{id}\` URLs; the listings DB query was removed from the sitemap route. \`llms.txt\` copy updated to match (commit \`e4ecd86\`).
+
+## Alternatives considered
+
+- **Keep all ~4.4k listing URLs** — rejected: thin pages earn no crawl budget, and the sitemap at the time also advertised the 522 synthetic negative-id listings whose public rendering was still broken.
+- **Sitemap index with a listings child file** — rejected: unnecessary complexity once listings are fully discoverable through \`/archive\` (paginated, newest-first) and \`/collections\` internal links.
+
+## Rationale
+
+A sitemap's job is URL discovery, not quality signaling — and listing URLs were already discoverable by crawling hub internal links. Dropping them concentrates crawl budget on surfaces that matter while listings remain indexable (found by crawling, not listed). It also decouples the sitemap from the synthetic-id situation on the corpus.
+
+## Consequences
+
+- Sitemap = 36 URLs / 0 listing URLs; listings stay indexable via \`/archive\` and \`/collections\` internal links.
+- User follow-up: resubmit \`sitemap.xml\` in Google Search Console after the deploy — Google drops removed URLs as it recrawls, and the transient 404s it saw on \`/listings/-52x\` resolve to real pages.
+- Amends only the sitemap scope of the discovery ADR; every other part of that decision stands.
+- See [[pages/entities/dynamic-xml-sitemap-endpoint]] for the resulting URL set and [[learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis]] for the related listing-route fix shipped in the same commit.
+`,
   "decisions/use-plausible-for-privacy-friendly-site-analytics.md": `---
 type: Decision
 title: Use Plausible for privacy-friendly site analytics, wired in app.html
@@ -938,7 +2242,7 @@ timestamp: "2026-07-03T13:24:57.608Z"
 | productsear.ch | The project/repo name; suggests an intended product-search application, though no source code exists yet. |
 `,
   "index.md": `---
-okf_version: "0.1"
+okf_version: "0.2"
 ---
 
 # Project Knowledge Wiki
@@ -946,7 +2250,7 @@ okf_version: "0.1"
 <!-- wiki-nav:start -->
 ## Navigation map
 
-Auto-generated detailed index of every docs/wiki/ concept — the map the LLM uses to locate information. 122 concept(s). Regenerated on init and on wiki_mark_synced. Generated 2026-11-06T14:28:28.542Z.
+Auto-generated detailed index of every docs/wiki/ concept — the map the LLM uses to locate information. 200 concept(s). Regenerated on init and on wiki_mark_synced. Generated 2026-11-18T15:23:06.815Z.
 
 Each entry: [title](concept-id.md) — description. Links are clickable in /wiki; pass the concept-id (link target minus .md) to wiki_get.
 
@@ -970,10 +2274,13 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Impeccable pattern one-pager (P3)](pages/artifacts/impeccable-pattern-one-pager-p3.md) — The **pattern one-pager** is the P3 gate deliverable of the impeccable design-studio redesign: a single self-contained HTML page showing the "80% base" layout f
 - [insert-missing-repos-active-30d.sql](pages/artifacts/insert-missing-repos-active-30d-sql.md) — What is it?
 - [productsear.ch promo video](pages/artifacts/productsear-ch-promo-video.md) — An animated ~6-scene promo MP4 that introduces productsear.ch: semantic bookmark search via hybrid retrieval ([[hybrid-search-via-reciprocal-rank-fusion]]) plus
+- [The Drum feed spec](pages/artifacts/the-drum-feed-spec.md) — **The Drum feed spec** — the formal, converged specification for the [The Drum feed](../entities/the-drum-feed.md) entity, committed at \`docs/specs/the-drum.md\` after the 15-turn diverge/con
 - [Hybrid search via Reciprocal Rank Fusion](pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md) — What is it?
 - [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it?
+- [Search and LLM discovery layer](pages/concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
 - [URL-driven search state](pages/concepts/url-driven-search-state.md) — What is it?
 - [Admin console (/admin)](pages/entities/admin-console-admin.md) — What it is
+- [Admin feed console (/admin/feed)](pages/entities/admin-feed-console-admin-feed.md) — What it is
 - [API ask endpoint](pages/entities/api-ask-endpoint.md) — What is it?
 - [API search endpoint](pages/entities/api-search-endpoint.md) — What is it?
 - [Archive page](pages/entities/archive-page.md) — \`/archive\` — the chronological all-entries surface of productsear.ch, displayed as **"listings"** (URLs stay /archive). Newest-first by raindrop_created_at, paginated 20/page.
@@ -981,13 +2288,23 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Collections pages](pages/entities/compendium-pages.md) — \`/collections\` (index) and \`/collections/[slug]\` (group) — the archetype roll-up surface. The index lists all **30 canonical archetypes** with live counts; ea
 - [Corpus enrichment pipeline (sync/crawl/analyze)](pages/entities/corpus-enrichment-pipeline-sync-crawl-analyze.md) — What is it?
 - [Daily embed-new-bookmarks workflow](pages/entities/daily-embed-new-bookmarks-workflow.md) — \`.github/workflows/embed-new-bookmarks.yml\` — a GitHub Actions scheduled workflow that keeps the corpus enriched nightly. **Since 2026-11-06 it runs the full en
+- [Drum email approval pipeline](pages/entities/drum-email-approval-pipeline.md) — **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner 
+- [Dynamic XML sitemap endpoint](pages/entities/dynamic-xml-sitemap-endpoint.md) — \`/sitemap.xml\` — the dynamic XML sitemap serving the **hub URLs** of productsear.ch: 6 static surfaces + all 30 archetype collections = **36 URLs**. Listing pag
 - [Embed-bookmarks backfill script](pages/entities/embed-bookmarks-backfill-script.md) — What is it?
+- [Feed feature flags](pages/entities/feed-feature-flags.md) — Two admin-toggled visibility flags on te9_dev.feed_settings (nav_enabled, homepage_cards_enabled) that show/hide The Drum's nav link and homepage latest-3 block — /feed itself stays reachable.
+- [feed.xml RSS endpoint](pages/entities/feed-xml-rss-endpoint.md) — \`/feed.xml\` — The Drum as RSS 2.0, letting readers subscribe to the 48h-draw feed in any feed reader.
+- [Homepage system drawer](pages/entities/homepage-system-drawer.md) — The bottom-sheet drawer on the productsear.ch homepage that holds the system-metadata blocks — the vital-signs panel (listings / last 30 days / synced / analyze
 - [InfoTip component](pages/entities/infotip-component.md) — \`src/lib/components/InfoTip.svelte\` — a lightweight hover/focus tooltip for homepage methodology terms and vital-signs metric labels
+- [JsonLd.svelte component](pages/entities/jsonld-svelte-component.md) — \`src/lib/components/JsonLd.svelte\` — a head component that renders a schema.org JSON-LD \`<script type="application/ld+json">\` block from server-owned data.
 - [LlmDoc component](pages/entities/llmdoc-component.md) — \`src/lib/components/LlmDoc.svelte\` — the browser-facing renderer for llms views. Receives the server-built markdown string and renders it as a **machine-readout
+- [llms.txt agent index](pages/entities/llms-txt-agent-index.md) — \`/llms.txt\` — the curated, llmstxt.org-convention index of productsear.ch for LLMs and AI agents, generated at request time with live corpus stats so agents alw
 - [product-search mascot (illo character pack)](pages/entities/product-search-mascot-illo-character-pack.md) — The official brand mascot for productsear.ch: **product-search**, a bookmark-ribbon character in the illo plugin's **riso** look — the ribbon that has already f
+- [Receipt-card OG image route](pages/entities/receipt-card-og-image-route.md) — Receipt-card OG image route
 - [repo-scan pipeline](pages/entities/repo-scan-pipeline.md) — One-off checkpointed Node pipeline (\`.archive/repo-scan/\`) that matched all 4,224 bookmarks against open-source GitHub repos — provenance for the digital-products repo index
 - [Rerank service](pages/entities/rerank-service.md) — \`src/lib/server/rerank.ts\` — a thin client for the Voyage \`rerank-2.5-lite\` cross-encoder rerank API.
 - [Search diagnostics](pages/entities/search-diagnostics.md) — Search-quality diagnostic tooling shipped with the 2026-11-01 rerank fix: a trace script for the retrieval stages, a debug env flag for the rerank stage, and a 
+- [The Digest (email digest pipeline)](pages/entities/the-digest-email-digest-pipeline.md) — The Digest (email digest pipeline)
+- [The Drum feed](pages/entities/the-drum-feed.md) — **The Drum** is productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of 11 item types — 10 drawing today — published on a **da
 - [utobo email platform](pages/entities/utobo-email-platform.md) — utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
 - [utobo Email (transactional email service)](pages/entities/utobo-email-transactional-email-service.md) — **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS
 - [Utobo sending-domain DNS records](pages/entities/utobo-sending-domain-dns-records.md) — The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Wri
@@ -996,44 +2313,80 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 
 ### Decisions
 
+- [Adapt every public surface for touch/mobile — rethink, don't scale](decisions/adapt-every-public-surface-for-touch-mobile-rethink-don-t-sc.md) — **Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-
+- [Add a corpus-narrated magazine feed to productsear.ch (proposed)](decisions/add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos.md) — Context
 - [Adopt agentos-sdk.dev visual design system](decisions/adopt-agentos-sdk-dev-visual-design-system.md) — Context
 - [Adopt cross-encoder reranking (Voyage rerank-2.5-lite) on top of RRF hybrid search](decisions/adopt-cross-encoder-reranking-voyage-rerank-2-5.md) — Context
+- [Adopt dark theme via semantic token swap on html.dark (reverses earlier deferral)](decisions/adopt-dark-theme-via-semantic-token-swap-on-html-dark-revers.md) — Context
+- [Adopt full search-engine and LLM discovery infrastructure](decisions/adopt-full-search-engine-and-llm-discovery-infrastructure.md) — Context
 - [Adopt product-search bookmark-ribbon mascot as the brand character](decisions/adopt-product-search-bookmark-ribbon-mascot-as-the.md) — Context
 - [Content-negotiate llms views: raw text/markdown for LLM clients, rendered markdown for browsers](decisions/content-negotiate-llms-views-raw-text-markdown-for.md) — Context
+- [Corpus feed anatomy: stream + stack; Ambition Path accepted; The Pulse pitched (proposed)](decisions/corpus-feed-anatomy-stream-stack-ambition-path-accepted-the-.md) — Context
+- [Detect LLM clients by user-agent allowlist, not Accept header alone, for raw-markdown negotiation](decisions/detect-llm-clients-by-user-agent-allowlist-not-accept-header.md) — Context
+- [Drum draw cadence: once daily at 07:00 Amsterdam time](decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time.md) — Context
+- [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) — Context
+- [Drum draw schedule made miss-proof (cron redundancy)](decisions/drum-draw-schedule-made-miss-proof-cron-redundancy.md) — Context
+- [Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes](decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md) — Context
 - [Dual-view surfaces: humans | llms tabs with ?view=llm on every route](decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm.md) — Context
+- [Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint](decisions/elegant-shared-og-cards-one-card-builder-in-lib-server-og-pl.md) — Context
 - [Embedding provider: Voyage voyage-4-large (1024-dim)](decisions/embedding-provider-voyage-voyage-4-large-1024-dim.md) — Context
 - [Enrich reranker input with page content; show 30 results](decisions/enrich-reranker-input-with-page-content-show-30.md) — Context
+- [Feed round 10: Tombola selection corpus-derived; Origin card parked; The Floor pitched (aggregated search misses)](decisions/feed-round-10-tombola-selection-corpus-derived-origin-card-p.md) — Context
+- [Feed round 11: The Floor in (type #10), Impress the Boss in as user-originated type #11; The Drum pitched (countdown mechanic)](decisions/feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us.md) — Context
+- [Feed round 12: editorial workflow in (corpus-drafted, admin-approved); artifact source D hybrid+origin tags; The Drum in; The Digest pitched (utobo email)](decisions/feed-round-12-editorial-workflow-in-corpus-drafted-admin-app.md) — Context
+- [Feed round 12 wrap: approvals are per-item admin toggles; The Digest in as admin-toggled dark launch (off by default); The Backlog pitched (launch pre-draft)](decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-.md) — Context
+- [Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)](decisions/feed-round-13-stream-order-fixed-round-robin-the-backlog-in-.md) — Context
+- [Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)](decisions/feed-round-14-same-day-last-year-out-the-feed-is-named-the-d.md) — Context
+- [Feed round 6: Bluesky-only share; Receipt cards accepted](decisions/feed-round-6-bluesky-only-share-receipt-cards-accepted.md) — Context
+- [Feed round 7: v1 ships all 7 item types; The Walk pitched](decisions/feed-round-7-v1-ships-all-7-item-types-the-walk-pitched.md) — Context
+- [Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched](decisions/feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-.md) — Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched
+- [Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in as type #9; The Origin card pitched](decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to.md) — Context
+- [Feed stream runs on rotation (personalization post-accounts); The Pulse accepted; Receipt cards pitched (proposed)](decisions/feed-stream-runs-on-rotation-personalization-post-accounts-t.md) — Context
+- [Homepage content/system-metadata split: auto-opening search drawer](decisions/homepage-content-system-metadata-split-auto-opening-search-d.md) — **Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text · cross-encoder rera
 - [Hybrid semantic search stack: pgvector + tsvector with RRF fusion](decisions/hybrid-semantic-search-stack-pgvector-tsvector.md) — Context
 - [Machine-readout console identity for ?view=llm surfaces](decisions/machine-readout-console-identity-for-view-llm.md) — Context
 - [Product-search corpus pipeline is self-contained in productsear.ch](decisions/product-search-corpus-pipeline-is-self-contained-in-products.md) — Context
+- [Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)](decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md) — Context
+- [Redesign The Drum /feed around the nine Gestalt principles](decisions/redesign-the-drum-feed-around-the-nine-gestalt-principles.md) — **Context.** The \`/feed\` page (The Drum, [[pages/entities/the-drum-feed]]) had shipped as a functional column of hairline-separated rows: unbounded cards with f
 - [Remove Ask mode — productsear.ch becomes search-only](decisions/remove-ask-mode-productsear-ch-becomes-search-only.md) — Context
 - [Rename compendium to collections (routes moved, 308 redirects)](decisions/rename-compendium-to-collections-routes-moved-308-redirects.md) — Context
 - [Repo-scan pipeline: cheapest-first phases; npm/PyPI registry lookups replace GitHub slug-guessing](decisions/repo-scan-pipeline-cheapest-first-phases-npm-pypi.md) — Context
+- [Reshape the corpus feed as a listings feed of item types: pitches, One Save, Two Futures (proposed)](decisions/reshape-the-corpus-feed-as-a-listings-feed-of-item-types-pit.md) — Context
 - [Serve the LLM usage guide at /skill.md and distill it into the llms-view preamble](decisions/serve-the-llm-usage-guide-at-skill-md-and-distill.md) — Context
 - [Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)](decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — Context
 - [Shift visual design to instrument-grade precision-tool system (OKLCH)](decisions/shift-visual-design-to-instrument-grade-precision.md) — Context
 - [Store bookmark archetypes as multi-entry JSONB on an app-owned table](decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md) — Context
+- [The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md](decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) — Context
+- [Trim sitemap.xml to hub surfaces only — no individual listing URLs](decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md) — Context
 - [Use Plausible for privacy-friendly site analytics, wired in app.html](decisions/use-plausible-for-privacy-friendly-site-analytics.md) — Context
 - [User-facing vocabulary is "listings" — display-terms-only rename, URLs stay /archive](decisions/user-facing-vocabulary-is-listings-display-terms.md) — Context
 
 ### Rules
 
 - [Attribute build failures before fixing; never touch a concurrent session's in-progress work](rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md) — **Guideline:** When a whole-project check (\`npm run build\`, typecheck) fails in this repo, attribute the errors **before** treating your own work as broken — an
+- [Back up and dry-run the restore before any destructive bulk delete](rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md) — **Guideline:** Before a destructive bulk DELETE against \`te9_dev\` (e.g. wiping a table like \`feed_items\`), run the three-step interlock — and prove the restore 
+- [Brainstorm pacing: one idea + one grill question per turn, branch ledger](rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc.md) — **Guideline:** In ideation/brainstorm sessions with this user, do **not** batch multiple questions or a big idea menu into one turn. Each turn carries **exactly
 - [Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes](rules/check-the-index-before-committing-use-pathspec-scoped-commit.md) — **Guideline:** Before running \`git commit\` in any repo — especially auxiliary/external repos like \`E:\\skills.te9.dev\` whose indexes accumulate unrelated pre-sta
 - [Corroborate product→repo matches with multi-signal checks; stars never validate homepage/npm links](rules/corroborate-product-repo-matches-with-multi-signal.md) — Guideline
 - [Diagnose search misses stage-by-stage before tuning](rules/diagnose-search-misses-stage-by-stage-before.md) — Guideline
 - [Every ?view=llm branch must render an LLM document — including no-parameter fallbacks](rules/every-view-llm-branch-must-render-an-llm-document.md) — **Guideline:** On any route honoring \`?view=llm\`, *every* code path — including the fallback branch where search params are absent — must return the LLM markdow
 - [Guard min-content width on wrapping-sensitive text](rules/guard-min-content-width-on-wrapping-sensitive-text.md) — **Guideline**: wide monospace faces (Martian Mono is ~15px/char at 18px) and unbreakable tokens (repo-style titles like \`owner/deepseek_ocr_app:\`) set large **m
 - [Instrument-grade design principles; avoid banned tells](rules/instrument-grade-design-principles-avoid-banned.md) — Guideline
+- [Interview questions ship with lettered options plus a proceed/notes/add-your-own round](rules/interview-questions-ship-with-lettered-options-plus-a-procee.md) — **Guideline:** In any planning/design interview with this user (grill-docs-style P2 rounds, feature scoping, content-brainstorm triage), never pose open-ended q
 - [Keep ?view=llm surfaces free of human UI chrome](rules/keep-view-llm-surfaces-free-of-human-ui-chrome.md) — **Guideline:** Any site-wide chrome added to \`src/routes/+layout.svelte\` — footers, mascots, banners, badges — must be **hidden on \`?view=llm\` surfaces**, so LL
+- [OG endpoint assets must fail soft: lazy-read with try/catch, omit gracefully](rules/og-endpoint-assets-must-fail-soft-lazy-read-with-try-catch-o.md) — **Guideline:** Any binary asset an OG/social-card renderer depends on (mascot PNG, fonts, future images) must be loaded **tolerantly**: a lazy (memoized) read w
 - [Pool-then-rerank with graceful fallback for retrieval](rules/pool-then-rerank-with-graceful-fallback-for.md) — Guideline
 - [Prepare and dry-run the rollback script before generating derived rows](rules/prepare-and-dry-run-the-rollback-script-before-generating-de.md) — **Guideline:** When a bulk data mutation against \`te9_dev\` is committed for real (no rollback wrapper), write and dry-run-verify the undo script **before** gene
+- [Probe responsive overflow programmatically; don't eyeball screenshots](rules/probe-responsive-overflow-programmatically-don-t-eyeball-scr.md) — **Guideline:** For any responsive change, verify overflow by measurement, not by looking at screenshots. Build (\`npm run build\`), serve \`node build\` on a known 
+- [Redesign surfaces via the Gestalt diagnosis-then-map method](rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-method.md) — **Guideline:** When a redesign request lands ("make X read/enjoy better"), run the nine Gestalt principles (common region, closure, proximity, figure-ground, co
 - [Reverse-engineer hosted component bundles into plain CSS, never add the dependency](rules/reverse-engineer-hosted-component-bundles-into.md) — **Guideline:** When a design reference is a hosted component bundle (21st.dev CDN, React component previews, similar), do **not** add the React dependency or po
 - [Rewrite delimiter-dense code blocks wholesale via the write path](rules/rewrite-delimiter-dense-code-blocks-wholesale-via.md) — Guideline
 - [Sanitize text at the embedding API boundary](rules/sanitize-text-at-the-embedding-api-boundary.md) — Guideline
 - [Skip HTML sanitizer for server-owned LLM output; add one if untrusted input flows in](rules/skip-html-sanitizer-for-server-owned-llm-output.md) — When rendering model output as HTML on the client (e.g. ask-mode answers parsed
+- [Style with semantic theme tokens only — never hardcode colors](rules/style-with-semantic-theme-tokens-only-never-hardcode-colors.md) — **Guideline:** Every color in components and raw CSS must reference the semantic theme tokens (\`var(--canvas)\`, \`var(--ink)\`, \`var(--accent)\`, …) — never hardco
 - [Sweep every render path when renaming display vocabulary](rules/sweep-every-render-path-when-renaming-display.md) — **Guideline:** When renaming display vocabulary on a SvelteKit surface, sweep **every render path**, not just visible body copy: \`<svelte:head><title>\`, sr-only
 - [Validate generated SQL inserts with a rollback-wrapped dry run against the live DB](rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r.md) — **Guideline:** Before declaring a generated/hand-written INSERT or migration SQL file ready to run, execute it against the real database inside a single \`BEGIN;
+- [Verify production runtime env vars before declaring a send pipeline armed](rules/verify-production-runtime-env-vars-before-declaring-a-send-p.md) — **Guideline:** Before declaring any external-send or API-integration pipeline operational (utobo email, Drum approval mails, The Digest sends, Voyage, chat prov
 - [Verify the serving process on a test port before trusting smoke tests](rules/verify-the-serving-process-on-a-test-port-before-trusting-sm.md) — **Guideline:** After any restart of a local \`node build\` preview server, verify what actually serves the test port \`netstat -ano | findstr :<port>\` (and, when a
 
 ### Learnings
@@ -1044,51 +2397,80 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Analyzed metric 100%: analyzer fallback patch + what the metric actually counts](learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md) — Discovered 2026-11-06 while driving the homepage \`analyzed\` vital sign to 100%.
 - [Await dotenv imports; anchor .env path](learnings/await-dotenv-imports-anchor-env-path.md) — Two failures when \`missing-repos.js\` (a plain Node script in \`.archive/repo-scan/\`) loaded \`DATABASE_URL\`, discovered 2026-11-06:
 - [better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed](learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md) — Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06):
+- [Bluesky caches og:image aggressively — bump a ?v=N cache-bust on card URLs after redesigns](learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md) — **The incident (2026-11-07, commit \`6b3aeb0\`):** after the receipt-card redesign, the user pasted a Bluesky compose screenshot showing the **old card** (missing
+- [Bluesky link-card cache is keyed by the shared URL — bust the share URL, not just og:image](learnings/bluesky-link-card-cache-is-keyed-by-the-shared-url-bust-the-.md) — **The mechanism (discovered 2026-11-07, commit \`80cadc8\`):** Bluesky's link-card cache is keyed by **the shared URL itself** (\`/listings/2274791\`), not by the \`
 - [Bookmark ingestion chain is gap-catching; archetypes classifier lives at src/lib/archetypes.ts](learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md) — Discovered 2026-11-06 while processing the 522 synthetic repo rows end-to-end.
 - [bookmarks table is a read-only mirror — the Raindrop→DB sync lives outside this repo](learnings/bookmarks-table-is-a-read-only-mirror-the-raindrop.md) — The gotcha
 - [BrowserClaw owns IPv4 :9222; harness Chrome lands on IPv6 — discover CDP WS URL via curl, not undici fetch](learnings/browserclaw-owns-ipv4-9222-harness-chrome-lands-on.md) — Discovered 2026-11-03 while doing CDP-based visual QA of \`.archive/digital-products-repos.html\`:
 - [check-active.js: "active" is user-defined as pushed within 30 days; --resplit re-splits cached data without API calls](learnings/check-active-js-active-is-user-defined-as-pushed-within-30-d.md) — **The fact (set 2026-11-06, user-defined):** for the digital-products-repos activity split, the user explicitly redefined **ACTIVE = last push within the last 3
 - [Corpus schema facts: raindrop_created_at, analysis who/what/how/when fields, 1,320 messy categories](learnings/corpus-schema-facts-raindrop-created-at-analysis.md) — Discovered 2026-11-01 during the compendium-page design (facts homework before P2 interview).
+- [Dark theme token architecture: @theme inline + html.dark swap, no hardcoded oklch](learnings/dark-theme-token-architecture-theme-inline-html-dark-swap-no.md) — **The architecture (added 2026-11-06, commit c06dfe4):** theming works by swapping semantic vars on \`html.dark\`, not by \`dark:\` utilities.
 - [Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only](learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md) — Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1ac2b8e..bbd94b1\`).
+- [Don't name a domain type Node in DOM-lib code — shadowing the global bites](learnings/don-t-name-a-domain-type-node-in-dom-lib-code-shadowing-the-.md) — With \`lib.dom\` in the tsconfig (SvelteKit default), declaring your own \`interface Node\` / \`type Node\` shadows the global DOM \`Node\`. Wherever both concepts touc
 - [Driving html-video (nexu-io) headlessly to render a product video](learnings/driving-html-video-nexu-io-headlessly-to-render-a.md) — When using **html-video** (https://github.com/nexu-io/html-video) to render a video about this app:
+- [Drizzle's sql tag expands JS arrays into a param tuple — not an array literal](learnings/drizzle-s-sql-tag-expands-js-arrays-into-a-param-tuple-not-a.md) — **The gotcha (2026-11-06, The Drum slice C):** interpolating a JS array into a drizzle \`sql\` template sends it as a list of separate bind parameters (a PG tuple
+- [Drizzle's sql tag has no .json() — use explicit JSON.stringify(...)::jsonb casts](learnings/drizzle-s-sql-tag-has-no-json-use-explicit-json-stringify-js.md) — Discovered 2026-11-06 during The Drum slice A seed (\`scripts/\` feeding \`feed_items\` jsonb payloads).
+- [Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email](learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md) — **The fact (established 2026-11-13 while answering "should I have gotten an email already?"):** the Drum approval-email cadence is a **24h clock measured from t
 - [$env/dynamic/private breaks under plain tsx — use process.env in shared server modules](learnings/env-dynamic-private-breaks-under-plain-tsx-use.md) — SvelteKit's \`$env/dynamic/private\` is a **virtual module resolved only by the SvelteKit Vite pipeline**. Importing it from a standalone script run via \`tsx\` (e.
 - [Explicit outer SELECT silently drops columns carried by CTE \`scored.*\`](learnings/explicit-outer-select-silently-drops-columns.md) — The gotcha
 - [External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first](learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md) — Discovered 2026-11-06 while answering "where is the sync/analysis pipeline?" (user's best guess: \`E:\\te9.dev\` — confirmed correct).
 - [Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing](learnings/extracted-svelte-scoped-css-needs-scope-classes.md) — When extracting compiled Svelte CSS into a standalone test harness (e.g. a plain HTML file to screenshot), naive selector stripping breaks everything silently: 
+- [Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id](learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis.md) — **The coupling (found 2026-11-10, fixed in commit \`e4ecd86\`):** feed surfaces link \`/listings/{id}\` for their drawn items — Drum cards and The Walk — and 522 co
+- [Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)](learnings/fixed-locally-but-never-committed-verify-head-bytes-when-pro.md) — **The incident (2026-11-07, commit \`faf3818\`):** production Bluesky cards rendered with **all text missing** while the local working tree rendered fine. The rea
 - [Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed](learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md) — Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule):
+- [GitHub Actions cron is UTC-only — Amsterdam-local schedules drift an hour with DST](learnings/github-actions-cron-is-utc-only-amsterdam-local-schedules-dr.md) — **The fact (found 2026-11-12 while retiming the drum draw):** GitHub Actions \`schedule:\` accepts cron expressions in **UTC only** — there is no timezone paramet
+- [GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires](learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md) — **The gotcha (found 2026-11-09):** a \`run:\` value containing \`Drum draw:\` — a \`colon+space\` inside a plain (unquoted) YAML scalar — made \`.github/workflows/feed
 - [GitHub disables scheduled workflows after 60 days without commits — cron runs don't count](learnings/github-disables-scheduled-workflows-after-60-days.md) — GitHub automatically disables scheduled workflows after **60 days with no commits** to the repository. Scheduled (cron) runs do **not** count as activity — only
 - [GitHub requires \`workflow\` scope on the token to push commits touching \`.github/workflows/\`](learnings/github-requires-workflow-scope-on-the-token-to.md) — A token with only \`repo\` (and \`gist\`, \`read:org\`) scopes cannot push a commit that modifies any file under \`.github/workflows/\`. GitHub rejects the push with a 
 - [Gold accent fails WCAG AA contrast when used for chip/tag text](learnings/gold-accent-fails-wcag-aa-contrast-when-used-for.md) — Gotcha
+- [gstatic css2 legacy-UA downloads are EOT files, not TTFs — pull real TTFs from the official repo](learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user-agent.md) — The legacy user-agent trick against Google Fonts' css2 API returns URLs whose downloaded bytes are legacy EOT, not TTF — @resvg/resvg-js silently drops them and all text vanishes from the render. Commit TTFs pulled from the font's official GitHub repo and verify the sfnt magic (00 01 00 00) first.
 - [Headless Chrome clamps window width (~500px) — "390px" screenshots are crops, not reflows](learnings/headless-chrome-clamps-window-width-500px-390px.md) — When doing responsive visual QA via headless-Chrome screenshots:
 - [Headless-Chrome screenshots don't advance CSS animations — freeze frames with animation-play-state](learnings/headless-chrome-screenshots-don-t-advance-css.md) — When visually verifying CSS animations via headless-Chrome screenshots, letting the page "run" for a while (or relying on virtual time) does not reliably advanc
 - [Homepage "analyzed" vital sign = analyzed/total ratio — bulk inserts regress it until the external analysis pass runs](learnings/homepage-analyzed-vital-sign-analyzed-total-ratio-bulk-inser.md) — Discovered 2026-11-06 while diagnosing why https://productsear.ch/ showed \`analyzed\` = 81% (user reported the drop).
+- [In a FROM list, JOIN binds tighter than comma — put set-returning functions last](learnings/in-a-from-list-join-binds-tighter-than-comma-put-set-returni.md) — **The gotcha (2026-11-06, Ambition Path query):** when a FROM list mixes comma joins and explicit JOINs, Postgres parses the JOIN as binding tighter than the co
+- [Interview brevity refinement: bare lettered options, no prose — "way too complex"](learnings/interview-brevity-refinement-bare-lettered-options-no-prose-.md) — **The refinement (2026-11-06, magazine-feed brainstorm round 2):** the lettered-options interview format from [[rules/interview-questions-ship-with-lettered-opt
 - [LLM usage skill lives outside the repo (E:\\skills.te9.dev\\productsear.ch\\SKILL.md) and must stay in sync](learnings/llm-usage-skill-lives-outside-the-repo-e-skills.md) — The fact
 - [llmview.ts / skill-doc.ts template literals contain escaped backticks; multi-hunk edit calls are atomic](learnings/llmview-ts-skill-doc-ts-template-literals-contain-escaped-ba.md) — Discovered 2026-11-06 while renaming compendium → collections across the LLM-view surfaces.
 - [MCP server names in .pi/mcp.json forbid dots — name them with letters/digits/_/- only](learnings/mcp-server-names-no-dots.md) — The dot gotcha (found 2026-11-05): pi rejects MCP server names containing characters outside \`[A-Za-z0-9_-]\`. The project's \`.pi/mcp.json\` named its database se
 - [Negative synthetic ids for manual bookmarks-table inserts (never collide with the external sync)](learnings/negative-synthetic-ids-for-manual-bookmarks-table-inserts-ne.md) — **The convention (set 2026-11-06):** when manually inserting rows into \`te9_dev.bookmarks\` (normally an external-sync mirror), use **negative synthetic ids**: \`
+- [opacity-0 elements still occupy layout space — closed tipboxes caused 54px of phantom overflow](learnings/opacity-0-elements-still-occupy-layout-space-closed-tipboxes.md) — Discovered 2026-11-06 while probing 54px of hidden horizontal overflow on 390px phones: the three closed tipboxes were hidden with \`opacity: 0\` but kept their f
 - [pi reads project MCP config from .pi/mcp.json — root .mcp.json is ignored](learnings/pi-project-mcp-config-location.md) — The gotcha (found 2026-11-06 while debugging why \`/mcp\` showed no servers):
 - [pi loads every standalone .md in .agents/skills/ as a skill named after its parent dir; slash commands live in .pi/prompts/](learnings/pi-skill-name-fallback-and-prompts-dir.md) — Two related facts about how pi loads project-level agent config, discovered 2026-11-06 while fixing a \`commands\` collision warning:
 - [Postgres FTS "word too long" NOTICE for >2047-char tokens is harmless](learnings/postgres-fts-word-too-long-notice-for-2047-char.md) — When populating a \`tsvector\` / \`search_tsv\` column, Postgres may emit a NOTICE like:
 - [postgres-js db.execute() returns rows directly, not { rows }](learnings/postgres-js-db-execute-returns-rows-directly-not.md) — When using Drizzle's postgres-js driver, \`db.execute(sql\\\`...\\\`)\` returns the **row array directly**, not an object with a \`.rows\` property (unlike the \`pg\`/nod
 - [postgres-js double-encodes plain strings sent to jsonb — use sql.json()](learnings/postgres-js-double-encodes-plain-strings-sent-to.md) — When writing to a \`jsonb\` column through Drizzle's postgres-js driver using a raw \`sql\` template, passing a plain JS string makes postgres-js serialize it as a
+- [Production runs Railway commits only — local uncommitted work is invisible on the live site](learnings/production-runs-railway-commits-only-local-uncommitted-work-.md) — **Discovered 2026-11-06** when the user reported "I don't see an icon to log into the admin" on https://productsear.ch/:
 - [Railpack (Railway build driver) requires a start command](learnings/railpack-railway-build-driver-requires-a-start.md) — Railpack is Railway's default build driver (v0.30.0 at time of writing). It infers the start command for a Node app by checking, in order:
+- [Railway CLI sets env vars via the \`variable set\` subcommand — the --set flag is legacy](learnings/railway-cli-sets-env-vars-via-the-variable-set-subcommand-th.md) — **The gotcha (found 2026-11-12 while wiring \`DRUM_APPROVAL_SECRET\` across environments):** on Railway CLI 5.x (5.62.1), setting env vars goes through the **\`var
 - [Raindrop→DB sync runs outside this repo; published page count sums all collections](learnings/raindrop-db-sync-runs-outside-this-repo-published.md) — **Architecture:** The \`te9_dev.bookmarks\` table (and \`bookmark_content\`, \`bookmark_analysis\`) is a **read-only mirror populated by an EXTERNAL Raindrop-sync pro
 - [Relevance floor 0.45 sits exactly in the measured gap between noise and matches](learnings/relevance-floor-0-45-sits-exactly-in-the-measured.md) — \`RELEVANCE_FLOOR = 0.45\` in \`src/lib/server/search.ts\` is not a guess — it was calibrated (2026-11-01) against real rerank-2.5-lite score distributions using \`s
+- [SELECT DISTINCT ... ORDER BY random() is illegal in Postgres](learnings/select-distinct-order-by-random-is-illegal-in-postgres.md) — **The rule:** with \`SELECT DISTINCT\`, every \`ORDER BY\` expression must appear in the select list. \`random()\` is not in the list, so Postgres rejects the query w
 - [Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md) — The site-wide accent (set 2026-11-01) is \`#0021FF\`, expressed in the OKLCH token system as:
 - [Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors](learnings/skill-skill-md-description-must-quote-colons-to.md) — In \`.agents/skills/*/SKILL.md\`, a plain-scalar \`description:\` value containing \`: \` (colon-space — e.g. from embedded text like \`Triggers:\` or \`Use when:\`) caus
 - [Splitting npm dependency versions: direct dep for the new, pinned deps nest auto](learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md) — When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct dependency — packag
 - [Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first](learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md) — Discovered 2026-11-06 while verifying the new "last 30 days" homepage tile on a local production build:
+- [Standalone tsx scripts hang after success — close the postgres pool or call process.exit()](learnings/standalone-tsx-scripts-hang-after-success-close-the-postgres.md) — Discovered 2026-11-06 while seeding The Drum (\`feed-draw\` seed script run via tsx).
 - [Svelte 5: values captured in plain consts go stale across param navigation — use $derived](learnings/svelte-5-values-captured-in-plain-consts-go-stale.md) — A Svelte 5 component instance **persists across navigation** to the same route with different params (e.g. \`/archive/page/2\` → \`/archive/page/3\`). A plain \`cons
+- [Svelte script blocks terminate at a literal <\/script> — even in comments](learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c.md) — **The gotcha (found 2026-11-10 while adding JSON-LD via a \`JsonLd.svelte\` head component):**
 - [SvelteKit blocks $lib/server imports in client components — even for pure-data modules](learnings/sveltekit-blocks-lib-server-imports-in-client.md) — SvelteKit refuses \`$lib/server/*\` imports from client-side code (\`+page.svelte\`) at dev/build time — **even when the module contains no server dependencies at a
 - [SvelteKit dev server does not populate process.env from .env — load dotenv yourself](learnings/sveltekit-dev-server-does-not-populate-process-env.md) — SvelteKit's Vite dev server does **not** populate \`process.env\` from your \`.env\` file. That is what the \`$env/*\` virtual modules are for. If your server modules
 - [SvelteKit normalizes event.url for data requests — always early-return on event.isDataRequest in handle hooks](learnings/sveltekit-normalizes-event-url-for-data-requests.md) — **The gotcha (found 2026-11-01 while debugging a prod 500 on \`/?view=llm\`):** in a SvelteKit \`handle\` hook, \`event.url\` for a client-router data fetch (\`/__data
 - [synced_at runs ~4 days ahead of wall clock; sync rewrites all rows every pass](learnings/synced-at-runs-4-days-ahead-of-wall-clock-sync.md) — Discovered 2026-10-31 while answering "has the repo/db been updating lately?":
+- [The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented](learnings/the-digest-is-deactivated-at-two-layers-feature-gate-disable.md) — **The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out:
+- [The Digest send pipeline verifies in stages — "no active subscribers" is the expected stop when armed but empty](learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr.md) — **The behavior (verified 2026-11-06 after the operator added the utobo secrets):** \`scripts/digest-send.ts\` gates its send path in stages, and the *failure poin
+- [The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly](learnings/the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md) — Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port number on different st
+- [Translucent overlays ghost background content — auto-opening drawers go canvas-solid](learnings/translucent-overlays-ghost-background-content-auto-opening-d.md) — Discovered 2026-11-07 while building the homepage system drawer (\`src/routes/+page.svelte\`, commit \`9168e3d\`).
 - [Transparent-cutout QA: previews don't honor alpha — verify the alpha channel programmatically](learnings/transparent-cutout-qa-previews-don-t-honor-alpha.md) — When producing a transparent cutout of the [[product-search-mascot-illo-character-pack]] (or any character) for web use, the cutout engine warns of possible **m
+- [TS interfaces lack implicit index signatures — type aliases have them](learnings/ts-interfaces-lack-implicit-index-signatures-type-aliases-ha.md) — **The rule (hit 2026-11-06 in The Drum slice C):** a TypeScript \`interface\` is **not** assignable to \`Record<string, unknown>\` — \`Index signature for type 'stri
+- [Utobo API key provisioning: dashboard path, shown once, Send-only scope](learnings/utobo-api-key-provisioning-dashboard-path-shown-once-send-on.md) — **The how-to (settled 2026-11-06 while wiring The Digest's sends):** the utobo API key for \`UTOBO_EMAIL_API_KEY\` is created in the **email.utobo.com** dashboard
+- [UTOBO_EMAIL_API_KEY was missing from the Railway runtime — local-send success masked the prod gap](learnings/utobo-email-api-key-was-missing-from-the-railway-runtime-loc.md) — **The incident (2026-11-12, "Generate new produced no new approval email"):** The Drum approval send failed silently in production — Railway logs showed \`[feed]
 - [Vercel AI SDK v4 streamText exposes async textStream, not toReadableStream()](learnings/vercel-ai-sdk-v4-streamtext-exposes-async.md) — In AI SDK v4, \`streamText(...)\` exposes a **\`textStream\`** property (an async iterable of string chunks), not a \`toReadableStream()\` method. To stream a respons
 - [Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly](learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API:
 - [Voyage free-tier rate limit (3 RPM / 10K TPM) blocks bulk backfill without a payment method](learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md) — Gotcha
 - [Voyage rerank-2.5-lite has run-to-run rank variance (±2 positions)](learnings/voyage-rerank-2-5-lite-has-run-to-run-rank.md) — The gotcha
+- [When LLM providers are down, the drum degenerates into consecutive Walk items](learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md) — **The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items** — the same type d
 - [wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs](learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md) — Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-domain ADR in \`docs/w
+- [Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully](learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md) — Discovered 2026-11-07 while wiping all Drum items and handing the surface back to the normal draw flow.
 <!-- wiki-nav:end -->
 
 An [OKF](https://github.com/earendil-works/okf) bundle documenting this project.
@@ -1212,6 +2594,45 @@ Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/a
 2. **\`Cannot read properties of undefined (reading 'getTracer')\` / \`reading 'ERROR'\`** at runtime — better-auth's instrumentation does a lazy \`await import("@opentelemetry/api")\` with a noop fallback, but with @opentelemetry/api absent and better-auth bundled into a server chunk, the fallback is defeated. Fix: install \`@opentelemetry/api\` (it's a soft peer) so the dynamic import succeeds. Alternative would be \`experimental.instrumentation.enabled = false\` in betterAuth options.
 
 Also relevant: adapter-node form-action CSRF rejects POSTs when \`ORIGIN\` env isn't set (url.origin defaults to https).
+`,
+  "learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md": `---
+type: Learning
+title: "Bluesky caches og:image aggressively — bump a ?v=N cache-bust on card URLs after redesigns"
+description: "**The incident (2026-11-07, commit \`6b3aeb0\`):** after the receipt-card redesign, the user pasted a Bluesky compose screenshot showing the **old card** (missing"
+tags: [[og-images, caching, bluesky, gotcha, social-cards]]
+timestamp: "2026-11-07T12:16:44.524Z"
+---
+
+# Bluesky caches og:image aggressively — bump a ?v=N cache-bust on card URLs after redesigns
+
+**The incident (2026-11-07, commit \`6b3aeb0\`):** after the receipt-card redesign, the user pasted a Bluesky compose screenshot showing the **old card** (missing text, full-height blue left stripe) — while production was in fact already serving the redesigned card (verified: prod PNG sizes byte-identical to local, 101KB/104KB, mascot and all).
+
+**The cause:** not the code — **Bluesky's CDN replaying its cached PNG** of the OG endpoint response. Our own endpoint also sends cache headers (\`max-age=3600\`), so unfurls keep the previous image even after a correct deploy. The deploy was fine; the *platform cache* was stale.
+
+**The fix:** versioned \`og:image\` URLs — both meta tags (\`src/routes/feed/+page.svelte\`, \`src/routes/listings/[id]/+page.svelte\`) now carry \`?v=2\` on the \`/api/feed/og/...\` URLs. **Bump the \`?v=N\` number on every card redesign** to force social platforms to refetch.
+
+**Corollary diagnostic:** when a social-card bug report arrives after a redesign, first curl the OG endpoint from production and compare against local before debugging card code — the stale image often lives in the platform's CDN, not in the code. (Distinct from the OG font incident, where production genuinely diverged from HEAD — there the fix-side check is \`git show HEAD:…\` bytes.)
+`,
+  "learnings/bluesky-link-card-cache-is-keyed-by-the-shared-url-bust-the-.md": `---
+type: Learning
+title: "Bluesky link-card cache is keyed by the shared URL — bust the share URL, not just og:image"
+description: "**The mechanism (discovered 2026-11-07, commit \`80cadc8\`):** Bluesky's link-card cache is keyed by **the shared URL itself** (\`/listings/2274791\`), not by the \`"
+tags: [bluesky, og-images, caching, social-cards, gotcha, share-urls]
+timestamp: "2026-11-07T12:19:40.325Z"
+---
+
+# Bluesky link-card cache is keyed by the shared URL — bust the share URL, not just og:image
+
+**The mechanism (discovered 2026-11-07, commit \`80cadc8\`):** Bluesky's link-card cache is keyed by **the shared URL itself** (\`/listings/2274791\`), not by the \`og:image\` URL. While composing a post, Bluesky does **not re-fetch the page** — it replays the cached card for that URL, so a \`?v=2\` bump on the og:image (the fix from [[learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o]]) is never discovered: the page never gets re-resolved.
+
+**The two-layer fix:**
+
+- **Layer 1 (page side):** bump \`?v=N\` on the og:image URLs — helps only *once* the page is re-fetched.
+- **Layer 2 (share side):** make the shared URL itself a fresh cache key. The **share on bluesky buttons** now append \`?utm_source=bsky\` to every share URL, so each future share gets a unique cache key (and Plausible gets the referral attribution).
+
+**Instant workaround** for verifying a redesigned card right now: paste the listing URL with any query suffix — \`https://productsear.ch/listings/2274791?bsky\` — Bluesky treats it as a different URL, fetches fresh, and the new card unfurls.
+
+**Rule of thumb:** after a social-card redesign, bust *both* layers — the og:image version param AND the share-URL template. Deploying the new card alone shows the old card to everyone who shared the URL before.
 `,
   "learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md": `---
 type: Learning
@@ -1348,6 +2769,24 @@ So the compendium's "who, what, how, when" per entry is direct data, not somethi
 - Any per-entry metadata UI (compendium, detail views) can pull purpose/how_to_use/when_to_use directly from \`bookmark_analysis\`.
 - Any grouping/faceting by category must roll up the 1,320 near-duplicate labels — raw grouping doesn't work. See [[bookmarks-table-is-a-read-only-mirror-the-raindrop]] for why these tables can't be rewritten to fix it.
 `,
+  "learnings/dark-theme-token-architecture-theme-inline-html-dark-swap-no.md": `---
+type: Learning
+title: "Dark theme token architecture: @theme inline + html.dark swap, no hardcoded oklch"
+description: "**The architecture (added 2026-11-06, commit c06dfe4):** theming works by swapping semantic vars on \`html.dark\`, not by \`dark:\` utilities."
+tags: [theming, css, tailwind, dark-mode]
+timestamp: "2026-11-06T19:15:41.918Z"
+---
+
+# Dark theme token architecture: @theme inline + html.dark swap, no hardcoded oklch
+
+**The architecture (added 2026-11-06, commit c06dfe4):** theming works by swapping semantic vars on \`html.dark\`, not by \`dark:\` utilities.
+
+- \`src/app.css\` has two blocks: a static \`@theme\` (fonts, radius) and a \`@theme inline\` block mapping \`--color-canvas: var(--canvas)\` etc. The \`inline\` is required — utilities must resolve the var at the element, otherwise the \`:root\`-computed value freezes the light palette.
+- Light values live in \`:root\`, dark values in \`html.dark\` (green-tinted neutrals ~hue 165; accent lightened to oklch(0.72 0.15 264.2) for AA contrast on dark).
+- The \`.dark\` class is set pre-paint by an inline script in \`src/app.html\` (stored \`localStorage.theme\` > OS preference), so there is no flash. The header toggle in \`+layout.svelte\` flips the class + persists + syncs the \`theme-color\` meta.
+- \`@custom-variant dark\` is wired to the class, so \`dark:\` utilities also work if ever needed.
+- **Convention: no hardcoded oklch alpha colors anymore.** Raw CSS must derive tints/hairlines from tokens via \`color-mix(in oklab, var(--ink) N%, transparent)\` (alpha), \`color-mix(... var(--canvas))\` (tint toward bg), or dedicated vars like \`--pre-bg\`. Raw CSS should reference the bare vars (\`var(--ink)\`), which are guaranteed to exist — unlike \`@theme inline\` emitted names.
+`,
   "learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md": `---
 type: Learning
 title: "Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only"
@@ -1368,6 +2807,20 @@ Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1
 - \`.monster/\` session transcripts
 
 When doing a final-commit sweep of the repo, these paths are expected leftovers, not missed files. Never move \`.ghtoken\` (or copies of it) into tracked paths.
+`,
+  "learnings/don-t-name-a-domain-type-node-in-dom-lib-code-shadowing-the-.md": `---
+type: Learning
+title: Don't name a domain type Node in DOM-lib code — shadowing the global bites
+description: With \`lib.dom\` in the tsconfig (SvelteKit default), declaring your own \`interface Node\` / \`type Node\` shadows the global DOM \`Node\`. Wherever both concepts touc
+tags: [[typescript, naming, gotcha, feed]]
+timestamp: "2026-11-06T20:27:00.787Z"
+---
+
+# Don't name a domain type Node in DOM-lib code — shadowing the global bites
+
+With \`lib.dom\` in the tsconfig (SvelteKit default), declaring your own \`interface Node\` / \`type Node\` shadows the global DOM \`Node\`. Wherever both concepts touch a file (DOM APIs, events, generic tree code) the shadowing produces confusing type errors that look unrelated to your code.
+
+**Convention set 2026-11-06:** name domain graph/trail node types with a domain prefix — the Walk generator's embedding-trail node is \`WalkNode\` (\`src/lib/server/feed/generators/walk.ts\`) for exactly this reason. Applies to any new AST/graph/tree type in this repo.
 `,
   "learnings/driving-html-video-nexu-io-headlessly-to-render-a.md": `---
 type: Learning
@@ -1390,6 +2843,66 @@ When using **html-video** (https://github.com/nexu-io/html-video) to render a vi
 - **The \`claude\` and \`opencode\` CLIs are auto-detected** as the agent backend; no \`ANTHROPIC_API_KEY\` needed for the Studio, but you don't need the Studio at all for the CLI render path.
 
 Files for the productsear.ch promo live in the html-video checkout at \`templates/productsearch-promo/\` (manifest + \`source/index.html\` single-file version + \`source/scenes/s1..s6.html\` multi-frame version). Output: \`e:/productsear.ch/productsearch-promo.mp4\`.
+`,
+  "learnings/drizzle-s-sql-tag-expands-js-arrays-into-a-param-tuple-not-a.md": `---
+type: Learning
+title: Drizzle's sql tag expands JS arrays into a param tuple — not an array literal
+description: "**The gotcha (2026-11-06, The Drum slice C):** interpolating a JS array into a drizzle \`sql\` template sends it as a list of separate bind parameters (a PG tuple"
+tags: [[drizzle, postgres, sql, gotcha, feed]]
+timestamp: "2026-11-06T20:27:00.786Z"
+---
+
+# Drizzle's sql tag expands JS arrays into a param tuple — not an array literal
+
+**The gotcha (2026-11-06, The Drum slice C):** interpolating a JS array into a drizzle \`sql\` template sends it as a list of separate bind parameters (a PG tuple), not an \`int[]\` value. Any context that needs a real array — \`<> ALL(...)\`, array operators — fails with a type error like \`operator does not exist: integer <> record\`.
+
+Hit in the Walk generator: \`e.bookmark_id <> ALL(\${exclude})\` where \`exclude\` is a \`number[]\`.
+
+**Fix** (\`src/lib/server/feed/generators/walk.ts\`): build the array literal explicitly — \`ARRAY[1,2,3]::int[]\` interpolated via \`sql.raw()\` — filtering values with \`Number.isInteger\` first so nothing unvalidated reaches the SQL string. For plain \`IN (...)\` lists prefer drizzle's \`inArray()\` helper instead of hand-rolling.
+
+Related: [[learnings/drizzle-s-sql-tag-has-no-json-use-explicit-json-stringify-js]] (same family: drizzle sql tag needs explicit type handling at the boundary).
+`,
+  "learnings/drizzle-s-sql-tag-has-no-json-use-explicit-json-stringify-js.md": `---
+type: Learning
+title: "Drizzle's sql tag has no .json() — use explicit JSON.stringify(...)::jsonb casts"
+description: Discovered 2026-11-06 during The Drum slice A seed (\`scripts/\` feeding \`feed_items\` jsonb payloads).
+tags: [[drizzle, postgres-js, jsonb, gotcha]]
+timestamp: "2026-11-06T20:13:46.640Z"
+---
+
+# Drizzle's sql tag has no .json() — use explicit JSON.stringify(...)::jsonb casts
+
+Discovered 2026-11-06 during The Drum slice A seed (\`scripts/\` feeding \`feed_items\` jsonb payloads).
+
+**The gotcha:** drizzle-orm's \`sql\` template tag exposes **no \`.json()\` helper**. That helper belongs to the **postgres-js client** (\`sql.json(...)\`), which is the subject of [[learnings/postgres-js-double-encodes-plain-strings-sent-to]] — easy to mix up because both are imported as \`sql\`.
+
+**The fix:** in a drizzle raw \`sql\` template, write jsonb with an explicit stringify + cast:
+
+\`\`\`ts
+sql\`insert into feed_items (payload) values (\${JSON.stringify(payload)}::jsonb)\`
+\`\`\`
+
+Passing a plain JS string instead re-triggers the postgres-js double-encoding problem the earlier learning describes.
+
+**Applies to:** any seed/backfill script or server module writing \`jsonb\` columns through drizzle raw \`sql\` templates in this repo.
+`,
+  "learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md": `---
+type: Learning
+title: Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email
+description: "**The fact (established 2026-11-13 while answering "should I have gotten an email already?"):** the Drum approval-email cadence is a **24h clock measured from t"
+tags: [drum, cadence, approval-email, github-actions, cron]
+timestamp: "2026-11-13T09:50:40.458Z"
+---
+
+# Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email
+
+**The fact (established 2026-11-13 while answering "should I have gotten an email already?"):** the Drum approval-email cadence is a **24h clock measured from the last draw** (\`due = max(created_at)\` of feed items — see [[wiping-feed-items-due-max-created-at-rotation-resets-empty-s]]), NOT an anchored daily 06:03 schedule. Consequence: a manual **Generate new** redraw (or an Approve that draws the next slot) shifts the due time, so the *following* morning's 05:03 UTC cron check can legitimately find the slot not-yet-due and skip → **no approval email that morning is expected behavior, not a bug.** The clock self-aligns to the cron from the next day (once overdue, the cron draws immediately at 05:03 UTC / ~06:03 Amsterdam).
+
+Observed sequence (Nov 12–14, 2026): waku card drawn manually 17:04 Amsterdam → next slot due Nov 12 17:04+24h... i.e. the Nov 13 06:03 cron found it not yet due and correctly skipped; regular morning email resumes Nov 14 ~06:03 (slot overdue by then → draws on the cron).
+
+**Secondary observation, same session:** the *scheduled* run for Nov 12 05:03 UTC never appeared in GitHub Actions (last scheduled run Nov 11, before the cron change) — GitHub can lag registering a changed cron schedule by a day or so. The workflow itself was proven healthy via **\`workflow_dispatch\` (manual dispatch) as the health-check tool** — don't conclude a workflow is broken from a missing scheduled run right after editing its \`schedule:\`. Watch item agreed with the user: if the Nov 14 morning email also misses (~06:15 check), add a second daily draw attempt so the morning email can't be missed. Related guardrail: [[rules/verify-production-runtime-env-vars-before-declaring-a-send-p]] (the Nov 12 silent-fail incident is a *different* failure mode — missing Railway env var — already fixed).
+
+**Resolution (2026-11-13, commit \`b9ccb22\`):** the watch item shipped the same day — the schedule is now **miss-proof**: morning attempts at 04:03 / 05:03 / 06:03 UTC plus an evening catch-up at 16:03 UTC, all behind the cadence gate (only the first past-due attempt draws; redundant attempts no-op) — see [[decisions/drum-draw-schedule-made-miss-proof-cron-redundancy]]. The same push re-registers the cron schedules with GitHub, and the cadence anchor was rewound so the drum comes due exactly at 05:03 UTC (06:03 Amsterdam CET): the manual-redraw drift described above is now corrected by re-anchoring the clock rather than left to self-align.
 `,
   "learnings/env-dynamic-private-breaks-under-plain-tsx-use.md": `---
 type: Learning
@@ -1478,6 +2991,40 @@ A crude strip of the hash (\`.izzyoe\`) leaves \`:where(.svelte-izzyoe)\` behind
 
 The real app is unaffected — its markup carries the scope classes; only extracted-CSS test harnesses hit this. Related QA technique: freeze animations with \`animation-play-state: paused\` before screenshotting.
 `,
+  "learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis.md": `---
+type: Learning
+title: Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id
+description: "**The coupling (found 2026-11-10, fixed in commit \`e4ecd86\`):** feed surfaces link \`/listings/{id}\` for their drawn items — Drum cards and The Walk — and 522 co"
+tags: [synthetic-ids, listings, routing, feed, og-images]
+timestamp: "2026-11-10T11:43:26.026Z"
+---
+
+# Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id
+
+**The coupling (found 2026-11-10, fixed in commit \`e4ecd86\`):** feed surfaces link \`/listings/{id}\` for their drawn items — Drum cards and The Walk — and 522 corpus rows use **negative synthetic ids** (the [[learnings/negative-synthetic-ids-for-manual-bookmarks-table-inserts-ne]] convention). The public listing route (\`src/routes/listings/[id]/+page.server.ts\`) and the OG card endpoint (\`src/routes/api/feed/og/listing/[id]/+server.ts\`) carried a stale **positive-id-only gate**, so every synthetic listing returned 404 — meaning any synthetic item drawn to The Drum would have served visitors a dead link.
+
+**Fix:** both routes now validate only the numeric shape of the id and accept any integer. The OG endpoint's fail-soft path is unchanged — it 404s naturally when no card exists for the id.
+
+**Implication:** never re-introduce an id-sign or positive-only gate on public listing surfaces; synthetic ids are first-class corpus content. Verified with \`/listings/-520\` → 200 with its title (salmanulharis/optic-editor) and \`/listings/1\` still 200.
+`,
+  "learnings/fixed-locally-but-never-committed-verify-head-bytes-when-pro.md": `---
+type: Learning
+title: Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)
+description: "**The incident (2026-11-07, commit \`faf3818\`):** production Bluesky cards rendered with **all text missing** while the local working tree rendered fine. The rea"
+tags: [gotcha, fonts, og-images, git, deployment-drift, resvg]
+timestamp: "2026-11-07T12:12:53.578Z"
+---
+
+# Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)
+
+**The incident (2026-11-07, commit \`faf3818\`):** production Bluesky cards rendered with **all text missing** while the local working tree rendered fine. The real TTFs had been pulled locally by an earlier session (after the gstatic-EOT gotcha) but **never committed** — HEAD still shipped the EOT garbage fonts, so production resvg silently rendered zero text.
+
+**The diagnostic that pinned it:** compare bytes in HEAD, not the working tree: \`git show HEAD:static/fonts/<file>.ttf | head -c 4\` — a real TTF starts with the sfnt magic \`00 01 00 00\`; the committed files started \`88e0…\`/\`78e0…\` (EOT junk).
+
+**Martian Mono specifics** (added to the OG cards this turn): the official source is the **\`evilmartians/mono\`** GitHub releases — not gstatic; the resvg family name is **\`Martian Mono Std Rg\`** (Regular/Bold styles); name tables are UTF-16 — parse them with code, don't grep raw bytes.
+
+**Rule of thumb:** when a render bug reproduces in production but not locally, diff **committed** assets against working-tree assets before debugging code — an uncommitted local fix masks the root cause.
+`,
   "learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md": `---
 type: Learning
 title: Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed
@@ -1499,6 +3046,48 @@ taskkill //PID <pid> //T //F
 \`\`\`
 
 **Always verify the kill took effect** — re-run \`netstat -ano | findstr :<port>\` (or check the PID is gone) before trusting that the port is free. The escaped-flags lesson generalizes to any Windows CLI invoked from Git Bash with \`/FLAG\`-style arguments.
+`,
+  "learnings/github-actions-cron-is-utc-only-amsterdam-local-schedules-dr.md": `---
+type: Learning
+title: GitHub Actions cron is UTC-only — Amsterdam-local schedules drift an hour with DST
+description: "**The fact (found 2026-11-12 while retiming the drum draw):** GitHub Actions \`schedule:\` accepts cron expressions in **UTC only** — there is no timezone paramet"
+tags: [github-actions, cron, timezone, dst, feed-draw, digest-send]
+timestamp: "2026-11-12T15:58:17.798Z"
+---
+
+# GitHub Actions cron is UTC-only — Amsterdam-local schedules drift an hour with DST
+
+**The fact (found 2026-11-12 while retiming the drum draw):** GitHub Actions \`schedule:\` accepts cron expressions in **UTC only** — there is no timezone parameter.
+
+Pinning a local clock time (e.g. 06:00 Europe/Amsterdam) therefore means hardcoding a fixed UTC slot (05:03 UTC), which **drifts +1 hour during CEST** (roughly late March–late October: the same slot fires at 07:03 Amsterdam). The alternatives are both worse:
+
+- two cron entries → double-fires half the year;
+- seasonal edits to the workflow → someone must remember to flip it twice a year.
+
+**House choice:** accept the drift and document the CET/CEST split in a header comment on the workflow (\`feed-draw.yml\` notes "05:03 UTC = 06:03 Amsterdam; 07:03 during summer time"). The same applies to \`digest-send.yml\` (Monday 10:07 UTC).
+
+Note also: cron runs don't count as repo activity for the 60-day scheduled-workflow disable (see [github-disables-scheduled-workflows-after-60-days]) — a quiet quarter can silently kill the daily draw even though the cron "runs".
+`,
+  "learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md": `---
+type: Learning
+title: "GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires"
+description: "**The gotcha (found 2026-11-09):** a \`run:\` value containing \`Drum draw:\` — a \`colon+space\` inside a plain (unquoted) YAML scalar — made \`.github/workflows/feed"
+tags: [github-actions, yaml, cron, feed-draw, the-drum, digest-send, ci, gotcha]
+timestamp: "2026-11-09T15:22:21.421Z"
+---
+
+# GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires
+
+**The gotcha (found 2026-11-09):** a \`run:\` value containing \`Drum draw:\` — a \`colon+space\` inside a plain (unquoted) YAML scalar — made \`.github/workflows/feed-draw.yml\` **invalid**. Every run (push-triggered and scheduled) died as a \`startup_failure\` with **zero jobs**: GitHub never executed a single step. Worse, the daily 09:07 UTC schedule **never produced a single run** — all 14 run attempts since the workflow's creation (2026-11-06) were startup failures, so The Drum's nightly cron was silently dead from day one. \`digest-send.yml\` (The Digest's weekly cron) carried the identical bug; \`embed-new-bookmarks.yml\` was valid, which is why that pipeline worked.
+
+**Diagnostic signature — how to recognize a dead workflow vs a failing one:**
+- \`gh run list\` shows every run \`failure\`/\`startup_failure\`, and the run's job/steps list is **empty** — no step ever started. A failing script shows at least the failing step.
+- No scheduled runs at all in the history (\`gh run list --workflow=feed-draw.yml\`) means the schedule never fired once — the workflow itself, not the trigger cadence, was broken.
+- Check-run annotations / the run object name the YAML parse problem.
+
+**Fix:** wrap \`run:\` values containing \`:\` (colons appear constantly in shell echo lines like \`Drum draw: …\`) in **block scalars** (\`run: |\`). This is the same colon+space hazard already recorded for skill frontmatter ([[learnings/skill-skill-md-description-must-quote-colons-to]]) — plain scalars cannot contain \`: \` anywhere in GitHub-adjacent YAML.
+
+**Related but distinct:** [[learnings/github-disables-scheduled-workflows-after-60-days]] is the *other* way a schedule silently stops firing (repo inactivity); this one is invalid YAML from creation. Both present as "the cron never runs" — check the run history's shape to tell them apart.
 `,
   "learnings/github-disables-scheduled-workflows-after-60-days.md": `---
 type: Learning
@@ -1585,6 +3174,26 @@ Reserve gold for one deliberate active state (active mode pill / focused-input c
 
 No vision model was available, so contrast was computed programmatically (Pillow + numpy) on \`.work/shots/01-home.png\` and \`02-results.png\`, separating true glyph strokes from antialiasing halos via HSV masking + dark-stroke adjacency (scripts in \`.work/qa/\`). The low readings are on real gold pixels, not AA artifacts.
 `,
+  "learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user-agent.md": `---
+type: Learning
+title: gstatic css2 legacy-UA downloads are EOT files, not TTFs — pull real TTFs from the official repo
+description: "The legacy user-agent trick against Google Fonts' css2 API returns URLs whose downloaded bytes are legacy EOT, not TTF — @resvg/resvg-js silently drops them and all text vanishes from the render. Commit TTFs pulled from the font's official GitHub repo and verify the sfnt magic (00 01 00 00) first."
+tags: [fonts, self-hosting, og-images, resvg, gotcha]
+timestamp: "2026-11-06T20:33:43.155Z"
+---
+
+# gstatic css2 legacy-UA downloads are EOT files, not TTFs — pull real TTFs from the official repo
+
+**The correction (2026-11-06, found when the receipt-card OG images rendered with *all text missing*):** the old trick — request \`https://fonts.googleapis.com/css2?family=...\` with a legacy user-agent to get "TTF" URLs — is **unreliable**: what you actually download is **EOT** (gstatic serves the legacy Embedded OpenType format to old UAs; the sfnt header is garbage). Committed as \`.ttf\`, \`@resvg/resvg-js\` fails to load them silently and every glyph disappears from the rendered SVG.
+
+## What actually works
+
+- Pull genuine TTFs from the font's **official GitHub repository** (for Hanken Grotesk the good branch was \`master\`) and commit those under \`static/fonts/\` (OFL license note alongside).
+- **Verify the bytes, not the extension**: a real TTF starts with the sfnt magic \`00 01 00 00\` (\`0x00010000\`). EOT garbage fails this check — catch it before committing.
+- The user-agent trick remains true only for its URL-format effect (modern UAs get woff2, which resvg cannot use); never assume the legacy-UA payload is a usable TTF.
+
+Result: \`static/fonts/HankenGrotesk-{Regular,SemiBold}.ttf\` (~57KB each) load deterministically in [the receipt-card OG route](../pages/entities/receipt-card-og-image-route.md) — brand-true text with no runtime CDN dependency.
+`,
   "learnings/headless-chrome-clamps-window-width-500px-390px.md": `---
 type: Learning
 title: Headless Chrome clamps window width (~500px) — "390px" screenshots are crops, not reflows
@@ -1645,15 +3254,67 @@ count(bookmarks joined to a bookmark_analysis row) / count(bookmarks)
 
 **What to do when it regresses:** don't treat it as an app bug — the analysis pass is an EXTERNAL pipeline (outside this repo, same as the Raindrop sync) that enriches rows over time. The expected remediation is to run the analysis pass over the new rows (or wait for the external pipeline to pick them up); the app itself degrades gracefully via LEFT JOINs. When bulk-inserting rows, expect this vital sign to dip until analysis catches up.
 `,
+  "learnings/in-a-from-list-join-binds-tighter-than-comma-put-set-returni.md": `---
+type: Learning
+title: In a FROM list, JOIN binds tighter than comma — put set-returning functions last
+description: "**The gotcha (2026-11-06, Ambition Path query):** when a FROM list mixes comma joins and explicit JOINs, Postgres parses the JOIN as binding tighter than the co"
+tags: [[postgres, sql, gotcha, feed, query-planner]]
+timestamp: "2026-11-06T20:27:00.787Z"
+---
+
+# In a FROM list, JOIN binds tighter than comma — put set-returning functions last
+
+**The gotcha (2026-11-06, Ambition Path query):** when a FROM list mixes comma joins and explicit JOINs, Postgres parses the JOIN as binding tighter than the comma:
+
+\`\`\`sql
+FROM te9_dev.bookmark_analysis ba, generate_series(1,3) g
+JOIN te9_dev.bookmarks b ON b.id = ba.bookmark_id   -- ERROR: can't see \`ba\`
+\`\`\`
+
+parses as \`ba, (generate_series(...) JOIN bookmarks ON ...)\` — the JOIN is assembled before the comma-introduced \`ba\` exists, so its ON clause fails with \`invalid reference to FROM-clause entry for table "ba"\`.
+
+**Fix:** reorder so the comma item / set-returning function comes **after** the explicit JOINs it depends on (\`FROM ba JOIN b ON ... , generate_series(1,3) g\`), or convert the whole FROM list to explicit JOINs. General rule: when using set-returning functions (generate_series, unnest) alongside joins, place them last in the FROM list.
+`,
   "learnings/index.md": `# Learnings
 
-- [Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed](./git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md) - Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule):
-- [Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only](./deliberately-untracked-paths-archive-is-gitignored-holds-ght.md) - Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1ac2b8e..bbd94b1\`).
-- [Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly](./verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) - Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API:
-- [wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs](./wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md) - Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-domain ADR in \`docs/w
-- [better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed](./better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md) - Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06):
-- [Splitting npm dependency versions: direct dep for the new, pinned deps nest auto](./splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md) - When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct dependency — packag
-- [Production runs Railway commits only — local uncommitted work is invisible on the live site](./production-runs-railway-commits-only-local-uncommitted-work-.md) - **Discovered 2026-11-06** when the user reported "I don't see an icon to log into the admin" on https://productsear.ch/:
+- [The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly](./the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md) - Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port number on different st
+- [Translucent overlays ghost background content — auto-opening drawers go canvas-solid](./translucent-overlays-ghost-background-content-auto-opening-d.md) - Discovered 2026-11-07 while building the homepage system drawer (\`src/routes/+page.svelte\`, commit \`9168e3d\`).
+- [Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)](./fixed-locally-but-never-committed-verify-head-bytes-when-pro.md) - **The incident (2026-11-07, commit \`faf3818\`):** production Bluesky cards rendered with **all text missing** while the local working tree rendered fine. The rea
+- [Bluesky caches og:image aggressively — bump a ?v=N cache-bust on card URLs after redesigns](./bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md) - **The incident (2026-11-07, commit \`6b3aeb0\`):** after the receipt-card redesign, the user pasted a Bluesky compose screenshot showing the **old card** (missing
+- [Bluesky link-card cache is keyed by the shared URL — bust the share URL, not just og:image](./bluesky-link-card-cache-is-keyed-by-the-shared-url-bust-the-.md) - **The mechanism (discovered 2026-11-07, commit \`80cadc8\`):** Bluesky's link-card cache is keyed by **the shared URL itself** (\`/listings/2274791\`), not by the \`
+- [Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully](./wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md) - Discovered 2026-11-07 while wiping all Drum items and handing the surface back to the normal draw flow.
+- [GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires](./github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md) - **The gotcha (found 2026-11-09):** a \`run:\` value containing \`Drum draw:\` — a \`colon+space\` inside a plain (unquoted) YAML scalar — made \`.github/workflows/feed
+- [The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented](./the-digest-is-deactivated-at-two-layers-feature-gate-disable.md) - **The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out:
+- [Svelte script blocks terminate at a literal <\/script> — even in comments](./svelte-script-blocks-terminate-at-a-literal-script-even-in-c.md) - **The gotcha (found 2026-11-10 while adding JSON-LD via a \`JsonLd.svelte\` head component):**
+- [Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id](./feed-surfaces-link-synthetic-negative-id-listings-public-lis.md) - **The coupling (found 2026-11-10, fixed in commit \`e4ecd86\`):** feed surfaces link \`/listings/{id}\` for their drawn items — Drum cards and The Walk — and 522 co
+- [GitHub Actions cron is UTC-only — Amsterdam-local schedules drift an hour with DST](./github-actions-cron-is-utc-only-amsterdam-local-schedules-dr.md) - **The fact (found 2026-11-12 while retiming the drum draw):** GitHub Actions \`schedule:\` accepts cron expressions in **UTC only** — there is no timezone paramet
+- [Railway CLI sets env vars via the \`variable set\` subcommand — the --set flag is legacy](./railway-cli-sets-env-vars-via-the-variable-set-subcommand-th.md) - **The gotcha (found 2026-11-12 while wiring \`DRUM_APPROVAL_SECRET\` across environments):** on Railway CLI 5.x (5.62.1), setting env vars goes through the **\`var
+- [UTOBO_EMAIL_API_KEY was missing from the Railway runtime — local-send success masked the prod gap](./utobo-email-api-key-was-missing-from-the-railway-runtime-loc.md) - **The incident (2026-11-12, "Generate new produced no new approval email"):** The Drum approval send failed silently in production — Railway logs showed \`[feed]
+- [Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email](./drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md) - **The fact (established 2026-11-13 while answering "should I have gotten an email already?"):** the Drum approval-email cadence is a **24h clock measured from t
+- [When LLM providers are down, the drum degenerates into consecutive Walk items](./when-llm-providers-are-down-the-drum-degenerates-into-consec.md) - **The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items** — the same type d
+- [The Walk is the only failure-proof drum type; The Floor starves silently](./the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md) - Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can never 503. All 5 LLM
+`,
+  "learnings/interview-brevity-refinement-bare-lettered-options-no-prose-.md": `---
+type: Learning
+title: "Interview brevity refinement: bare lettered options, no prose — "way too complex""
+description: "**The refinement (2026-11-06, magazine-feed brainstorm round 2):** the lettered-options interview format from [[rules/interview-questions-ship-with-lettered-opt"
+tags: [[interview, planning, process, brevity, magazine]]
+timestamp: "2026-11-06T18:54:35.832Z"
+---
+
+# Interview brevity refinement: bare lettered options, no prose — "way too complex"
+
+**The refinement (2026-11-06, magazine-feed brainstorm round 2):** the lettered-options interview format from [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]] was still rejected by the user as **"way too complex — reformat and rephrase the questions."** What finally landed:
+
+- **Bare letter options with zero prose** — \`Q1. Voice: A) you B) mascot C) "we" D) mascot daily + you for deep pieces\` — no one-line characterizations, no scorecard tables.
+- **One compact line per question**, questions numbered Q1…Qn, and a single closing instruction: "just answer with letters."
+- The idea menu collapsed to a numbered one-line-per-idea list (e.g. \`3. Resurrections\`), not a table with descriptions.
+
+**When it applies:** any multi-question interview with this user (grill-docs-style rounds, feature scoping, brainstorm triage). Lead with the tersest possible format; only add elaboration if the user asks for it.
+
+**Evidence:** two consecutive rejections in the same day — first the free-form interview, then the lettered-with-characterizations version. The user answers fast and accurately to bare letters; elaboration in the question is friction, not help.
+
+**Related:** the questions were for the [[decisions/add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos]] brainstorm (voice, idea triage, anonymized-queries policy, repo-obituary tone, writing budget, share targets, audience priority).
 `,
   "learnings/llm-usage-skill-lives-outside-the-repo-e-skills.md": `---
 type: Learning
@@ -1732,6 +3393,22 @@ Why this works:
 - Keep \`synced_at = now()\`, \`type = 'link'\`, and copy \`raindrop_created_at\` from the source export so chronological ordering stays truthful.
 
 Caveat: if the external sync is ever switched to full DELETE+reload (instead of upsert-by-raindrop_id), mirror rows vanish — keep the generating SQL re-runnable. First applied by \`scripts/insert-missing-repos-active-30d.sql\` (see [[insert-missing-repos-active-30d-sql]]).
+`,
+  "learnings/opacity-0-elements-still-occupy-layout-space-closed-tipboxes.md": `---
+type: Learning
+title: opacity-0 elements still occupy layout space — closed tipboxes caused 54px of phantom overflow
+description: "Discovered 2026-11-06 while probing 54px of hidden horizontal overflow on 390px phones: the three closed tipboxes were hidden with \`opacity: 0\` but kept their f"
+tags: [css, frontend, gotcha, mobile, layout]
+timestamp: "2026-11-06T23:46:41.433Z"
+---
+
+# opacity-0 elements still occupy layout space — closed tipboxes caused 54px of phantom overflow
+
+Discovered 2026-11-06 while probing 54px of hidden horizontal overflow on 390px phones: the three closed tipboxes were hidden with \`opacity: 0\` but kept their full ~300px layout width, hanging off the viewport's right edge and inflating \`scrollWidth\` even though nothing was visibly wrong. \`opacity: 0\` hides paint, not layout.
+
+Fix pattern: \`display: none\` when closed, and when open clamp to the viewport with the \`translate\` property — it composes with the centering \`transform\` instead of overriding it.
+
+Applies to any fade/tooltip/drawer positioned partially offscreen: hidden states must be verified with [[rules/probe-responsive-overflow-programmatically-don-t-eyeball-sc]], not the eye.
 `,
   "learnings/pi-project-mcp-config-location.md": `---
 type: Learning
@@ -1891,6 +3568,27 @@ Static sites can instead set \`RAILPACK_SPA_OUTPUT_DIR\` to the built-files dire
 
 The fix that unblocked the Railway deploy was simply adding the \`start\` script — Railpack then runs \`npm install\` → \`npm run build\` → \`node build\`.
 `,
+  "learnings/railway-cli-sets-env-vars-via-the-variable-set-subcommand-th.md": `---
+type: Learning
+title: Railway CLI sets env vars via the \`variable set\` subcommand — the --set flag is legacy
+description: "**The gotcha (found 2026-11-12 while wiring \`DRUM_APPROVAL_SECRET\` across environments):** on Railway CLI 5.x (5.62.1), setting env vars goes through the **\`var"
+tags: [railway, cli, env, secrets, github-actions]
+timestamp: "2026-11-12T15:59:03.147Z"
+---
+
+# Railway CLI sets env vars via the \`variable set\` subcommand — the --set flag is legacy
+
+**The gotcha (found 2026-11-12 while wiring \`DRUM_APPROVAL_SECRET\` across environments):** on Railway CLI 5.x (5.62.1), setting env vars goes through the **\`variable set\` subcommand**, not a flag:
+
+\`\`\`bash
+railway variable set KEY=VALUE -s <service>   # canonical form
+railway variables set KEY=VALUE               # alias works too
+\`\`\`
+
+The old flag form (\`railway variables --set "KEY=VALUE"\`) still exists but is marked **legacy** ("use 'variable set' instead") and failed in practice when invoked with quoted pairs from Git Bash.
+
+GitHub-side counterpart for Actions secrets: \`gh secret set NAME --body "..."\` (requires the \`repo\` scope + admin). The full shared-secret wiring across all three surfaces used: \`railway variable set\` + \`gh secret set\` + local \`.env\` edit — the value must match everywhere when GitHub-minted tokens must verify against the Railway-served production endpoint.
+`,
   "learnings/raindrop-db-sync-runs-outside-this-repo-published.md": `---
 type: Learning
 title: Raindrop→DB sync runs outside this repo; published page count sums all collections
@@ -1932,6 +3630,28 @@ timestamp: "2026-11-01T01:12:01.418Z"
 **Calibration method**: run one good-match query and one nonsense query through the reranker, compare max scores, place the floor between the two populations.
 
 **Related**: rerank scores have run-to-run variance (±2 rank positions) — see [[voyage-rerank-2-5-lite-has-run-to-run-rank]]. Re-calibrate with \`scripts/calibrate-floor.ts\` if the corpus or rerank model changes.
+`,
+  "learnings/select-distinct-order-by-random-is-illegal-in-postgres.md": `---
+type: Learning
+title: SELECT DISTINCT ... ORDER BY random() is illegal in Postgres
+description: "**The rule:** with \`SELECT DISTINCT\`, every \`ORDER BY\` expression must appear in the select list. \`random()\` is not in the list, so Postgres rejects the query w"
+tags: [[postgres, sql, gotcha, feed]]
+timestamp: "2026-11-06T20:27:00.787Z"
+---
+
+# SELECT DISTINCT ... ORDER BY random() is illegal in Postgres
+
+**The rule:** with \`SELECT DISTINCT\`, every \`ORDER BY\` expression must appear in the select list. \`random()\` is not in the list, so Postgres rejects the query with \`for SELECT DISTINCT, ORDER BY expressions must appear in select list\`.
+
+**Fix:** wrap the DISTINCT select in a subquery and do the random ordering in the outer query:
+
+\`\`\`sql
+SELECT * FROM (
+  SELECT DISTINCT b.id, b.title, ... FROM ... 
+) t ORDER BY random() LIMIT 5
+\`\`\`
+
+Found 2026-11-06 while sampling random embedded listings for The Walk's seed query.
 `,
   "learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md": `---
 type: Learning
@@ -2002,6 +3722,26 @@ An **orphaned preview server from an earlier session** was still holding the tes
 
 Symptom tells: served output matches an *older* version of the code, and your recent edits are absent from an otherwise-working page.
 `,
+  "learnings/standalone-tsx-scripts-hang-after-success-close-the-postgres.md": `---
+type: Learning
+title: Standalone tsx scripts hang after success — close the postgres pool or call process.exit()
+description: Discovered 2026-11-06 while seeding The Drum (\`feed-draw\` seed script run via tsx).
+tags: [[tsx, postgres-js, scripts, gotcha]]
+timestamp: "2026-11-06T20:13:46.640Z"
+---
+
+# Standalone tsx scripts hang after success — close the postgres pool or call process.exit()
+
+Discovered 2026-11-06 while seeding The Drum (\`feed-draw\` seed script run via tsx).
+
+**The gotcha:** a standalone tsx script that imports the repo's shared postgres client never exits after its work completes — the postgres-js pool stays open and the process hangs with no error, looking like a failed run even though the inserts landed.
+
+**The fix:** end standalone tsx scripts with an explicit \`process.exit(0)\` (after the final verification/commit step), or explicitly close the pool if the script owns one.
+
+**Bonus gotcha (same session):** \`tsx -e "..."\` cannot top-level-await when running as CJS — quick DB count checks via \`-e\` silently don't work; write a temp script file and run it instead.
+
+**Related tsx gotchas in this repo:** [[learnings/await-dotenv-imports-anchor-env-path]] (dotenv import + \`.env\` path) and [[learnings/env-dynamic-private-breaks-under-plain-tsx-use]] (\`$env/dynamic/private\` unavailable under plain tsx).
+`,
   "learnings/svelte-5-values-captured-in-plain-consts-go-stale.md": `---
 type: Learning
 title: "Svelte 5: values captured in plain consts go stale across param navigation — use $derived"
@@ -2028,6 +3768,27 @@ Svelte 5 flags this as *stale-capture* warnings at compile time — when you see
 \`\`\`
 
 **Evidence**: hit in the 2026-11-01 redesign on the paginated archive surface; \`svelte-check\` surfaced it, the fix was mechanical ($derived).
+`,
+  "learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c.md": `---
+type: Learning
+title: Svelte script blocks terminate at a literal <\/script> — even in comments
+description: "**The gotcha (found 2026-11-10 while adding JSON-LD via a \`JsonLd.svelte\` head component):**"
+tags: [svelte, sveltekit, gotcha, seo, json-ld]
+timestamp: "2026-11-10T11:26:57.748Z"
+---
+
+# Svelte script blocks terminate at a literal <\/script> — even in comments
+
+**The gotcha (found 2026-11-10 while adding JSON-LD via a \`JsonLd.svelte\` head component):**
+
+Svelte's template parser scans \`<script lang="ts">\` blocks for the literal character sequence \`<\/script>\` to find the block end — **even inside a TS comment**. A comment like \`// prevents a <\/script> breakout\` silently terminates the script block at that point; the rest of the script leaks out and gets parsed as markup, producing confusing cascade errors like:
+
+- \`Expected a valid element or component name\` pointing at innocuous code (e.g. \`Record<string, unknown>\` — the \`<string,\` looks like a tag start)
+- \`Module '...svelte' has no default export\` on every importer of the component
+
+**Rule:** never write the literal closing-tag sequence \`<\/script>\` (or an opening \`<script\`) anywhere inside a Svelte script block — including comments, string literals shown in copy, and regexes. Write "script-close breakout" in prose instead.
+
+Related: the same hazard exists for the RUNTIME payload — \`JSON.stringify\` of arbitrary data can emit \`<\/script>\` and break out of a real JSON-LD script tag. Escape \`<\` as \`\\u003c\` before injection (JsonLd.svelte does \`.replace(/</g, '\\u003c')\`).
 `,
   "learnings/sveltekit-blocks-lib-server-imports-in-client.md": `---
 type: Learning
@@ -2122,6 +3883,95 @@ Discovered 2026-10-31 while answering "has the repo/db been updating lately?":
 
 Related: [[raindrop-db-sync-runs-outside-this-repo-published]], [[bookmarks-table-is-a-read-only-mirror-the-raindrop]], [[daily-embed-new-bookmarks-workflow]], [[github-disables-scheduled-workflows-after-60-days]].
 `,
+  "learnings/the-digest-is-deactivated-at-two-layers-feature-gate-disable.md": `---
+type: Learning
+title: The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented
+description: "**The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out:"
+tags: [the-drum, digest, cron, github-actions, feature-flag, devops]
+timestamp: "2026-11-09T15:26:58.723Z"
+---
+
+# The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented
+
+**The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out:
+
+1. **Feature gate** — \`feed_settings.digest_enabled = false\` (it ships dark by default): 0 subscribers, never sent. Even if the cron ran, the send would stop at the gates (see [[learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr]] for the expected stop messages).
+2. **Cron** — the Monday 10:07 UTC workflow \`.github/workflows/digest-send.yml\` was disabled on GitHub via \`gh workflow disable digest-send.yml\` → state \`disabled_manually\`. The workflow won't even run to stop at the gates (keeps the Actions history clean of confusing "expected stop" runs).
+
+**What stays live:** the drum draw cron is untouched; the \`/feed\` subscribe form still works — new addresses simply accumulate in \`digest_subscribers\` and will receive the first send once re-armed.
+
+**Re-arm procedure (reversible, "for now"):**
+1. \`gh workflow enable digest-send.yml\` (or flip it back in the GitHub Actions tab)
+2. Turn \`digest_enabled\` on in the admin console (\`/admin/feed\`)
+3. Subscribers opt in via \`/feed\` — the next Monday run sends whatever the drum published since the \`feed_settings.last_digest_sent_at\` cursor
+
+**Why two layers:** the feature gate alone already prevented sends; disabling the cron additionally avoids weekly scheduled runs whose only outcome is a gates-stop. If you find \`digest-send.yml\` in \`disabled_manually\` state, that is intentional — not a broken workflow.
+`,
+  "learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr.md": `---
+type: Learning
+title: The Digest send pipeline verifies in stages — "no active subscribers" is the expected stop when armed but empty
+description: "**The behavior (verified 2026-11-06 after the operator added the utobo secrets):** \`scripts/digest-send.ts\` gates its send path in stages, and the *failure poin"
+tags: [the-drum, digest, utobo, verification, devops, secrets]
+timestamp: "2026-11-06T20:50:19.673Z"
+---
+
+# The Digest send pipeline verifies in stages — "no active subscribers" is the expected stop when armed but empty
+
+**The behavior (verified 2026-11-06 after the operator added the utobo secrets):** \`scripts/digest-send.ts\` gates its send path in stages, and the *failure point* is the proof of progress:
+
+- **"key not configured"** — \`UTOBO_EMAIL_API_KEY\` missing/invalid; the pipeline dies at the utobo auth stage.
+- **"no active subscribers"** — the key **passed** auth; the pipeline is armed and stops only because \`te9_dev.digest_subscribers\` has no active rows (expected normal state until readers sign up via the \`/feed\` form).
+
+**The working method:** when arming an external-service integration, don't just check that the secret exists in \`.env\`/GitHub secrets — walk the pipeline stage-by-stage: \`--dry\` first (proves the template renders and the key is *read*), then a real force-send and observe **which gate it stops at**. A *changed* failure message is evidence the previous stage passed, even though the run "failed". For The Digest, "no active subscribers" after a force-send is the success signal for the credential, not an error.
+
+At verification time the remaining operator steps were: flip \`digest_enabled\` in \`/admin/feed\` settings, and let subscribers accumulate — first automatic send fires Monday 10:07 UTC (cron) or instantly via the admin "send digest now" button. See [[pages/entities/the-digest-email-digest-pipeline]].
+`,
+  "learnings/the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md": `---
+type: Learning
+title: The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly
+description: Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port number on different st
+tags: [networking, ports, debugging, windows, processes]
+timestamp: "2026-11-06T23:46:41.433Z"
+---
+
+# The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly
+
+Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port number on different stacks: the productsear.ch \`node build\` preview held IPv4 \`127.0.0.1:4173\` (PID 25332) while a concurrent session's vite preview (monstrous.dev) held \`[::1]:4173\` (PID 38196). \`localhost\` resolved to IPv6, so the browser fetched the OTHER app's 404 page — indistinguishable from "my server is broken".
+
+This extends [[rules/verify-the-serving-process-on-a-test-port-before-trusting-sm]]: run \`netstat -ano | findstr :<port>\` and expect BOTH stacks in the output; address \`127.0.0.1\` explicitly to hit the IPv4 listener; and never kill the other session's PID — identify it, leave it alone (global no-name-kill rule).
+`,
+  "learnings/the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md": `---
+type: Learning
+title: The Walk is the only failure-proof drum type; The Floor starves silently
+description: Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can never 503. All 5 LLM
+tags: [drum, rss-feed, pgvector]
+timestamp: "2026-11-18T15:23:38.429Z"
+---
+
+# The Walk is the only failure-proof drum type; The Floor starves silently
+
+Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can never 503. All 5 LLM-drafted types (One Save, Target-User Pitch, Two Futures, Ambition Path, Impress the Boss) fail when the gateway is down, and The Floor silently returns null when \`search_misses\` has too few rows (only 2 at time of writing). Net effect: any gateway outage funnels every daily draw into Walk.
+
+Also note the rotation cursor is \`count(*) % 10\` over published items, so deletions/rejections shift positions — repeated same-type outputs are a fall-through symptom, not a cursor bug.
+`,
+  "learnings/translucent-overlays-ghost-background-content-auto-opening-d.md": `---
+type: Learning
+title: Translucent overlays ghost background content — auto-opening drawers go canvas-solid
+description: Discovered 2026-11-07 while building the homepage system drawer (\`src/routes/+page.svelte\`, commit \`9168e3d\`).
+tags: [frontend, css, design, gotcha]
+timestamp: "2026-11-07T11:19:56.310Z"
+---
+
+# Translucent overlays ghost background content — auto-opening drawers go canvas-solid
+
+Discovered 2026-11-07 while building the homepage system drawer (\`src/routes/+page.svelte\`, commit \`9168e3d\`).
+
+**The gotcha:** with a translucent drawer background, the page footer (and faint decorative blobs) ghosted through the panel — visible in desktop screenshots and the phone mid-search state, with the footer bleeding under the vital-signs grid.
+
+**The fix:** the drawer uses the opaque canvas token (\`bg-canvas\`), a hairline top edge (\`border-t border-ink/10\`), and a soft upward shadow for separation. Translucency + backdrop-blur (\`bg-canvas/90 backdrop-blur\`) is fine for the small floating \`system ▴\` chip, where nothing critical sits behind.
+
+**Rule of thumb:** any overlay that opens above page content (drawers, bottom sheets, panels) gets an opaque \`var(--canvas)\` background; save translucency for small floating controls where ghosting can't hurt. Same family as the \`opacity: 0\` layout-space gotcha — hidden ≠ gone: alpha layers always show what's behind.
+`,
   "learnings/transparent-cutout-qa-previews-don-t-honor-alpha.md": `---
 type: Learning
 title: "Transparent-cutout QA: previews don't honor alpha — verify the alpha channel programmatically"
@@ -2141,6 +3991,66 @@ When producing a transparent cutout of the [[product-search-mascot-illo-characte
 **Workflow that worked (2026-11-01, mascot footer deployment):** render cutout with alpha → programmatic alpha/magenta check → trim flush to silhouette feet (so the character *stands* on the page's bottom edge) → downscale to >2× display density (footer shows it at ~half size; 163×256 @ 68 KB) → drop in \`static/\`.
 
 Tags: mascot, image-processing, qa, asset-pipeline
+`,
+  "learnings/ts-interfaces-lack-implicit-index-signatures-type-aliases-ha.md": `---
+type: Learning
+title: TS interfaces lack implicit index signatures — type aliases have them
+description: "**The rule (hit 2026-11-06 in The Drum slice C):** a TypeScript \`interface\` is **not** assignable to \`Record<string, unknown>\` — \`Index signature for type 'stri"
+tags: [[typescript, gotcha, feed, types]]
+timestamp: "2026-11-06T20:27:00.787Z"
+---
+
+# TS interfaces lack implicit index signatures — type aliases have them
+
+**The rule (hit 2026-11-06 in The Drum slice C):** a TypeScript \`interface\` is **not** assignable to \`Record<string, unknown>\` — \`Index signature for type 'string' is missing in type 'X'\` — because interfaces support declaration merging, so TS refuses to invent an index signature for them. A \`type\` alias of the exact same object shape gets an implicit index signature and assigns fine.
+
+**When it bites:** helper functions typed to accept generic JSON-ish payloads (\`Record<string, unknown>\`, \`signals: Record<string, unknown>\` in the feed types) fed from interface-typed objects.
+
+**Fix:** declare the shape as a \`type\` alias instead of an interface (or add an explicit index signature — but that weakens the type). The feed subsystem uses type aliases for its body shapes for this reason.
+`,
+  "learnings/utobo-api-key-provisioning-dashboard-path-shown-once-send-on.md": `---
+type: Learning
+title: "Utobo API key provisioning: dashboard path, shown once, Send-only scope"
+description: "**The how-to (settled 2026-11-06 while wiring The Digest's sends):** the utobo API key for \`UTOBO_EMAIL_API_KEY\` is created in the **email.utobo.com** dashboard"
+tags: [utobo, email, github-actions, secrets, the-digest, devops]
+timestamp: "2026-11-06T20:48:03.037Z"
+---
+
+# Utobo API key provisioning: dashboard path, shown once, Send-only scope
+
+**The how-to (settled 2026-11-06 while wiring The Digest's sends):** the utobo API key for \`UTOBO_EMAIL_API_KEY\` is created in the **email.utobo.com** dashboard → API keys (or Account → API keys), with **Send only** permission — the right scope for production sends.
+
+Gotchas:
+
+- The key is displayed **once** at creation (\`ut_live_\` + 64 chars) — copy it immediately; losing it means creating a new key.
+- Store it as the GitHub repo secret \`UTOBO_EMAIL_API_KEY\` (github.com/creatuluw/productsear.ch → Settings → Secrets and variables → Actions), or via CLI: \`gh secret set UTOBO_EMAIL_API_KEY --repo creatuluw/productsear.ch\`.
+- Also add the same key to local \`.env\` for manual runs (\`npx tsx scripts/digest-send.ts --send\`).
+- \`DATABASE_URL\` is already set as a repo secret (the [[corpus-enrichment-pipeline-sync-crawl-analyze]] workflow uses it) — the utobo key is the **only new secret** the digest workflow needs.
+
+After the secret lands: Actions → The Digest → Run workflow does an instant manual test; real sends still require the admin digest toggle on in \`/admin/feed\` plus at least one subscriber (see [[the-digest-email-digest-pipeline]]).
+`,
+  "learnings/utobo-email-api-key-was-missing-from-the-railway-runtime-loc.md": `---
+type: Learning
+title: UTOBO_EMAIL_API_KEY was missing from the Railway runtime — local-send success masked the prod gap
+description: "**The incident (2026-11-12, "Generate new produced no new approval email"):** The Drum approval send failed silently in production — Railway logs showed \`[feed]"
+tags: [true]
+timestamp: "2026-11-12T17:01:27.848Z"
+---
+
+# UTOBO_EMAIL_API_KEY was missing from the Railway runtime — local-send success masked the prod gap
+
+**The incident (2026-11-12, "Generate new produced no new approval email"):** The Drum approval send failed silently in production — Railway logs showed \`[feed] approval NOT sent: UTOBO_EMAIL_API_KEY is not configured\`.
+
+Root cause: \`UTOBO_EMAIL_API_KEY\` existed in **GitHub Actions secrets and the local \`.env\`, but never in the Railway runtime**. The first approval email "worked" only because it was sent from the local machine's \`.env\` — that success masked the production gap and made the pipeline look operational when it wasn't.
+
+Key facts about the failure mode:
+
+- **Fail-soft path worked as designed**: the click DID work — old draft was deleted, a new one was drawn — only the email step failed; the drawn card sat safely as a draft and the failure was logged. Recovery = re-mail the approval for the existing draft (no redraw needed).
+- **Collateral discovery**: The Digest's real sends would have failed for the same reason; setting the key in Railway unblocked both surfaces at once.
+- **Fix pattern**: set the var in Railway (\`railway variables set ...\`, which triggers a redeploy), then re-trigger the mail for the existing draft rather than redrawing.
+- Different surfaces hold different copies of secrets: **GitHub Secrets ≠ Railway runtime env ≠ local \`.env\`** — presence in one says nothing about the others.
+
+Evidence: Railway deploy logs + the re-sent approval email verified live (2026-11-12). See [[rules/verify-production-runtime-env-vars-before-declaring-a-send-pipeline-armed]] and [[learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr]].
 `,
   "learnings/vercel-ai-sdk-v4-streamtext-exposes-async.md": `---
 type: Learning
@@ -2221,6 +4131,26 @@ Also: run-to-run shuffles also mean "minor top-5 reordering" on control queries 
 
 Related: the fix context in [[enrich-reranker-input-with-page-content-show-30]]; methodology in [[diagnose-search-misses-stage-by-step-before-tuning]].
 `,
+  "learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md": `---
+type: Learning
+title: When LLM providers are down, the drum degenerates into consecutive Walk items
+description: "**The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items** — the same type d"
+tags: [the-drum, feed, rotation, llm-drafting, failure-mode, walk]
+timestamp: "2026-11-18T15:22:58.937Z"
+---
+
+# When LLM providers are down, the drum degenerates into consecutive Walk items
+
+**The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items** — the same type day after day. Observed live: draws of 11-14, 11-16, 11-17 were all The Walk.
+
+**The mechanism:** the rotation cursor is \`count(te9_dev.feed_items) % 10\` over the fixed order [pulse, resurrections, tombola, floor, one-save, target-user-pitch, two-futures, ambition-path, walk, impress-the-boss]. Each draw walks the order from the cursor and takes the first generator that produces something. When the five LLM-drafted types (one-save, target-user-pitch, two-futures, ambition-path, impress-the-boss) all throw, and The Floor returns null (starving: needs accumulated \`search_misses\`, only 2 rows exist), the only generator that can succeed is **The Walk — pure pgvector SQL, zero external dependencies**. Draw cursors at positions 3, 4, 5 all fell through to position 8 → three Walks in a row. With cursor at 6 the next draw (due 2026-11-18 ~16:44 UTC) would draw a **fourth** Walk.
+
+**The root cause of the LLM failures** (GitHub Actions run logs 43589473464 / 43867771793): \`all draft providers failed — railway-gateway: railway-gateway API error 503: {"error":{"message":"Loading model","type":"unavailable_error","code":503}}\`. The Railway-hosted fallback gateway model never finishes loading (cold start that never warms or service down); the z.ai (GLM-5) primary also fails before it. Same provider chain as \`scripts/analyze-bookmarks.js\` (src/lib/server/feed/llm.ts).
+
+**Why the catch-and-skip safety net causes this:** the design goal was "a broken generator must never stall the drum" — which works, but because Walk is the only generator that *cannot* fail, provider outages don't stall the drum, they funnel every draw into Walk. A fix could add per-type last-drawn tracking or skip/retry logic so a draw that had to fall through N slots does not always land on Walk.
+
+**Follow-up (2026-11-18):** Walk-specific mitigation shipped — the generator now enforces a 20-day minimum gap on published walks (see [decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it](../../decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md)), so an outage can no longer produce consecutive Walks. The underlying LLM-gateway outage itself remains open — the five LLM-drafted types stay dead until it is fixed or replaced.
+`,
   "learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md": `---
 type: Learning
 title: wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs
@@ -2241,9 +4171,33 @@ Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-servi
 **The fix:** use **path-qualified slugs** for any cross-folder reference — \`[[decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c]]\`, not \`[[set up utobo as transactional email sender]]\`. Same-folder links can stay bare.
 
 **Working method:** after writing a page with wikilinks, run \`wiki_validate\` and read the actual written file (the transformation happens silently — the tool's input echoes don't show it); fix any W4 broken-link warnings with path-qualified slugs before declaring the page done. Pre-existing W2 long-filename warnings on tool-generated slugs are noise — leave them.
+
+**Refinement (same day, while creating [The Drum feed](../pages/entities/the-drum-feed.md)):** the converter's cross-folder handling is also *inconsistent*, not just folder-sensitive — from a \`pages/entities/\` file, \`[[pages/concepts/X]]\` came out as a same-folder link (\`./X.md\`, folder dropped) and \`[[decisions/X]]\` got slash→dash slugified then truncated to 60 chars (\`./decisions-X-trunc.md\`); both broke. So path-qualified slugs are **necessary but not reliably sufficient**: after wiki_validate, hand-correct the generated relative links (\`../../decisions/<slug>.md\`, \`../concepts/<slug>.md\`, and fix wrong slugs like \`collections-pages\` vs the real \`compendium-pages.md\`) and re-run validate until W4 clears.
+`,
+  "learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md": `---
+type: Learning
+title: "Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully"
+description: Discovered 2026-11-07 while wiping all Drum items and handing the surface back to the normal draw flow.
+tags: [the-drum, feed-draw, rotation, wipe, empty-state, operations]
+timestamp: "2026-11-07T12:26:23.427Z"
+---
+
+# Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully
+
+Discovered 2026-11-07 while wiping all Drum items and handing the surface back to the normal draw flow.
+
+**The draw-due mechanics (from \`src/lib/server/feed/rotation\`):**
+
+- \`due\` is computed from **\`max(created_at)\` over \`feed_items\`** vs the configured cadence — not from a separate scheduler state. After a full wipe there is no \`created_at\`, so \`last draw=never\` and the drum is **DUE immediately**.
+- The round-robin **type cursor resets to 0** on an empty table — the next draw restarts from the **top of the configured order** (The Pulse as of the 2026-11-07 wipe).
+- Repopulation is fully owned by the normal flow: the nightly \`feed-draw\` cron (\`.github/workflows/feed-draw.yml\`, 09:07 UTC) or a forced \`POST /api/feed/draw?force=1\` from the admin gate. \`feed_settings\` (cadence/order/flags) survives the wipe; \`search_misses\` (The Floor's data) is independent of \`feed_items\` and untouched.
+
+**Empty-state degradation is graceful by design:** with zero \`feed_items\`, \`/feed\` shows its empty state ("The drum hasn't drawn yet — the first items arrive with the next due draw"), the homepage drum section hides entirely, and OG endpoints for wiped listings (\`/api/feed/og/listing/[id]\`) return 404. No dangling links or broken cards anywhere.
+
+**Restore proven before the wipe:** 10 rows backed up to \`.work/feed-items-backup-2026-11-07T12-25-03-519Z.json\`; \`.work/feed-items-tool.ts restore <backup-file>\` re-inserts them (dry-run verified 10/10 in a rolled-back transaction). \`.work/\` is local scratch — the tool/backup may not persist; the procedure (see the destructive-bulk-delete rule) is what carries over.
 `,
   "memory.md": `---
-okf_version: "0.1"
+okf_version: "0.2"
 ---
 
 <!-- wiki-memory:start -->
@@ -2252,28 +4206,36 @@ okf_version: "0.1"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T14:29:02.619Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15:30:37.021Z.
 
 ## Recent Decisions
 
-- [Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)](decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — Context (2026-11-06)
-- [Rename compendium to collections (routes moved, 308 redirects)](decisions/rename-compendium-to-collections-routes-moved-308-redirects.md) — Context (2026-11-06)
-- [Product-search corpus pipeline is self-contained in productsear.ch](decisions/product-search-corpus-pipeline-is-self-contained-in-products.md) — Context (2026-11-06)
-- [Repo-scan pipeline: cheapest-first phases; npm/PyPI registry lookups replace GitHub slug-guessing](decisions/repo-scan-pipeline-cheapest-first-phases-npm-pypi.md) — Context (2026-11-03)
-- [Machine-readout console identity for ?view=llm surfaces](decisions/machine-readout-console-identity-for-view-llm.md) — Context (2026-11-03)
-- [User-facing vocabulary is "listings" — display-terms-only rename, URLs stay /archive](decisions/user-facing-vocabulary-is-listings-display-terms.md) — Context (2026-11-03)
-- [Use Plausible for privacy-friendly site analytics, wired in app.html](decisions/use-plausible-for-privacy-friendly-site-analytics.md) — Context (2026-11-01)
-- [Adopt product-search bookmark-ribbon mascot as the brand character](decisions/adopt-product-search-bookmark-ribbon-mascot-as-the.md) — Context (2026-11-01)
-- [Content-negotiate llms views: raw text/markdown for LLM clients, rendered markdown for browsers](decisions/content-negotiate-llms-views-raw-text-markdown-for.md) — Context (2026-11-01)
-- [Serve the LLM usage guide at /skill.md and distill it into the llms-view preamble](decisions/serve-the-llm-usage-guide-at-skill-md-and-distill.md) — Context (2026-11-01)
-- [Remove Ask mode — productsear.ch becomes search-only](decisions/remove-ask-mode-productsear-ch-becomes-search-only.md) — Context (2026-11-01)
-- [Dual-view surfaces: humans | llms tabs with ?view=llm on every route](decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm.md) — Context (2026-11-01)
-- [Store bookmark archetypes as multi-entry JSONB on an app-owned table](decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md) — Context (2026-11-01)
-- [Enrich reranker input with page content; show 30 results](decisions/enrich-reranker-input-with-page-content-show-30.md) — Context (2026-11-01)
-- [Shift visual design to instrument-grade precision-tool system (OKLCH)](decisions/shift-visual-design-to-instrument-grade-precision.md) — Context (2026-08-06)
+- [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md) — Context (2026-11-18)
+- [Drum draw schedule made miss-proof (cron redundancy)](decisions/drum-draw-schedule-made-miss-proof-cron-redundancy.md) — Context (2026-11-13)
+- [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) — Context (2026-11-12)
+- [Drum draw cadence: once daily at 07:00 Amsterdam time](decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time.md) — Context (2026-11-12)
+- [Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes](decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md) — Context (2026-11-12)
+- [Trim sitemap.xml to hub surfaces only — no individual listing URLs](decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md) — Context (2026-11-10)
+- [Adopt full search-engine and LLM discovery infrastructure](decisions/adopt-full-search-engine-and-llm-discovery-infrastructure.md) — Context (2026-11-10)
+- [Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint](decisions/elegant-shared-og-cards-one-card-builder-in-lib-server-og-pl.md) — Context (2026-11-07)
+- [Homepage content/system-metadata split: auto-opening search drawer](decisions/homepage-content-system-metadata-split-auto-opening-search-d.md) — **Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text … (2026-11-07)
+- [Adapt every public surface for touch/mobile — rethink, don't scale](decisions/adapt-every-public-surface-for-touch-mobile-rethink-don-t-sc.md) — **Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt… (2026-11-06)
+- [Redesign The Drum /feed around the nine Gestalt principles](decisions/redesign-the-drum-feed-around-the-nine-gestalt-principles.md) — **Context.** The \`/feed\` page (The Drum, [[pages/entities/the-drum-feed]]) had shipped as a functional column of hairline-separated rows: un… (2026-11-06)
+- [Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)](decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md) — Context (2026-11-06)
+- [The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md](decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) — Context (2026-11-06)
+- [Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)](decisions/feed-round-14-same-day-last-year-out-the-feed-is-named-the-d.md) — Context (2026-11-06)
+- [Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)](decisions/feed-round-13-stream-order-fixed-round-robin-the-backlog-in-.md) — Context (2026-11-06)
 
 ## Active Rules
 
+- [Verify production runtime env vars before declaring a send pipeline armed](rules/verify-production-runtime-env-vars-before-declaring-a-send-p.md) — **Guideline:** Before declaring any external-send or API-integration pipeline operational (utobo email, Drum approval mails, The Digest send… (2026-11-12)
+- [Back up and dry-run the restore before any destructive bulk delete](rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md) — **Guideline:** Before a destructive bulk DELETE against \`te9_dev\` (e.g. wiping a table like \`feed_items\`), run the three-step interlock — an… (2026-11-07)
+- [OG endpoint assets must fail soft: lazy-read with try/catch, omit gracefully](rules/og-endpoint-assets-must-fail-soft-lazy-read-with-try-catch-o.md) — **Guideline:** Any binary asset an OG/social-card renderer depends on (mascot PNG, fonts, future images) must be loaded **tolerantly**: a la… (2026-11-07)
+- [Probe responsive overflow programmatically; don't eyeball screenshots](rules/probe-responsive-overflow-programmatically-don-t-eyeball-scr.md) — **Guideline:** For any responsive change, verify overflow by measurement, not by looking at screenshots. Build (\`npm run build\`), serve \`nod… (2026-11-06)
+- [Redesign surfaces via the Gestalt diagnosis-then-map method](rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-method.md) — **Guideline:** When a redesign request lands ("make X read/enjoy better"), run the nine Gestalt principles (common region, closure, proximit… (2026-11-06)
+- [Style with semantic theme tokens only — never hardcode colors](rules/style-with-semantic-theme-tokens-only-never-hardcode-colors.md) — **Guideline:** Every color in components and raw CSS must reference the semantic theme tokens (\`var(--canvas)\`, \`var(--ink)\`, \`var(--accent)… (2026-11-06)
+- [Brainstorm pacing: one idea + one grill question per turn, branch ledger](rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc.md) — **Guideline:** In ideation/brainstorm sessions with this user, do **not** batch multiple questions or a big idea menu into one turn. Each tu… (2026-11-06)
+- [Interview questions ship with lettered options plus a proceed/notes/add-your-own round](rules/interview-questions-ship-with-lettered-options-plus-a-procee.md) — **Guideline:** In any planning/design interview with this user (grill-docs-style P2 rounds, feature scoping, content-brainstorm triage), nev… (2026-11-06)
 - [Verify the serving process on a test port before trusting smoke tests](rules/verify-the-serving-process-on-a-test-port-before-trusting-sm.md) — **Guideline:** After any restart of a local \`node build\` preview server, verify what actually serves the test port \`netstat -ano | findstr :… (2026-11-06)
 - [Attribute build failures before fixing; never touch a concurrent session's in-progress work](rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md) — **Guideline:** When a whole-project check (\`npm run build\`, typecheck) fails in this repo, attribute the errors **before** treating your own… (2026-11-06)
 - [Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes](rules/check-the-index-before-committing-use-pathspec-scoped-commit.md) — **Guideline:** Before running \`git commit\` in any repo — especially auxiliary/external repos like \`E:\\skills.te9.dev\` whose indexes accumula… (2026-11-06)
@@ -2294,34 +4256,35 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-06T14
 
 ## Recent Learnings — development patterns
 
-- [Production runs Railway commits only — local uncommitted work is invisible on the live site](learnings/production-runs-railway-commits-only-local-uncommitted-work-.md) — **Discovered 2026-11-06** when the user reported "I don't see an icon to log into the admin" on https://productsear.ch/: (2026-11-06)
-- [better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed](learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md) — Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06): (2026-11-06)
-- [Splitting npm dependency versions: direct dep for the new, pinned deps nest auto](learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md) — When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct… (2026-11-06)
-- [wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs](learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md) — Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-d… (2026-11-06)
-- [Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly](learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API: (2026-11-06)
-- [Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only](learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md) — Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1ac2b8e..bbd94b1\`). (2026-11-06)
-- [Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed](learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md) — Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule): (2026-11-06)
-- [Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first](learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md) — Discovered 2026-11-06 while verifying the new "last 30 days" homepage tile on a local production build: (2026-11-06)
-- [Analyzed metric 100%: analyzer fallback patch + what the metric actually counts](learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md) — Discovered 2026-11-06 while driving the homepage \`analyzed\` vital sign to 100%. (2026-11-06)
-- [llmview.ts / skill-doc.ts template literals contain escaped backticks; multi-hunk edit calls are atomic](learnings/llmview-ts-skill-doc-ts-template-literals-contain-escaped-ba.md) — Discovered 2026-11-06 while renaming compendium → collections across the LLM-view surfaces. (2026-11-06)
-- [External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first](learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md) — Discovered 2026-11-06 while answering "where is the sync/analysis pipeline?" (user's best guess: \`E:\\te9.dev\` — confirmed correct). (2026-11-06)
-- [Homepage "analyzed" vital sign = analyzed/total ratio — bulk inserts regress it until the external analysis pass runs](learnings/homepage-analyzed-vital-sign-analyzed-total-ratio-bulk-inser.md) — Discovered 2026-11-06 while diagnosing why https://productsear.ch/ showed \`analyzed\` = 81% (user reported the drop). (2026-11-06)
-- [Bookmark ingestion chain is gap-catching; archetypes classifier lives at src/lib/archetypes.ts](learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md) — Discovered 2026-11-06 while processing the 522 synthetic repo rows end-to-end. (2026-11-06)
-- [Negative synthetic ids for manual bookmarks-table inserts (never collide with the external sync)](learnings/negative-synthetic-ids-for-manual-bookmarks-table-inserts-ne.md) — **The convention (set 2026-11-06):** when manually inserting rows into \`te9_dev.bookmarks\` (normally an external-sync mirror), use **negativ… (2026-11-06)
-- [check-active.js: "active" is user-defined as pushed within 30 days; --resplit re-splits cached data without API calls](learnings/check-active-js-active-is-user-defined-as-pushed-within-30-d.md) — **The fact (set 2026-11-06, user-defined):** for the digital-products-repos activity split, the user explicitly redefined **ACTIVE = last pu… (2026-11-06)
-- [Await dotenv imports; anchor .env path](learnings/await-dotenv-imports-anchor-env-path.md) — Two failures when \`missing-repos.js\` (a plain Node script in \`.archive/repo-scan/\`) loaded \`DATABASE_URL\`, discovered 2026-11-06: (2026-11-06)
-- [pi loads every standalone .md in .agents/skills/ as a skill named after its parent dir; slash commands live in .pi/prompts/](learnings/pi-skill-name-fallback-and-prompts-dir.md) — Two related facts about how pi loads project-level agent config, discovered 2026-11-06 while fixing a \`commands\` collision warning: (2026-11-06)
-- [MCP server names in .pi/mcp.json forbid dots — name them with letters/digits/_/- only](learnings/mcp-server-names-no-dots.md) — The dot gotcha (found 2026-11-05): pi rejects MCP server names containing characters outside \`[A-Za-z0-9_-]\`. The project's \`.pi/mcp.json\` n… (2026-11-06)
-- [pi reads project MCP config from .pi/mcp.json — root .mcp.json is ignored](learnings/pi-project-mcp-config-location.md) — The gotcha (found 2026-11-06 while debugging why \`/mcp\` showed no servers): (2026-11-06)
-- [BrowserClaw owns IPv4 :9222; harness Chrome lands on IPv6 — discover CDP WS URL via curl, not undici fetch](learnings/browserclaw-owns-ipv4-9222-harness-chrome-lands-on.md) — Discovered 2026-11-03 while doing CDP-based visual QA of \`.archive/digital-products-repos.html\`: (2026-11-03)
+- [The Walk is the only failure-proof drum type; The Floor starves silently](learnings/the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md) — Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can … (2026-11-18)
+- [When LLM providers are down, the drum degenerates into consecutive Walk items](learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md) — **The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items… (2026-11-18)
+- [Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email](learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md) — **The fact (established 2026-11-13 while answering "should I have gotten an email already?"):** the Drum approval-email cadence is a **24h c… (2026-11-13)
+- [UTOBO_EMAIL_API_KEY was missing from the Railway runtime — local-send success masked the prod gap](learnings/utobo-email-api-key-was-missing-from-the-railway-runtime-loc.md) — **The incident (2026-11-12, "Generate new produced no new approval email"):** The Drum approval send failed silently in production — Railway… (2026-11-12)
+- [Railway CLI sets env vars via the \`variable set\` subcommand — the --set flag is legacy](learnings/railway-cli-sets-env-vars-via-the-variable-set-subcommand-th.md) — **The gotcha (found 2026-11-12 while wiring \`DRUM_APPROVAL_SECRET\` across environments):** on Railway CLI 5.x (5.62.1), setting env vars goe… (2026-11-12)
+- [GitHub Actions cron is UTC-only — Amsterdam-local schedules drift an hour with DST](learnings/github-actions-cron-is-utc-only-amsterdam-local-schedules-dr.md) — **The fact (found 2026-11-12 while retiming the drum draw):** GitHub Actions \`schedule:\` accepts cron expressions in **UTC only** — there is… (2026-11-12)
+- [Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id](learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis.md) — **The coupling (found 2026-11-10, fixed in commit \`e4ecd86\`):** feed surfaces link \`/listings/{id}\` for their drawn items — Drum cards and T… (2026-11-10)
+- [Svelte script blocks terminate at a literal <\/script> — even in comments](learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c.md) — **The gotcha (found 2026-11-10 while adding JSON-LD via a \`JsonLd.svelte\` head component):** (2026-11-10)
+- [The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented](learnings/the-digest-is-deactivated-at-two-layers-feature-gate-disable.md) — **The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out: (2026-11-09)
+- [GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires](learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md) — **The gotcha (found 2026-11-09):** a \`run:\` value containing \`Drum draw:\` — a \`colon+space\` inside a plain (unquoted) YAML scalar — made \`.g… (2026-11-09)
+- [Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully](learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md) — Discovered 2026-11-07 while wiping all Drum items and handing the surface back to the normal draw flow. (2026-11-07)
+- [Bluesky link-card cache is keyed by the shared URL — bust the share URL, not just og:image](learnings/bluesky-link-card-cache-is-keyed-by-the-shared-url-bust-the-.md) — **The mechanism (discovered 2026-11-07, commit \`80cadc8\`):** Bluesky's link-card cache is keyed by **the shared URL itself** (\`/listings/227… (2026-11-07)
+- [Bluesky caches og:image aggressively — bump a ?v=N cache-bust on card URLs after redesigns](learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md) — **The incident (2026-11-07, commit \`6b3aeb0\`):** after the receipt-card redesign, the user pasted a Bluesky compose screenshot showing the *… (2026-11-07)
+- [Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)](learnings/fixed-locally-but-never-committed-verify-head-bytes-when-pro.md) — **The incident (2026-11-07, commit \`faf3818\`):** production Bluesky cards rendered with **all text missing** while the local working tree re… (2026-11-07)
+- [Translucent overlays ghost background content — auto-opening drawers go canvas-solid](learnings/translucent-overlays-ghost-background-content-auto-opening-d.md) — Discovered 2026-11-07 while building the homepage system drawer (\`src/routes/+page.svelte\`, commit \`9168e3d\`). (2026-11-07)
+- [opacity-0 elements still occupy layout space — closed tipboxes caused 54px of phantom overflow](learnings/opacity-0-elements-still-occupy-layout-space-closed-tipboxes.md) — Discovered 2026-11-06 while probing 54px of hidden horizontal overflow on 390px phones: the three closed tipboxes were hidden with \`opacity:… (2026-11-06)
+- [The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly](learnings/the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md) — Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port nu… (2026-11-06)
+- [The Digest send pipeline verifies in stages — "no active subscribers" is the expected stop when armed but empty](learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr.md) — **The behavior (verified 2026-11-06 after the operator added the utobo secrets):** \`scripts/digest-send.ts\` gates its send path in stages, a… (2026-11-06)
+- [Utobo API key provisioning: dashboard path, shown once, Send-only scope](learnings/utobo-api-key-provisioning-dashboard-path-shown-once-send-on.md) — **The how-to (settled 2026-11-06 while wiring The Digest's sends):** the utobo API key for \`UTOBO_EMAIL_API_KEY\` is created in the **email.u… (2026-11-06)
+- [gstatic css2 legacy-UA downloads are EOT files, not TTFs — pull real TTFs from the official repo](learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user-agent.md) — The legacy user-agent trick against Google Fonts' css2 API returns URLs whose downloaded bytes are legacy EOT, not TTF — @resvg/resvg-js sil… (2026-11-06)
 
 ## Architecture
 
-- [File tree](architecture/file-tree.md) — Complete project file listing with per-file descriptions. (2026-07-04)
+- [File tree](architecture/file-tree.md) — Complete project file listing with per-file descriptions. (2026-11-10)
 
 ## Global Patterns
 
-- [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it? (2026-11-01)
+- [Search and LLM discovery layer](pages/concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine cra… (2026-11-10)
+- [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it? (2026-11-06)
 - [URL-driven search state](pages/concepts/url-driven-search-state.md) — What is it? (2026-08-25)
 - [Hybrid search via Reciprocal Rank Fusion](pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md) — What is it? (2026-07-03)
 
@@ -2604,6 +4567,7 @@ _Documents, diagrams, and deliverables will be listed here._
 - [digital-products-repos-missing CSV](./digital-products-repos-missing-csv.md) - What is it?
 - [digital-products-repos activity split CSVs](./digital-products-repos-activity-split-csvs.md) - What is it?
 - [insert-missing-repos-active-30d.sql](./insert-missing-repos-active-30d-sql.md) - What is it?
+- [The Drum feed spec](./the-drum-feed-spec.md) - **The Drum feed spec** — the formal, converged specification for [[entities/the-drum-feed]], committed at \`docs/specs/the-drum.md\` after the 15-turn diverge/con
 `,
   "pages/artifacts/insert-missing-repos-active-30d-sql.md": `---
 type: Artifact
@@ -2665,6 +4629,36 @@ An animated ~6-scene promo MP4 that introduces productsear.ch: semantic bookmark
 
 - [driving-html-video-nexu-io-headlessly-to-render-a](../../learnings/driving-html-video-nexu-io-headlessly-to-render-a.md) — the full how-to and the gotchas (prereqs, why the Studio was skipped, the freeze/unfreeze breakage, the multi-frame fix).
 `,
+  "pages/artifacts/the-drum-feed-spec.md": `---
+type: Artifact
+title: The Drum feed spec
+description: "**The Drum feed spec** — the formal, converged specification for the [The Drum feed](../entities/the-drum-feed.md) entity, committed at \`docs/specs/the-drum.md\` after the 15-turn diverge/con"
+tags: [the-drum, feed, spec, editorial-workflow, designed-not-built]
+timestamp: "2026-11-06T19:39:44.066Z"
+---
+
+# The Drum feed spec
+
+**The Drum feed spec** — the formal, converged specification for [The Drum feed](../entities/the-drum-feed.md), committed at \`docs/specs/the-drum.md\` after the 15-turn diverge/converge brainstorm converged (Q15-A, 2026-11-06). It is the build contract the implementation plan will be drafted from.
+
+## What it documents
+
+- [The Drum feed](../entities/the-drum-feed.md) — the full feature: identity, surfaces (\`/feed\`, homepage 3-latest slot, listing stacks), cadence (1 item / 2 days, admin-configurable), the fixed round-robin over the 11 item types, editorial workflow (draft → inline editor → per-item approval → publish), trust & attribution, sharing (Receipt cards + Bluesky, The Digest dark by default), data model sketch, and parked phase-2 scope
+- [the convergence decision](../../decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) — the convergence decision that closed the Q15 loop and commissioned this spec
+- **Format**: Markdown spec, 10 numbered sections plus an original-criteria goal check
+- Generated from: the 15-round feed brainstorm; per-round verdicts logged in \`docs/wiki/decisions/feed-round-*\`
+
+## Key contents
+
+- **§4 — the 11 item types table**: each type's angle and generation source (analysis \`who\` personas, archetype drift, embedding hops, 300+ day staleness, search misses below the 0.45 relevance floor)
+- **§5 — editorial workflow**: pipeline drafts land on the item page; inline editor on every post; per-item approval toggles; ungated items auto-publish; The Backlog pre-seeds the queue
+- **§8 — data model sketch**: app-owned \`feed_items\` (jsonb per-type payload, status, requires_approval, signals provenance) + singleton \`feed_settings\` (cadence_hours 48, digest_enabled false, type_order) on Postgres \`te9_dev\`; never writes to the read-only mirror tables
+- **§10 — open launch details**: canonical round-robin order, methodology-page copy, default-on vs dark states, Receipt card visual spec (riso/instrument identity, OKLCH tokens only)
+
+## Source
+
+- \`docs/specs/the-drum.md\` — the spec itself (97 lines, converged status header)
+`,
   "pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md": `---
 type: Concept
 title: Hybrid search via Reciprocal Rank Fusion
@@ -2700,6 +4694,7 @@ _Abstract ideas and definitions will be listed here._
 - [LLM content negotiation](./llm-content-negotiation.md) - What is it?
 - [URL-driven search state](./url-driven-search-state.md) - What is it?
 - [Hybrid search via Reciprocal Rank Fusion](./hybrid-search-via-reciprocal-rank-fusion.md) - What is it?
+- [Search and LLM discovery layer](./search-and-llm-discovery-layer.md) - The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
 `,
   "pages/concepts/llm-content-negotiation.md": `---
 type: Concept
@@ -2742,6 +4737,47 @@ LLM collaboration is first-class on this site: a URL pasted into a chat and the 
 - \`src/hooks.server.ts\` — the \`handle\` intercept performing the negotiation
 - \`src/lib/server/llms.ts\` — \`wantsRawMarkdown()\`, \`MARKDOWN_USER_AGENTS\`, \`llmMarkdown()\` router, raw \`Response\` builder
 - \`src/lib/server/llmview.ts\` — markdown builders + instruction preamble (\`searchApiMd()\` for the API's markdown face)
+`,
+  "pages/concepts/search-and-llm-discovery-layer.md": `---
+type: Concept
+title: Search and LLM discovery layer
+description: The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
+tags: [seo, discoverability, llm, agents, sitemap, rss, json-ld]
+timestamp: "2026-11-10T11:43:50.273Z"
+---
+
+# Search and LLM discovery layer
+
+The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and social-share unfurlers. It combines crawl control (\`static/robots.txt\` + \`X-Robots-Tag\` headers from \`src/hooks.server.ts\`), dynamic discovery surfaces ([pages/entities/dynamic-xml-sitemap-endpoint](../entities/dynamic-xml-sitemap-endpoint.md), [pages/entities/llms-txt-agent-index](../entities/llms-txt-agent-index.md), [pages/entities/feed-xml-rss-endpoint](../entities/feed-xml-rss-endpoint.md), \`/.well-known/security.txt\`), per-page metadata (meta description, canonical, OG tags, JSON-LD via [pages/entities/jsonld-svelte-component](../entities/jsonld-svelte-component.md)), and three redundant announcement channels. Shipped 2026-11-10 in one pass (commit \`76623ed\`) — see [decisions/adopt-full-search-engine-and-llm-discovery-infrastructure](../../decisions/adopt-full-search-engine-and-llm-discovery-infrastructure.md); the sitemap was trimmed to hub URLs only later the same day — see [decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-](../../decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md).
+
+## Why does it matter?
+
+A search app that search engines and AI agents cannot discover undercuts its own premise. Before this layer the site had zero crawler infrastructure — no sitemap, no robots.txt, no structured data, no RSS — and a static \`<title>\` in \`app.html\` shadowed every page's real title in raw-HTML crawls. [pages/concepts/llm-content-negotiation](./llm-content-negotiation.md) already gave agents markdown twins, but nothing told them (or crawlers) the site or its surfaces existed.
+
+## Key rules / properties
+
+- **Block private paths at both layers**: robots.txt \`Disallow\` prevents crawling but NOT indexing — \`X-Robots-Tag: noindex, nofollow\` (prefixes \`/admin\`, \`/api/auth\`, \`/api/digest\`, \`/digest\` in hooks.server.ts) covers indexing. \`/api\` is deliberately NOT disallowed wholesale so the \`/api/feed/og\` image endpoints stay unfurlable.
+- **AI crawlers are explicitly welcomed**: a dedicated 17-bot group in robots.txt (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, …) keeps the \`?view=llm\` markdown twins crawlable — they are FOR those agents.
+- **Discovery surfaces fail soft**: sitemap/llms.txt wrap DB reads in try/catch — a DB error yields a valid (shorter) file, never a 500.
+- **Announcement is redundant on purpose**: different clients read different channels — crawlers → robots.txt \`Sitemap:\`, non-HTML-parsing agents → HTTP \`Link:\` header on every HTML response, share fetchers → \`<link>\` tags in head.
+- **JSON-LD carries server-owned data only**: the component escapes \`<\` to \`\\u003c\` so no script-close breakout is possible through titles or copy.
+- **Dynamic, never stale; sitemap is hub-only**: the sitemap carries the 36 hub URLs (6 surfaces + 30 collections) — listing pages are intentionally excluded and discovered via internal links from \`/archive\` and \`/collections\`; llms.txt embeds live corpus stats (total, 30-day adds, sync date). Responses cache 30–60 min publicly.
+
+## Relationships
+
+- [pages/entities/dynamic-xml-sitemap-endpoint](../entities/dynamic-xml-sitemap-endpoint.md) — the crawler URL map (hub URLs only)
+- [pages/entities/llms-txt-agent-index](../entities/llms-txt-agent-index.md) — the agent-facing site index (llmstxt.org convention)
+- [pages/entities/feed-xml-rss-endpoint](../entities/feed-xml-rss-endpoint.md) — [pages/entities/the-drum-feed](../entities/the-drum-feed.md) as RSS 2.0
+- [pages/entities/jsonld-svelte-component](../entities/jsonld-svelte-component.md) — schema.org structured-data renderer
+- [pages/concepts/llm-content-negotiation](./llm-content-negotiation.md) — the \`?view=llm\` twins this layer advertises
+- [pages/concepts/url-driven-search-state](./url-driven-search-state.md) — the \`?q=\` param the SearchAction urlTemplate targets
+- [pages/entities/waveloader-component](../entities/waveloader-component.md), [pages/entities/llmdoc-component](../entities/llmdoc-component.md) — existing head/UI machinery the layer coexists with
+
+## Source
+
+- \`static/robots.txt\`, \`src/hooks.server.ts\`, \`src/app.html\` — crawl control + announcement channels
+- \`src/routes/sitemap.xml/+server.ts\`, \`src/routes/llms.txt/+server.ts\`, \`src/routes/feed.xml/+server.ts\`, \`src/routes/.well-known/security.txt/+server.ts\` — discovery surfaces
+- \`src/routes/+page.svelte\` et al. — per-page meta/JSON-LD
 `,
   "pages/concepts/url-driven-search-state.md": `---
 type: Concept
@@ -2787,7 +4823,7 @@ type: Entity
 title: Admin console (/admin)
 description: What it is
 tags: [admin, auth, better-auth, console]
-timestamp: "2026-11-06T14:18:37.245Z"
+timestamp: "2026-11-06T20:27:08.223Z"
 ---
 
 # Admin console (/admin)
@@ -2803,7 +4839,7 @@ timestamp: "2026-11-06T14:18:37.245Z"
 - **Admin gate**: \`ADMIN_EMAILS\` env (comma-separated allowlist). Sign-up is rejected server-side via a better-auth \`before\` hook for non-allowlisted emails; page loads are guarded by \`(admin)/admin/+layout.server.ts\`, and every form action re-guards itself via \`requireAdmin()\` in \`src/lib/server/admin-guard.ts\` (actions can be POSTed without a load)
 - **DB tables** ([corpus-enrichment-pipeline-sync-crawl-analyze](./corpus-enrichment-pipeline-sync-crawl-analyze.md) schema te9_dev): \`auth_user\`, \`auth_account\`, \`auth_session\`, \`auth_verification\` (better-auth, prefix \`auth_\`, model-name mapping via drizzleAdapter) + app-owned \`admin_extensions\`, \`admin_agents\`, \`admin_settings\`, \`admin_features\` (multi-entry in \`src/lib/server/db/admin-schema.ts\`, re-exported from \`db/index.ts\`)
 - **Migration**: \`scripts/migration-admin.sql\` (idempotent, seeds 3 flags + 2 settings), applied via the reusable \`scripts/run-sql.ts\` runner (dry-run = transaction rollback, \`--commit\` to persist). Undo: \`scripts/rollback-migration-admin.sql\`
-- **Section routes**: \`/admin\` (dashboard: corpus vitals + counts), \`/admin/extensions\`, \`/admin/agents\`, \`/admin/settings\`, \`/admin/features\` — all SvelteKit form actions (\`?/create\`, \`?/toggle|update|upsert\`, \`?/delete\`) with \`use:enhance\`
+- **Section routes**: \`/admin\` (dashboard: corpus vitals + counts), \`/admin/extensions\`, \`/admin/agents\`, \`/admin/settings\`, \`/admin/features\`, \`/admin/feed\` ([pages/entities/admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — The Drum editorial console) — all SvelteKit form actions (\`?/create\`, \`?/toggle|update|upsert\`, \`?/delete\`) with \`use:enhance\`
 - **Read helpers**: \`src/lib/server/admin-settings.ts\` — \`getSetting(key)\` and \`getFlag(key)\` with a 30s in-memory cache + \`clearSettingsCache()\` (called after every admin write) for production code that wants to consume console-managed values
 - **Icon**: \`src/lib/components/icons/ShieldCogCorner.svelte\` — NOT an upstream lucide icon (absent in lucide-svelte 1.0.1); composed from lucide's own shield + cog path data so it matches the lucide stroke style
 - **Env**: \`BETTER_AUTH_SECRET\` (required), \`ADMIN_EMAILS\`, \`BETTER_AUTH_URL\` (optional), \`TRUSTED_ORIGINS\` (extra, comma-separated). Local ports (localhost 3000/5173) are auto-allowed outside production
@@ -2816,8 +4852,50 @@ timestamp: "2026-11-06T14:18:37.245Z"
 
 ## Related
 
+- [pages/entities/admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — The Drum editorial console section (slice B)
 - [hybrid-search-via-reciprocal-rank-fusion](../concepts/hybrid-search-via-reciprocal-rank-fusion.md) — the search pipeline whose flags/settings the console manages
 - [remove-ask-mode-productsear-ch-becomes-search-only](../../decisions/remove-ask-mode-productsear-ch-becomes-search-only.md) — why the ai SDK deps could be dropped
+`,
+  "pages/entities/admin-feed-console-admin-feed.md": `---
+type: Entity
+title: Admin feed console (/admin/feed)
+description: What it is
+tags: [[admin, feed, the-drum, editorial-workflow, crud]]
+timestamp: "2026-11-06T20:27:00.787Z"
+---
+
+# Admin feed console (/admin/feed)
+
+## What it is
+
+\`/admin/feed\` — the editorial console for [pages/entities/the-drum-feed](./the-drum-feed.md), inside the admin platform console. This is the **human gate** of the machine-drafted feed: admins draw cards on demand, edit any card inline before or after publication, work the per-item approval dial, publish / retract / delete, and configure the drum's cadence, round-robin order, and Digest toggle.
+
+## Why it matters
+
+The Drum is machine-drafted but human-gated (spec Q12): a curator can edit, gate, retract, or delete any card. This console is that gate — and the escape hatch when a generator draws something off-brand (the first live example: an Impress-the-Boss card drawn on a saved Google Maps link during rotation wrap-around; the retract button exists precisely for that call).
+
+## Details
+
+- **Location**: \`src/routes/(admin)/admin/feed/+page.server.ts\` + \`+page.svelte\` — inside the \`(admin)\` guard layout; every action re-guards itself via \`requireAdmin()\` (\`src/lib/server/admin-guard.ts\`) because actions can be POSTed without a load
+- **Load**: last 200 items (typeName resolved server-side — the Svelte component must not import \`$lib/server\`, per [rules/sveltekit-blocks-lib-server-imports-in-client](../../learnings/sveltekit-blocks-lib-server-imports-in-client.md)), current feed settings, due info, the type roster and default round-robin order
+- **Form actions** (SvelteKit actions, all admin-gated):
+  - \`?/save\` — inline-editor patch of body fields (headline / standfirst / question / paragraphs split on blank lines); untouched jsonb keys survive; headline required
+  - \`?/toggleApproval\` — the per-item approval dial (\`requires_approval\`)
+  - \`?/publish\` / \`?/retract\` — status \`published\` ⇄ \`draft\`
+  - \`?/delete\` — remove the row
+  - \`?/drawNow\` — run the drum immediately, bypassing the cadence clock (\`drawNext(true)\`); fails with a clear message when every generator comes up empty
+  - \`?/settings\` — cadence hours (integer 1–720), Digest on/off, round-robin type order (slug per line, validated against \`FEED_TYPES\`, deduped)
+- **Mutations**: all item/settings queries live in \`src/lib/server/feed/queries.ts\` (\`listAllItems\`, \`patchItemBody\`, \`setItemApproval\`, \`setItemStatus\`, \`deleteItem\`, \`updateFeedSettings\`, \`getFeedSettings\`)
+
+## Relationships
+
+- [pages/entities/admin-console-admin](./admin-console-admin.md) — the platform console this section lives in (same allowlist gate, better-auth session)
+- [pages/entities/the-drum-feed](./the-drum-feed.md) — the feed this console curates
+- [pages/artifacts/the-drum-feed-spec](../artifacts/the-drum-feed-spec.md) — spec Q12 (approval dial) and Q8 (cadence config) this implements
+
+## Lifecycle
+
+- First added: 2026-11-06 — The Drum slice B (commit \`a12812e\`), implementing the editorial workflow converged in the spec at \`docs/specs/the-drum.md\`.
 `,
   "pages/entities/api-ask-endpoint.md": `---
 type: Entity
@@ -3056,6 +5134,84 @@ The project's only scheduled automation: every night it drains any enrichment ga
 - First added: 2026-07-04 — embed-only nightly job.
 - 2026-11-06 — extended to the full chain (crawl → analyze → archetypes → embed) when the corpus pipeline was imported into this repo; added optional \`ZAI_API_KEY\` secret.
 `,
+  "pages/entities/drum-email-approval-pipeline.md": `---
+type: Entity
+title: Drum email approval pipeline
+description: "**The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner "
+tags: [feed, the-drum, approval, email, hmac, utobo, editorial-workflow]
+timestamp: "2026-11-12T15:59:03.146Z"
+---
+
+# Drum email approval pipeline
+
+**The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner as a styled preview with three action links, and only an explicit click publishes it. Implements [decisions/drum-items-gate-on-email-approval-preview-approve-generate-n](../../decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md) on [pages/entities/the-drum-feed](./the-drum-feed.md).
+
+## What it is
+
+Two pieces, added 2026-11-12:
+
+- \`src/lib/server/feed/approval.ts\` — HMAC capability tokens + the brand-styled approval email (card preview + three buttons), sent via the utobo stack (same sender path as [pages/entities/the-digest-email-digest-pipeline](./the-digest-email-digest-pipeline.md)).
+- \`src/routes/api/feed/approve/+server.ts\` — the GET endpoint the email buttons hit. Renders a tiny standalone confirmation page (inline styles, no site chrome, \`noindex\` — it is read inside a mail context).
+
+## Details
+
+- **Interface**: \`GET /api/feed/approve?id=<uuid>&token=<hmac>&action=approve|regenerate|skip\`
+  - \`approve\` → \`setItemStatus(id, 'published')\` → "published ✓" page
+  - \`skip\` → \`deleteItem(id)\` → nothing publishes in this slot; next draw due at the regular cadence
+  - \`regenerate\` ("Generate new") → \`deleteItem(id)\` + \`drawNext(true)\` **synchronously** — the fresh card is drafted and its approval email sent *before* the confirmation page renders, per the owner's requirement that the new request arrives right after the signal is received
+  - invalid id/token → **403** page ("invalid link"); valid id, already-handled draft → friendly 200 ("already handled")
+- **Capability token**: \`HMAC-SHA256(item id, secret)\`, hex-truncated to 32 chars, verified with \`timingSafeEqual\`. **No schema change and nothing stored** — the capability is derived from the id, so there is no token column to migrate or leak. Actions are plain GET links because email clients can't run JS or POST.
+- **Configuration**: \`DRUM_APPROVAL_SECRET\` (falls back to \`BETTER_AUTH_SECRET\`; throws if neither is set), \`DRUM_APPROVAL_EMAIL\` (default \`creatuluw@gmail.com\`), \`DIGEST_FROM_EMAIL\` (from-line). The secret is set **identically on Railway + GitHub Actions + local \`.env\`** so tokens minted by the cron-run draw verify against production ([decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif](../../decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md)).
+- **Failure safety**: a failed email never loses the card — the drawn item stays a **draft** visible in [pages/entities/admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) (the secondary editorial surface, which can also publish/retract/delete manually).
+
+## Relationships
+
+- [pages/entities/the-drum-feed](./the-drum-feed.md) — the cadenced surface this gates; every draw inserts as a draft and mails first
+- [decisions/drum-items-gate-on-email-approval-preview-approve-generate-n](../../decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md) — the decision behind the gate
+- [pages/entities/utobo-email-transactional-email-service](./utobo-email-transactional-email-service.md) — the sending infrastructure (preview + confirmation emails)
+- [pages/entities/admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — fallback editorial surface; drafts land here if mail fails
+
+## Lifecycle
+
+- First added: 2026-11-12 (commits \`e4ecd86..1b8bb66\`) with the email-first approval gate.
+- Same day, first real end-to-end run: a Resurrections draft on listing −424 (synthetic negative id) was drawn and mailed; the skip path deleted the throwaway, a tampered token was rejected with 403 (initially returned 200 — fixed by the \`ok\` flag on the page helper), and a \`workflow_dispatch\` run proved the cron environment + secrets green ("not due, skipping").
+`,
+  "pages/entities/dynamic-xml-sitemap-endpoint.md": `---
+type: Entity
+title: Dynamic XML sitemap endpoint
+description: "\`/sitemap.xml\` — the dynamic XML sitemap serving the **hub URLs** of productsear.ch: 6 static surfaces + all 30 archetype collections = **36 URLs**. Listing pag"
+tags: [seo, sitemap, discovery]
+timestamp: "2026-11-10T11:43:50.272Z"
+---
+
+# Dynamic XML sitemap endpoint
+
+\`/sitemap.xml\` — the dynamic XML sitemap serving the **hub URLs** of productsear.ch: 6 static surfaces + all 30 archetype collections = **36 URLs**. Listing pages are deliberately absent — crawlers discover them through internal links from \`/archive\` and \`/collections\`. Built on request from live data, so it never goes stale as the nightly ingestion adds listings.
+
+## What it is
+
+The crawler entry point of the [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md). Search engines discover it via the \`Sitemap:\` line in \`static/robots.txt\` and the HTTP \`Link:\` header (hooks.server.ts); the user-side lever is submitting it in Google Search Console. Trimmed to hub-only on 2026-11-10 (commit \`e4ecd86\`) after shipping the same day with ~4,450 URLs — the user's call that 4,414 thin listing pages diluted crawl budget. See [decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-](../../decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md).
+
+## Details
+
+- **Location**: \`src/routes/sitemap.xml/+server.ts\`
+- **Interface**: \`GET\` → \`application/xml; charset=utf-8\`, \`Cache-Control: public, max-age=3600\`
+- **URL set**: static paths \`['/', '/archive', '/collections', '/feed', '/feed/methodology', '/skill.md']\` + \`/collections/{slug}\` for every \`ARCHETYPES\` entry — that's the whole set; no \`/listings/{id}\` URLs since the hub trim
+- **Failure mode**: DB reads stay wrapped in try/catch — a DB error still yields a valid sitemap (fail soft)
+- **Configuration**: \`ORIGIN\` hardcoded to \`https://productsear.ch\`
+
+## Relationships
+
+- Implements [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md) — discovery surface for crawlers
+- [pages/entities/bookmark-archetype-system](./bookmark-archetype-system.md) — supplies the 30 collection slugs
+- [pages/entities/archive-page](./archive-page.md) and [pages/entities/compendium-pages](./compendium-pages.md) — the hub pages whose internal links carry listing discovery instead of the sitemap
+- [pages/concepts/llm-content-negotiation](../concepts/llm-content-negotiation.md) — the markdown twins that share these URLs
+
+## Lifecycle
+
+- First added: 2026-11-10 — SEO/LLM discovery pass, commit \`76623ed\`, ~4,450 URLs (6 surfaces + 30 collections + 4,414 listings with lastmod)
+- 2026-11-10 — trimmed to 36 hub URLs, commit \`e4ecd86\`: listing URLs removed on the crawl-budget call; llms.txt copy aligned
+`,
   "pages/entities/embed-bookmarks-backfill-script.md": `---
 type: Entity
 title: Embed-bookmarks backfill script
@@ -3085,29 +5241,116 @@ Hybrid search needs pre-computed embeddings for the corpus. This script is the o
 ## Lifecycle
 - First added: 2026-07-03 (initial project scaffold).
 `,
+  "pages/entities/feed-feature-flags.md": `---
+type: Entity
+title: Feed feature flags
+description: Two admin-toggled visibility flags on te9_dev.feed_settings (nav_enabled, homepage_cards_enabled) that show/hide The Drum's nav link and homepage latest-3 block — /feed itself stays reachable.
+tags: [feed, feature-flags, admin, the-drum]
+timestamp: "2026-11-06T20:33:47.622Z"
+---
+
+# Feed feature flags
+
+## What it is
+
+Two admin-controlled **visibility feature flags** for The Drum's public surfaces, shipped in slice E (commit \`2a72c2a\`) when the user asked to be able to turn the feed off without deleting it:
+
+- **\`nav_enabled\`** — whether the \`feed\` link appears in the site nav (\`src/routes/+layout.server.ts\` exposes it; \`+layout.svelte\` hides the link when off).
+- **\`homepage_cards_enabled\`** — whether the homepage shows the 3 latest feed cards in the center space below the TRY chips (\`src/routes/+page.server.ts\` skips the feed query when off; \`+page.svelte\` hides the block).
+
+## Key properties
+
+- **Visibility flags, not kill switches** — \`/feed\` itself stays reachable when both are off; only the nav entry and homepage block hide.
+- Both default **on** (\`row?.x ?? true\` in \`src/lib/server/feed/queries.ts\`), so existing deployments/DB rows behave as before.
+- Toggled from the \`/admin/feed\` settings form as \`nav_enabled\` / \`homepage_cards_enabled\` checkboxes, persisted via the existing settings \`patch\` path.
+
+## Details
+
+- **Location**: columns on \`te9_dev.feed_settings\` (\`scripts/migration-feed-flags.sql\`); read/write helpers in \`src/lib/server/feed/queries.ts\`; UI in \`src/routes/(admin)/admin/feed/+page.svelte\`.
+- **Configuration**: admin toggles at \`/admin/feed\` (see [admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md)).
+- Smoke-tested both directions on the production build (off → verify hidden → back on → verify restored) per the house gates.
+
+## Relationships
+
+- [the-drum-feed](./the-drum-feed.md) — the feature these flags show/hide
+- [admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — the console where the toggles live
+- [admin-console-admin](./admin-console-admin.md) — the platform console the feed console sits in
+
+## Lifecycle
+
+- First added: 2026-11-06 — user request "turn the feed nav and cards on the homepage to inactive so then they are hidden"; shipped with slices D+E in commit \`2a72c2a\`.
+`,
+  "pages/entities/feed-xml-rss-endpoint.md": `---
+type: Entity
+title: feed.xml RSS endpoint
+description: \`/feed.xml\` — The Drum as RSS 2.0, letting readers subscribe to the 48h-draw feed in any feed reader.
+tags: [rss, feed, the-drum, discovery]
+timestamp: "2026-11-10T11:32:02.231Z"
+---
+
+# feed.xml RSS endpoint
+
+\`/feed.xml\` — The Drum as RSS 2.0, letting readers subscribe to the 48h-draw feed in any feed reader.
+
+## What it is
+
+The syndication twin of [pages/entities/the-drum-feed](./the-drum-feed.md) and a discovery surface of the [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md). Announced site-wide via \`<link rel="alternate" type="application/rss+xml">\` in \`src/app.html\` and the HTTP \`Link:\` header on every HTML response.
+
+## Details
+
+- **Location**: \`src/routes/feed.xml/+server.ts\`
+- **Interface**: \`GET\` → \`application/rss+xml; charset=utf-8\`, \`Cache-Control: public, max-age=1800\`
+- **Content source**: \`listPublished(50)\` from \`$lib/server/feed/queries\` — the 50 latest published Drum items
+- **Feed hygiene** (per the specification.website checklist): \`atom:link rel="self"\` for self-identification, stable \`guid isPermaLink="false"\` carrying the feed-item id, RFC-822 \`pubDate\` (\`publishedAt ?? createdAt\`), \`sy:updatePeriod hourly\` syndication module
+- **Item shape**: title = card headline, link = \`/listings/{id}\` when the card references a listing (else \`/feed\`), description = standfirst or first paragraph
+- **Channel**: "The Drum — productsear.ch", 48h-draw description, \`lastBuildDate\` from newest item
+
+## Relationships
+
+- [pages/entities/the-drum-feed](./the-drum-feed.md) — the content source it syndicates
+- Implements [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md) — discovery surface for feed readers and crawlers
+
+## Lifecycle
+
+- First added: 2026-11-10 — SEO/LLM discovery pass, commit \`76623ed\`
+`,
+  "pages/entities/homepage-system-drawer.md": `---
+type: Entity
+title: Homepage system drawer
+description: The bottom-sheet drawer on the productsear.ch homepage that holds the system-metadata blocks — the vital-signs panel (listings / last 30 days / synced / analyze
+tags: [frontend, homepage, component, ux]
+timestamp: "2026-11-07T11:20:03.695Z"
+---
+
+# Homepage system drawer
+
+The bottom-sheet drawer on the productsear.ch homepage that holds the system-metadata blocks — the vital-signs panel (listings / last 30 days / synced / analyzed / latency) and the retrieval-methodology tips (semantic + full-text · cross-encoder reranked · relevance-floored). It auto-opens the moment a search executes and auto-hides when results return, so the idle homepage shows only the search field, try chips, and The Drum cards — nothing sits between the query and the corpus.
+
+Role: doubles as the "engine room" readout during flight (the latency cell pulses a WaveLoader while waiting, then swaps to the \`tookMs\` ms readout) and as the always-reachable home of corpus stats via the fixed \`system ▴\` chip (bottom-right thumb zone) that reopens it when idle.
+
+## Details
+
+- **Location**: \`src/routes/+page.svelte\` — inline markup (\`<aside id="system-drawer">\` + corner chip), rendered in the human-view branch only (hidden on \`?view=llm\`)
+- **Behavior**: opens on search start (\`runSearch\` sets \`drawerOpen = true\`, non-empty queries only); closes on results or error (in the \`finally\`); Escape closes via \`<svelte:window onkeydown>\`; \`prefers-reduced-motion\` gets an instant swap (fly transition with zero distance/duration)
+- **Styling**: opaque \`bg-canvas\` panel, hairline \`border-t border-ink/10\` top edge, upward soft shadow, safe-area-aware bottom padding; \`role="region"\` + \`aria-label="system readout"\`; close/reopen buttons carry \`aria-controls\`/\`aria-expanded\`
+- **Layout**: vital-signs \`<dl>\` keeps its 2×2 + full-width mobile grid and 5-across \`md+\`; methodology tips sit as a second grouped region below
+- [waveloader-component](./waveloader-component.md) — pulses in the drawer's latency cell while a search runs
+- [infotip-component](./infotip-component.md) — every vital-signs label and methodology term is an InfoTip hover/focus tooltip
+- [the-drum-feed](./the-drum-feed.md) — its 3 latest cards are the only content besides the search field on the idle homepage
+- Decision: [homepage content/system-metadata split](../../decisions/homepage-content-system-metadata-split-auto-opening-search-d.md)
+
+## Lifecycle
+
+- **First added**: 2026-11-07 (commit \`9168e3d\`) — homepage restructure moving the methodology line + vital-signs panel out of the page flow
+- **Significant changes**: same day — drawer made canvas-solid to stop the footer ghosting through the translucent version
+`,
   "pages/entities/index.md": `# Entities
 
-_Concrete named things will be listed here._
-
-- [InfoTip component](./infotip-component.md) - \`src/lib/components/InfoTip.svelte\` — a lightweight hover/focus tooltip for homepage methodology terms and vital-signs metric labels
-- [repo-scan pipeline](./repo-scan-pipeline.md) - repo-scan pipeline
-- [LlmDoc component](./llmdoc-component.md) - \`src/lib/components/LlmDoc.svelte\` — the browser-facing renderer for llms views. Receives the server-built markdown string and renders it as a…
-- [WaveLoader component](./waveloader-component.md) - A CSS-only animated loading indicator shown in the latency gauge box while a search runs; it swaps to the \`{tookMs}ms\` latency readout when the…
-- [product-search mascot (illo character pack)](./product-search-mascot-illo-character-pack.md) - The official brand mascot for productsear.ch: **product-search**, a bookmark-ribbon character in the illo plugin's **riso** look — the ribbon that…
-- [Archive page](./archive-page.md) - \`/archive\` — the chronological all-entries surface of productsear.ch, displayed as **"listings"** (URLs stay /archive). Newest-first by…
-- [Collections pages](./compendium-pages.md) - \`/collections\` (index) and \`/collections/[slug]\` (group) — the archetype roll-up surface, formerly compendium (old paths 308-redirect). The index lists all **30 canonical archetypes** with live…
-- [Bookmark archetype system](./bookmark-archetype-system.md) - The bookmark archetype system classifies every bookmark in the corpus into a curated set of **30 canonical archetypes** (AI Coding Agent, RAG &…
-- [API ask endpoint](./api-ask-endpoint.md) - What is it?
-- [Search diagnostics](./search-diagnostics.md) - Search-quality diagnostic tooling shipped with the 2026-11-01 rerank fix: a trace script for the retrieval stages, a debug env flag for the rerank…
-- [Rerank service](./rerank-service.md) - \`src/lib/server/rerank.ts\` — a thin client for the Voyage \`rerank-2.5-lite\` cross-encoder rerank API.
-- [API search endpoint](./api-search-endpoint.md) - What is it?
-- [Embed-bookmarks backfill script](./embed-bookmarks-backfill-script.md) - What is it?
-- [Daily embed-new-bookmarks workflow](./daily-embed-new-bookmarks-workflow.md) - \`.github/workflows/embed-new-bookmarks.yml\` — a GitHub Actions scheduled workflow that keeps the corpus enriched nightly. **Since 2026-11-06 it runs the full en
-- [Corpus enrichment pipeline (sync/crawl/analyze)](./corpus-enrichment-pipeline-sync-crawl-analyze.md) - What is it?
-- [Utobo sending-domain DNS records](./utobo-sending-domain-dns-records.md) - The four DNS records at GoDaddy that make productsear.ch a **verified sending domain on utobo** (utobo.com) — the email-sending infrastructure for the site. Wri
-- [utobo Email (transactional email service)](./utobo-email-transactional-email-service.md) - **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS
-- [utobo email platform](./utobo-email-platform.md) - utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
-- [Admin console (/admin)](./admin-console-admin.md) - What it is
+- [JsonLd.svelte component](./jsonld-svelte-component.md) - \`src/lib/components/JsonLd.svelte\` — a head component that renders a schema.org JSON-LD \`<script type="application/ld+json">\` block from server-owned data.
+- [llms.txt agent index](./llms-txt-agent-index.md) - \`/llms.txt\` — the curated, llmstxt.org-convention index of productsear.ch for LLMs and AI agents, generated at request time with live corpus stats so agents alw
+- [Dynamic XML sitemap endpoint](./dynamic-xml-sitemap-endpoint.md) - \`/sitemap.xml\` — the dynamic XML sitemap serving the **hub URLs** of productsear.ch: 6 static surfaces + all 30 archetype collections = **36 URLs**. Listing pag
+- [The Drum feed](./the-drum-feed.md) - **The Drum** is productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of 11 item types — 10 drawing today — published on a **da
+- [Drum email approval pipeline](./drum-email-approval-pipeline.md) - **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner 
 `,
   "pages/entities/infotip-component.md": `---
 type: Entity
@@ -3133,6 +5376,41 @@ An inline wrapper that renders its children as usual and reveals an explanatory 
   - The search-methodology line under the search box — three tooltips decode \`semantic + full-text\` ([[hybrid-search-via-reciprocal-rank-fusion]]), \`cross-encoder reranked\` ([[rerank-service]]), and \`relevance-floored\` (the calibrated [[relevance-floor-0-45-sits-exactly-in-the-measured]]).
   - The vital-signs panel labels — \`listings\`, \`synced\`, \`analyzed\`, \`latency\` each get a one-line explanation.
 - **Accessibility**: tooltip content is reachable via keyboard focus, not hover-only
+`,
+  "pages/entities/jsonld-svelte-component.md": `---
+type: Entity
+title: JsonLd.svelte component
+description: \`src/lib/components/JsonLd.svelte\` — a head component that renders a schema.org JSON-LD \`<script type="application/ld+json">\` block from server-owned data.
+tags: [json-ld, seo, svelte, structured-data]
+timestamp: "2026-11-10T11:32:02.231Z"
+---
+
+# JsonLd.svelte component
+
+\`src/lib/components/JsonLd.svelte\` — a head component that renders a schema.org JSON-LD \`<script type="application/ld+json">\` block from server-owned data.
+
+## What it is
+
+The structured-data renderer of the [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md). Each public page builds its own schema graph and hands it to this component so search engines and AI agents get machine-readable facts about the site and its pages.
+
+## Details
+
+- **Location**: \`src/lib/components/JsonLd.svelte\`
+- **Interface**: one prop — \`data: Record<string, unknown> | Record<string, unknown>[]\` (a schema.org \`@graph\` or single node); serializes with \`JSON.stringify(...).replace(/</g, '\\\\u003c')\` in a \`$derived\`, rendered via \`{@html}\` so the payload can never close its own script tag (no \`<\/script>\` breakout through titles or copy)
+- **Usage**:
+  - \`/\` — \`WebSite\` + \`SearchAction\` (EntryPoint urlTemplate \`https://productsear.ch/?q={search_term_string}\` → Google sitelinks searchbox) + \`WebApplication\`
+  - collections pages — \`CollectionPage\` + \`ItemList\` (the group page builds a \`groupJsonLd\` const)
+  - \`/listings/[id]\` — \`ItemPage\`
+- **Gotcha baked into its history**: a literal \`<\/script>\` anywhere in this file — including inside a comment — terminates Svelte's script block and breaks the component; see [learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c](../../learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c.md)
+
+## Relationships
+
+- Implements [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md) — the structured-data leg
+- [pages/concepts/url-driven-search-state](../concepts/url-driven-search-state.md) — the \`?q=\` param the SearchAction template targets
+
+## Lifecycle
+
+- First added: 2026-11-10 — SEO/LLM discovery pass, commit \`76623ed\`
 `,
   "pages/entities/llmdoc-component.md": `---
 type: Entity
@@ -3162,6 +5440,42 @@ timestamp: "2026-11-03T09:30:39.301Z"
 - First added: 2026-11-01 — llms views switched from \`<pre>\` raw text to content negotiation (rendered for browsers, raw markdown for LLM fetchers).
 - 2026-11-03 — redesigned as a machine-readout console (commit \`0500b2d\`): dedicated \`.md-machine\` CSS layer, status bar with content-type + path, full Martian Mono body, green heading/list markers, wrap-safe long URLs, scrollable tables; raw \`.md\` link fixed to open in a new tab.
 - Security note: \`{@html}\` is safe only because the markdown is server-owned; query echoes inside it must be HTML-escaped by the builders (self-XSS vector addressed at creation).
+`,
+  "pages/entities/llms-txt-agent-index.md": `---
+type: Entity
+title: llms.txt agent index
+description: \`/llms.txt\` — the curated, llmstxt.org-convention index of productsear.ch for LLMs and AI agents, generated at request time with live corpus stats so agents alw
+tags: [llm, agents, llms-txt, discovery]
+timestamp: "2026-11-10T11:32:02.231Z"
+---
+
+# llms.txt agent index
+
+\`/llms.txt\` — the curated, llmstxt.org-convention index of productsear.ch for LLMs and AI agents, generated at request time with live corpus stats so agents always see real numbers.
+
+## What it is
+
+The agent-facing front door of the [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md): one markdown file that tells an agent what the site is, how to search it, what surfaces exist, and how the data behaves. Announced site-wide via \`<link rel="llms-txt">\` in the head and the HTTP \`Link:\` header on every HTML response (\`</llms.txt>; rel="llms-txt"\`).
+
+## Details
+
+- **Location**: \`src/routes/llms.txt/+server.ts\`
+- **Interface**: \`GET\` → \`text/markdown; charset=utf-8\`, \`Cache-Control: public, max-age=3600\`
+- **Live stats**: three parallel DB queries — total bookmark count, entries added in the last 30 days, \`max(synced_at)\` date — embedded in the doc so the numbers agents see are real
+- **Sections**: Search (the primary use — links to the agent usage guide \`/skill.md\`, the JSON API \`GET /api/search?q={problem-shape}&page=N\` with \`&format=md\`, and the \`?view=llm\` markdown twins), Surfaces (home, archive, collections, The Drum, methodology, RSS, sitemap), Collections (all 30 archetypes with one-line descriptions), Data notes (retrieval stack summary, robots.txt stance, cookieless Plausible)
+- **Convention details**: all links are absolute URLs (agents fetch from arbitrary contexts), per the llmstxt.org convention
+- Companion: the discovery mentions added to \`src/lib/server/llms.ts\` and \`skill-doc.ts\` keep the \`?view=llm\` preamble pointing at the same surfaces
+
+## Relationships
+
+- Implements [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md) — discovery surface for agents
+- [pages/concepts/llm-content-negotiation](../concepts/llm-content-negotiation.md) — the twins it advertises
+- [pages/entities/bookmark-archetype-system](./bookmark-archetype-system.md) — supplies the collection list
+- [decisions/serve-the-llm-usage-guide-at-skill-md-and-distill](../../decisions/serve-the-llm-usage-guide-at-skill-md-and-distill.md) — the \`/skill.md\` guide it links first
+
+## Lifecycle
+
+- First added: 2026-11-10 — SEO/LLM discovery pass, commit \`76623ed\`
 `,
   "pages/entities/product-search-mascot-illo-character-pack.md": `---
 type: Entity
@@ -3194,6 +5508,47 @@ Invoke via the illo plugin: "use product-search" (or an alias) in any illo reque
 - Gallery of the build: \`E:\\tmp\\illo\\20261101-135715-e42f\\index.html\` (temp dir — copy finals before reuse).
 - 2026-11-01: user swapped the canonical sheet to the rounder variant (blue back layer, droplet arms); \`character.md\` re-locked to match, proof scene re-verified on the banana tier.
 - 2026-11-01: deployed site-wide — the cutout stands bottom-right in the slim \`src/routes/+layout.svelte\` footer (hairline top border + deadpan mono tagline "product-search — it has already read everything you saved."), hidden on \`?view=llm\` per [keep ?view=llm surfaces free of human UI chrome](../../rules/keep-view-llm-surfaces-free-of-human-ui-chrome.md). Commit 3eb5879.
+`,
+  "pages/entities/receipt-card-og-image-route.md": `---
+type: Entity
+title: Receipt-card OG image route
+description: Receipt-card OG image route
+tags: [feed, og-images, receipt-cards, api, the-drum, share-cards]
+timestamp: "2026-11-07T12:12:53.578Z"
+---
+
+# Receipt-card OG image route
+
+# Receipt-card OG image route
+
+## What it is
+
+The server endpoints that render designed 1200×630 OG \`image/png\` cards so social shares (Bluesky et al.) unfurl into an image carrying the argument, not just the title — now **two routes sharing one card builder** (redesigned 2026-11-07):
+
+- \`src/routes/api/feed/og/listing/[id]/+server.ts\` — receipt-card shares from listings and feed cards (slice D, commit \`2a72c2a\`)
+- \`src/routes/api/feed/og/drum/+server.ts\` — \`/feed\` shares: corpus-readout Drum items share the \`/feed\` URL, which previously had **no og:image at all** ("The corpus drafts. The drum keeps time." card)
+- \`src/lib/server/og\` — the shared card builder both routes render from
+
+## Details
+
+- **Location**: routes above + shared builder \`src/lib/server/og\`
+- **Renderer**: hand-built SVG string → PNG via \`@resvg/resvg-js\` (native NAPI, no wasm) — per [the renderer ADR](../../decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md); this resvg version takes \`fontFiles\` paths, not buffers.
+- **Card anatomy (2026-11-07 redesign)**: hairline type chip → one accent tick in #0021FF → 60px Hanken Grotesk SemiBold headline (tight tracking) → ink-soft standfirst (width-based word wrap) → hairline footer (\`domain\` left, \`productsear.ch · the drum\` in accent, right). The heavy full-height blue stripe was dropped; the mascot anchors the right band (~220px, RGBA-verified).
+- **Fonts**: self-hosted \`static/fonts/HankenGrotesk-{Regular,SemiBold}.ttf\` + \`MartianMono-Std{Rg,Bd}.ttf\` (OFL, license note at \`static/fonts/LICENSE.txt\`). Martian Mono comes from **\`evilmartians/mono\`** releases (not gstatic); resvg family name is \`Martian Mono Std Rg\`.
+- **Chip text**: display names via the \`FEED_TYPE_BY_SLUG\` registry, never the raw \`f.type\` slug (raw slugs render as \`IMPRESS-THE-BOSS\`).
+- **Colors**: hex constants matching the site identity (\`#F9FBFA\` canvas, \`#0021FF\` accent) — deliberately hardcoded in SVG: an OG image is an asset, not app CSS.
+- **Consumers**: \`/listings/[id]\` and feed-card surfaces emit \`og:image\` / \`twitter:card\` meta; the \`/feed\` page now carries full \`og:\`/\`twitter:\` meta; the Bluesky share button composes with the stack URL.
+
+## Relationships
+
+- [the-drum-feed](./the-drum-feed.md) — the feed surface whose items these cards preview; receipt-cards item type and \`/feed\` shares both unfurl through this system
+- [product-search-mascot-illo-character-pack](./product-search-mascot-illo-character-pack.md) — anchors the right band of every card
+- [admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — the queue items whose share flow leads here
+
+## Lifecycle
+
+- First added: 2026-11-06 — slice D, commit \`2a72c2a\`, after the \`@vercel/og\` → resvg pivot.
+- **2026-11-07 redesigned** (commit \`faf3818\`): shared builder module extracted, drum OG route added (coverage gap closed), card redesigned to the two-voice elegant composition, and the real TTFs committed after the committed-fonts-were-EOT-garbage incident (root cause of the blank first unfurl).
 `,
   "pages/entities/repo-scan-pipeline.md": `---
 type: Entity
@@ -3294,6 +5649,124 @@ Makes "why didn't search find X" a 2-minute answer instead of an archaeology dig
 ## Lifecycle
 
 - First added: 2026-11-01, during the MotionClone rerank-miss diagnosis (commit \`decb723\`).
+`,
+  "pages/entities/the-digest-email-digest-pipeline.md": `---
+type: Entity
+title: The Digest (email digest pipeline)
+description: The Digest (email digest pipeline)
+tags: [email, feed, the-drum, digest, cron, utobo]
+timestamp: "2026-11-09T15:22:41.807Z"
+---
+
+# The Digest (email digest pipeline)
+
+# The Digest (email digest pipeline)
+
+**The Digest** is the weekly email edition of [the-drum-feed](./the-drum-feed.md) — an opt-in digest of freshly published drum cards, delivered through [utobo-email-transactional-email-service](./utobo-email-transactional-email-service.md). **Dark by default**: gated by the admin-toggled \`feed_settings.digest_enabled\` flag, nothing sends until the admin flips it on.
+
+## What it is
+
+Readers opt in via an email form on \`/feed\` (\`POST /api/digest/subscribe\` — public, validated, duplicate-safe; resubscribing after an unsubscribe clears the flag and rotates the token). Every email carries a per-reader unsubscribe token linking to \`/digest/unsubscribe\` (subscribers are marked, never erased — kept for abuse forensics).
+
+## Why it matters
+
+It completes The Drum's publish loop: corpus draws → admin gates → publishes → Bluesky share → OG unfurl → inbox. Readers follow the feed without visiting the site, and token-based unsubscribe keeps every send consent-clean.
+
+## Details
+
+- **Location**: core pipeline \`src/lib/server/feed/digest.ts\` (subscribers, windowed selection, \`buildDigestHtml\`, \`sendDigest()\`); opt-in endpoint \`src/routes/api/digest/subscribe/+server.ts\`; unsubscribe page \`src/routes/digest/unsubscribe/\`; send runner \`scripts/digest-send.ts\` (\`--dry\` renders only / \`--send\` real); cron \`.github/workflows/digest-send.yml\` (Mondays 10:07 UTC — off the top of the hour to dodge GitHub's cron rush — plus manual \`workflow_dispatch\`; **fixed 2026-11-09** after invalid-YAML startup failures left it dead since creation, see lifecycle); migration \`scripts/migration-digest.sql\`.
+- **Data model**: \`te9_dev.digest_subscribers\` (id, unique email, unique unsubscribe token, \`unsubscribed_at\`, \`created_at\`) + \`feed_settings.last_digest_sent_at\` — the send-window cursor.
+- **Send semantics**: items with \`published_at > last_digest_sent_at\` (limit 12) make up the next digest; first-ever send (no cursor yet) takes the latest 5 cards; a quiet week skips the send and the cursor stays put; the cursor advances **only after a real send reaches at least one subscriber**. Partial utobo failures are tolerated and reported (\`sent to N/M\`).
+- **Email build**: brand-styled, table-based HTML with inline styles only (email-client safe); the \`{{UNSUBSCRIBE_TOKEN}}\` placeholder is replaced per recipient with their token.
+- **Configuration**: \`UTOBO_EMAIL_API_KEY\` (send-only \`ut_live_…\` — without it sends fail gracefully with a clean reason and the digest stays dark by design), optional \`DIGEST_FROM_EMAIL\` (default \`The Drum <drum@productsear.ch>\`), admin block on [admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) (subscriber count, last-sent timestamp, enabled badge, confirm-gated send-now).
+
+## Relationships
+
+- [the-drum-feed](./the-drum-feed.md) — the digest emails this feed's published cards (spec slice E)
+- [utobo-email-transactional-email-service](./utobo-email-transactional-email-service.md) — the delivery transport: raw REST POST to \`api.email.utobo.com/v1/emails\` with a Bearer key, per the wiki contract
+- [admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — where the digest is toggled, monitored, and triggered manually
+
+## Lifecycle
+
+- First added: 2026-11-06 — commit \`29fa3a8\`, The Drum's spec slice E ([the-drum-feed-spec](../artifacts/the-drum-feed-spec.md)); dark by default pending the operator adding \`UTOBO_EMAIL_API_KEY\` to \`.env\` and the repo's GitHub secrets.
+- **Send cron fixed: 2026-11-09** — \`.github/workflows/digest-send.yml\` shared the invalid-YAML startup-failure bug with \`feed-draw.yml\` (a colon+space inside a plain scalar → every run died with zero jobs, so the weekly schedule never fired once since its 11-06 creation); fixed in the same commit \`5169320\` (failure signature in [learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t](../../learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md)). First real send still pending \`digest_enabled\` + a publish window with fresh cards.
+`,
+  "pages/entities/the-drum-feed.md": `---
+type: Entity
+title: The Drum feed
+description: **The Drum** is productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of 11 item types — 10 drawing today — published on a **da
+tags: [feed, the-drum, listings, editorial-workflow, slices-a-b-c-live, cron, email-approval, daily-cadence]
+timestamp: "2026-11-12T15:46:03.498Z"
+---
+
+# The Drum feed
+
+**The Drum** is productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of 11 item types — 10 drawing today — published on a **daily draw cadence: once a day at 06:00 Amsterdam time** (2026-11-12, retimed from 07:00 within the same day; previously 1 item / 2 days). The mechanic is the masthead: the drum opens every morning, the tombola draws from it, and [pages/entities/product-search-mascot-illo-character-pack](./product-search-mascot-illo-character-pack.md) turns the handle; the countdown ("next draw in …") is the appointment mechanic.
+
+## What it is
+
+- Lives at \`/feed\`, linked in the site nav; the homepage center space shows the 3 latest cards (slice E, gated by [pages/entities/feed-feature-flags](./feed-feature-flags.md)), which vanish the moment a search starts.
+- Every item is machine-drafted from the [pages/concepts/hybrid-search-via-reciprocal-rank-fusion](../concepts/hybrid-search-via-reciprocal-rank-fusion.md) corpus and human-gated **email-first**: draw → approval email to the owner (creatuluw@gmail.com) with the item preview plus **Approve / Generate new / Skip this one** buttons → publish only on explicit approval (2026-11-12, see [decisions/drum-items-gate-on-email-approval-preview-approve-generate-n](../../decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md)). The admin console remains the secondary editorial surface (inline editor, per-item toggles, publish/retract/delete).
+- Every card links to its listing's stack — the stacks are the depth surface (\`/listings/[id]\`); the stream is the appointment surface.
+
+## The 11 item types — 10 drawing (fixed round-robin order)
+
+1. **One Save** — daily anchor — **live, LLM-drafted** (why-it-mattered paragraph + reader question)
+2. **Target-User Pitch** — motivation via synthetic persona voices — **live, LLM-drafted**
+3. **Two Futures** — real-life before/after — **live, LLM-drafted** (the two Tuesday scenes)
+4. **Ambition Path** — multi-listing route to an ambition — **live** (corpus picks the cluster + 5 listings; LLM names the ambition and orders the steps, id-validated)
+5. **The Pulse** — 20% content: archetype drift, repo obituaries — **live since slice A**
+6. **Receipt cards** — share primitive: claim + proof — **live since slice D** ([pages/entities/receipt-card-og-image-route](./receipt-card-og-image-route.md) renders the OG PNG; Bluesky share button on every card)
+7. **Resurrections** — forgotten saves, second life — **live since slice A**
+8. **The Walk** — embedding-hop serendipity trail — **live since slice C, demoted 2026-11-18** (pure pgvector: random seed → 4 nearest-neighbor hops; the Keep Walking mechanic on listing stacks is live since slice A. Now rests ≥20 days between published walks — [the demotion decision](../../decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md); trail items are clickable external links)
+9. **The Tombola** — draw from the last 10, corpus-derived scoring — **live since slice A**
+10. **The Floor** — 20% content: aggregated search misses, themes only — **live since slice A**
+11. **Impress the Boss** — real artifact output — **live, LLM-drafted**, origin-tagged \`described-from-analysis\`
+
+## Why it matters
+
+The Drum turns a static search corpus into a narrated, cadenced surface that gives people a reason to return without an account — serving novelty, emotion, real-life improvement, ambition, tech insight, and a 20% unexpected-data quotient. The Digest (email via [pages/entities/utobo-email-transactional-email-service](./utobo-email-transactional-email-service.md)) extends it off-site, dark by default and admin-activated.
+
+## Details
+
+- **Status**: **slices A–E implemented and live** — slice A \`682ab37\` (data core, \`/feed\`, listing stacks, 4 data generators), slices B+C \`a12812e\` (admin feed console, all 10 generators, LLM drafting, \`/feed/methodology\`), D+E \`2a72c2a\` (receipt-card OG images via [pages/entities/receipt-card-og-image-route](./receipt-card-og-image-route.md), Bluesky share buttons, homepage latest-3 cards, [pages/entities/feed-feature-flags](./feed-feature-flags.md)). Migration + seed ran against the shared Railway DB, so production picks it up immediately. Slice E \`29fa3a8\` then shipped the Digest end-to-end — opt-in subscribers, token unsubscribe, windowed send cursor, admin send-now, weekly cron (see [the-digest-email-digest-pipeline](./the-digest-email-digest-pipeline.md)) — and commits \`b75116c\`/\`746f2a2\` redesigned \`/feed\` and the stack pages around the nine Gestalt principles ([decisions/redesign-the-drum-feed-around-the-nine-gestalt-principles](../../decisions/redesign-the-drum-feed-around-the-nine-gestalt-principles.md)). Remaining: a visual pass on the OG card after a real unfurl.
+- **Data core**: \`te9_dev.feed_items\`, \`feed_settings\`, \`search_misses\` tables — dry-run'd then committed via the house \`run-sql.ts\`.
+- **Server core**: \`src/lib/server/feed/\` — types, queries, rotation (catch-and-skip: a failing generator skips its slot instead of blocking the draw), stack queries.
+- **LLM drafting**: \`src/lib/server/feed/llm.ts\` — \`draftText\`/\`draftJson\` over the analyzer's provider chain (z.ai GLM-5 primary → Railway gateway fallback), temperature 0.8, JSON mode with code-fence repair. Throws on total provider failure so the rotation's catch-and-skip moves on.
+- **Generators**: all 10 implemented (registry \`src/lib/server/feed/generators/index.ts\`). Data-driven since slice A: Resurrections (300–900-day-old saves), The Tombola (last-10 saves scored by archetype drift), The Pulse (drift movers + rising domains), The Floor (aggregated zero-result search themes; waits until \`search_misses\` accumulate). Slice C: LLM-drafted One Save / Target-User Pitch / Two Futures / Impress the Boss / Ambition Path, plus the LLM-free Walk (pgvector hops).
+- **Surfaces**: \`/feed\` (drum header with cadence/next-draw/next-type + methodology link, type-tagged stream, LlmDoc twin), \`/feed/methodology\` (the trust surface — "how this drum works", synthetic-personas disclosure; same markdown for human + raw views), \`/listings/[id]\` (listing context, its feed items, **Keep Walking** into embedding neighbors), the RSS twin \`/feed.xml\` ([pages/entities/feed-xml-rss-endpoint](./feed-xml-rss-endpoint.md)), and \`/admin/feed\` (the editorial console) — all with raw-markdown \`?view=llm\` branches in \`llms.ts\`, per [rules/keep-view-llm-surfaces-free-of-human-ui-chrome](../../rules/keep-view-llm-surfaces-free-of-human-ui-chrome.md) and [rules/every-view-llm-branch-must-render-an-llm-document](../../rules/every-view-llm-branch-must-render-an-llm-document.md).
+- **The drum's hands**: \`scripts/feed-draw.ts\` (cadence-gated runner, \`--force\`/\`--status\`), \`.github/workflows/feed-draw.yml\` (daily draw cron — **miss-proof since 2026-11-13**: morning window 04:03/05:03/06:03 UTC + evening catch-up 16:03 UTC, all cadence-gated so only the first past-due attempt draws and the drum never silently loses a day; target **06:00 Europe/Amsterdam**, primary slot 05:03 UTC, since 2026-11-12; was 09:07 UTC, fixed 2026-11-09 after being dead since creation; see lifecycle and [decisions/drum-draw-schedule-made-miss-proof-cron-redundancy](../../decisions/drum-draw-schedule-made-miss-proof-cron-redundancy.md)), \`POST /api/feed/draw\` (admin-allowlist gated, \`?force=1\` supported, 403 verified), plus the approval-email pipeline ([pages/entities/drum-email-approval-pipeline](./drum-email-approval-pipeline.md)) feeding the [email-first gate](../../decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md), and nav label **\`feed · the drum\`** (commit \`f5945f4\`).
+- **Configuration**: owned by [pages/entities/admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — cadence (**1 item / day, drawn 06:00 Europe/Amsterdam** since 2026-11-12; was 1 item / 2 days, 1–720h range), per-item approval dial **superseded by the email-first approval gate** ([decisions/drum-items-gate-on-email-approval-preview-approve-generate-n](../../decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md)), Digest toggle (off by default), round-robin type order, the queue with inline editor and publish/retract/delete.
+- **Type roster history**: pitched types killed along the way include Ribbon's Diary, Origin card, Same Day Last Year — the roster is closed at 11.
+
+## Relationships
+
+- [pages/entities/admin-feed-console-admin-feed](./admin-feed-console-admin-feed.md) — the secondary editorial surface: draw-now, inline editor, approval dial, publish/retract/delete, settings (slice B); the primary gate is now the email approval
+- [decisions/drum-items-gate-on-email-approval-preview-approve-generate-n](../../decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md) — the publish gate: Approve / Generate new / Skip mailed to the owner
+- [decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif](../../decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) — the daily 06:00 Europe/Amsterdam draw schedule (cron 05:03 UTC; supersedes the same-day 07:00 ADR)
+- [pages/entities/admin-console-admin](./admin-console-admin.md) — the platform console the feed console lives in
+- [pages/entities/utobo-email-transactional-email-service](./utobo-email-transactional-email-service.md) — powers The Digest distribution (and the same utobo stack is available for the approval mail)
+- [pages/entities/product-search-mascot-illo-character-pack](./product-search-mascot-illo-character-pack.md) — turns the drum handle; visual identity
+- [pages/entities/bookmark-archetype-system](./bookmark-archetype-system.md) — source of archetype-drift signals for The Pulse and Tombola scoring
+- [pages/entities/feed-xml-rss-endpoint](./feed-xml-rss-endpoint.md) — The Drum as RSS 2.0, announced site-wide via Link header + <link rel="alternate">
+- [pages/entities/collections-pages](./compendium-pages.md) — listing stacks that cards deep-link into
+- [pages/artifacts/the-drum-feed-spec](../artifacts/the-drum-feed-spec.md) — the formal converged spec this implementation follows
+
+## Lifecycle
+
+- First added: 2026-11-06 — corpus-feed brainstorm rounds 1–14 ([decisions/add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos](../../decisions/add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos.md) onward)
+- Named: 2026-11-06 — round 14, user chose "The Drum"
+- Converged: 2026-11-06 — Q15-A closed the pending verdict; formal spec written at \`docs/specs/the-drum.md\`
+- **Slice A implemented: 2026-11-06** — data core (\`feed_items\`/\`feed_settings\`/\`search_misses\`), 4 working generators (Pulse, Resurrections, Tombola, Floor), \`/feed\` + \`/listings/[id]\` with \`?view=llm\` twins, draw runner + cron + admin API. First seed produced 4 draws (transient generator failures were skipped by the rotation's catch-and-skip; duplicate Pulse rows cleaned up afterward).
+- **Slices B+C implemented: 2026-11-06** (commit \`a12812e\`) — admin feed console (\`/admin/feed\`: queue, inline editor, approval dial, publish/retract/delete, draw-now, cadence/order/Digest settings), all 10 generators drawing (LLM-drafted One Save / Pitch / Two Futures / Impress the Boss / Ambition Path + pgvector Walk), shared drafting helper \`feed/llm.ts\`, and the \`/feed/methodology\` trust page. First live LLM-drawn path: "Build a Local AI Companion with Memory and Voice".
+- **Slices D+E implemented: 2026-11-06** (commit \`2a72c2a\`) — receipt-card OG images (hand-built SVG → \`@resvg/resvg-js\` PNG after the \`@vercel/og\`-outside-Vercel pivot; self-hosted Hanken Grotesk TTFs), Bluesky share button on every card, homepage latest-3 drum cards (vanish on query), and admin feature flags for the nav link + homepage cards (both default on; visibility flags, \`/feed\` stays reachable).
+- **feed_items wiped, drum reset to the normal flow: 2026-11-07** — all 10 rows backed up to \`.work/\` and deleted after a dry-run-proven restore (see [rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-](../../rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md)). \`last draw=never\` → drum DUE immediately, rotation cursor reset to 0 (next type = The Pulse, top of order); the nightly \`feed-draw\` cron (09:07 UTC) repopulates. Empty state degrades gracefully everywhere — see [learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s](../../learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md).
+- **Draw cron fixed: 2026-11-09** — \`.github/workflows/feed-draw.yml\` had been invalid YAML since creation (\`Drum draw:\` — a colon+space inside a plain scalar in the Summary step) → every run a startup failure with **zero jobs**; the 09:07 UTC schedule never fired once (all 14 attempts since 11-06 died), so after the wipe the drum had nothing to draw with. Fixed in commit \`5169320\` (the same bug was fixed in [the-digest-email-digest-pipeline](./the-digest-email-digest-pipeline.md)'s \`digest-send.yml\`; failure signature + diagnosis in [learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t](../../learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md)). The drum's first real draw ran manually via the cadence-gated script (no force — the clock said DUE): **"The Pulse — what the saves say (November 2026)"** went live ~15:19 UTC; a manual \`workflow_dispatch\` then proved the fixed workflow green (it correctly skipped — cadence satisfied). Next draw: **2026-11-12 09:07 UTC** (The Resurrections, round-robin advances).
+- **RSS twin added: 2026-11-10** — \`/feed.xml\` ships The Drum as RSS 2.0 (atom:link self, stable guids, sy cadence; commit \`76623ed\`, the SEO/LLM discovery pass — see [decisions/adopt-full-search-engine-and-llm-discovery-infrastructure](../../decisions/adopt-full-search-engine-and-llm-discovery-infrastructure.md)).
+- **Publish contract reworked: 2026-11-12** — **email-first approval gate**: every drawn item is mailed to creatuluw@gmail.com with its preview and Approve / Generate new / Skip this one buttons; nothing auto-publishes anymore ([decisions/drum-items-gate-on-email-approval-preview-approve-generate-n](../../decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md)). Draw cadence moved to **once daily at 06:00 Europe/Amsterdam** (was 1 item / 2 days; first set to 07:00, retimed the same day — [decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif](../../decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md)). The latest drawn item — a LinkedIn search-results listing ("leerkrachten basisonderwijs groningen - Google Zoeken") judged junk — was removed from \`te9_dev\` + the site in the same session (destructive delete per [rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-](../../rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md)).
+- **Draw retimed 07:00 → 06:00 + first approval email sent: 2026-11-12** — user override within the same session; cron 09:07 → **05:03 UTC** (06:03 Amsterdam CET / 07:03 CEST — drift accepted, see [learnings/github-actions-cron-is-utc-only-amsterdam-local-schedules-dr](../../learnings/github-actions-cron-is-utc-only-amsterdam-local-schedules-dr.md)); \`DRUM_APPROVAL_SECRET\`/\`DRUM_APPROVAL_EMAIL\` set identically across Railway + GitHub Actions + local \`.env\`; the first real draw ran the full pipeline — Resurrections draft on listing −424 drawn and mailed, skip + bad-token-403 + \`workflow_dispatch\` ("not due, skipping") all verified (commits \`e4ecd86..1b8bb66\`; see [pages/entities/drum-email-approval-pipeline](./drum-email-approval-pipeline.md)).
+- **The Walk demoted + trail items made clickable: 2026-11-18** — after three consecutive Walks (Nov 14/16/17, LLM outage funnelled every draw into the only never-failing generator — see [learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec](../../learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md)), the owner demoted Walk to half frequency (20-day minimum gap on published walks, generator gate returns null → fall-through) and made the trail items clickable (\`body.items[].url\` → external links in \`/feed\` cards — data-driven, so the three live cards picked the links up with no migration; see [the demotion decision](../../decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md)).
+- **Schedule made miss-proof + re-anchored: 2026-11-13** — user asked for the 06:00 Amsterdam email daily "so also still for today": today's approval mail went out immediately via a manual draw (slot had passed), the cadence anchor was rewound to come due exactly at 05:03 UTC, and the cron gained a triple morning window (04:03/05:03/06:03 UTC) plus an evening catch-up (16:03 UTC) — cadence-gated, so redundant attempts no-op and a GitHub-scheduler skip can no longer silently cost a day (commit \`b9ccb22\`; see [decisions/drum-draw-schedule-made-miss-proof-cron-redundancy](../../decisions/drum-draw-schedule-made-miss-proof-cron-redundancy.md), resolving the watch item in [learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr](../../learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md)).
 `,
   "pages/entities/utobo-email-platform.md": `---
 type: Entity
@@ -3555,6 +6028,18 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [utobo Email (transactional email service)](./entities/utobo-email-transactional-email-service.md) — **utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS
 - [utobo email platform](./entities/utobo-email-platform.md) — utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
 - [Admin console (/admin)](./entities/admin-console-admin.md) — What it is
+- [The Drum feed](./entities/the-drum-feed.md) — **The Drum** is the official name (2026-11-06, brainstorm round 14) of productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of
+- [The Drum feed spec](./artifacts/the-drum-feed-spec.md) — **The Drum feed spec** — the formal, converged specification for [[entities/the-drum-feed]], committed at \`docs/specs/the-drum.md\` after the 15-turn diverge/con
+- [Admin feed console (/admin/feed)](./entities/admin-feed-console-admin-feed.md) — What it is
+- [Feed feature flags](./entities/feed-feature-flags.md) — What it is
+- [Receipt-card OG image route](./entities/receipt-card-og-image-route.md) — What it is
+- [The Digest (email digest pipeline)](./entities/the-digest-email-digest-pipeline.md) — **The Digest** is the weekly email edition of [[the-drum-feed]] — an opt-in digest of freshly published drum cards, delivered through [[utobo-email-transactiona
+- [Homepage system drawer](./entities/homepage-system-drawer.md) — The bottom-sheet drawer on the productsear.ch homepage that holds the system-metadata blocks — the vital-signs panel (listings / last 30 days / synced / analyze
+- [Dynamic XML sitemap endpoint](./entities/dynamic-xml-sitemap-endpoint.md) — \`/sitemap.xml\` — the dynamic XML sitemap serving every indexable URL of productsear.ch: 6 static surfaces, all 30 archetype collections, and one URL per corpus
+- [JsonLd.svelte component](./entities/jsonld-svelte-component.md) — \`src/lib/components/JsonLd.svelte\` — a head component that renders a schema.org JSON-LD \`<script type="application/ld+json">\` block from server-owned data.
+- [llms.txt agent index](./entities/llms-txt-agent-index.md) — \`/llms.txt\` — the curated, llmstxt.org-convention index of productsear.ch for LLMs and AI agents, generated at request time with live corpus stats so agents alw
+- [Search and LLM discovery layer](./concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
+- [Drum email approval pipeline](./entities/drum-email-approval-pipeline.md) — **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner 
 `,
   "pages/TEMPLATES.md": `---
 type: Concept
@@ -3647,6 +6132,46 @@ This repo is regularly worked by multiple concurrent sessions (orca/foreman sibl
 - **Verify your own surfaces via the dev server**: the SvelteKit/Vite dev server compiles lazily per-request, so routes you own can be exercised in dev even while the full production build fails on unrelated WIP. Defer the "full build green" check until the other session's work lands.
 
 Rationale/evidence: 2026-11-06 — build failed with an \`adminExtensions\` shorthand bug in \`(admin)\` routes owned by a concurrent session; the correct move was to decline touching it and verify own surfaces via the lazily-compiling dev server.
+`,
+  "rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md": `---
+type: Rule
+title: Back up and dry-run the restore before any destructive bulk delete
+description: "**Guideline:** Before a destructive bulk DELETE against \`te9_dev\` (e.g. wiping a table like \`feed_items\`), run the three-step interlock — and prove the restore "
+tags: [database, data-safety, rollback, bulk-mutation, te9-dev]
+timestamp: "2026-11-07T12:26:23.426Z"
+---
+
+# Back up and dry-run the restore before any destructive bulk delete
+
+**Guideline:** Before a destructive bulk DELETE against \`te9_dev\` (e.g. wiping a table like \`feed_items\`), run the three-step interlock — and prove the restore **before** deleting, because after a delete there is no derived data to regenerate:
+
+1. **Back up the exact rows** — full JSON dump (ids, payloads, signals, timestamps) to \`.work/\` (e.g. \`.work/feed-items-backup-<timestamp>.json\`).
+2. **Write a restore tool** that re-inserts from the backup, and **dry-run it inside a rolled-back transaction** against the live DB — verify inserted counts match the backup, then ROLLBACK.
+3. **Only then delete**, and verify the post-state (row count 0, dependents untouched).
+
+**Gotcha:** the intentional ROLLBACK at the end of a dry-run is usually thrown as an error — that non-zero exit breaks \`&&\` command chains. Make the dry-run script catch the intentional rollback and **exit cleanly (0)** so the backup → dry-run → wipe chain runs unattended.
+
+**When it applies:** any \`DELETE\` (not just generated-row cleanup) committed for real. Complements [[rules/prepare-and-dry-run-the-rollback-script-before-generating-de]] (derived-row undo scripts) and [[rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r]] (insert dry runs) — together the te9_dev bulk-mutation safety family.
+
+**Evidence:** 2026-11-07 Drum wipe — 10 \`feed_items\` rows backed up, restore dry-run verified 10/10 in a rolled-back transaction, then wiped; rotation confirmed reset and due-now afterward.
+`,
+  "rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc.md": `---
+type: Rule
+title: "Brainstorm pacing: one idea + one grill question per turn, branch ledger"
+description: "**Guideline:** In ideation/brainstorm sessions with this user, do **not** batch multiple questions or a big idea menu into one turn. Each turn carries **exactly"
+tags: [planning, brainstorm, interview-format, process, magazine]
+timestamp: "2026-11-06T18:57:22.646Z"
+---
+
+# Brainstorm pacing: one idea + one grill question per turn, branch ledger
+
+**Guideline:** In ideation/brainstorm sessions with this user, do **not** batch multiple questions or a big idea menu into one turn. Each turn carries **exactly one idea proposal + one grill question**, and the user responds to **both**. If the ideation round creates new decision branches, append them to a running **question/turn ledger** so no open branch is lost between rounds (e.g. the magazine-feed ledger tracks voice, writing budget, share destination, privacy line, audience priority, idea menu).
+
+**When it applies:** multi-round brainstorms and planning interviews with this user — especially continuation sessions resuming an undecided feature discussion. Question *formatting* still follows the established family: lettered options, bare and prose-free.
+
+**Rationale / evidence:** User directive 2026-11-06, magazine-feed ideation round 3: "each turn 1 grill me question and 1 idea to which i both need to respond, if with the ideation round create new decision branches you'll add those to the question/turn ledger." Third consecutive format iteration in one day — the trajectory converges on slower, tighter, traceable rounds: free-form interview rejected → lettered options → bare letters → now paired pacing with a ledger.
+
+**Related:** [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]] — how each grill question is formatted; [[learnings/interview-brevity-refinement-bare-lettered-options-no-prose-]] — bare letters, no prose; [[decisions/add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos]] — the brainstorm this protocol currently runs.
 `,
   "rules/check-the-index-before-committing-use-pathspec-scoped-commit.md": `---
 type: Rule
@@ -3783,6 +6308,14 @@ _Reusable heuristics, guidelines, and conventions will be listed here._
 - [Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes](./check-the-index-before-committing-use-pathspec-scoped-commit.md) - **Guideline:** Before running \`git commit\` in any repo — especially auxiliary/external repos like \`E:\\skills.te9.dev\` whose indexes accumulate unrelated pre-sta
 - [Attribute build failures before fixing; never touch a concurrent session's in-progress work](./attribute-build-failures-before-fixing-never-touch-a-concurr.md) - **Guideline:** When a whole-project check (\`npm run build\`, typecheck) fails in this repo, attribute the errors **before** treating your own work as broken — an
 - [Verify the serving process on a test port before trusting smoke tests](./verify-the-serving-process-on-a-test-port-before-trusting-sm.md) - **Guideline:** After any restart of a local \`node build\` preview server, verify what actually serves the test port \`netstat -ano | findstr :<port>\` (and, when a
+- [Interview questions ship with lettered options plus a proceed/notes/add-your-own round](./interview-questions-ship-with-lettered-options-plus-a-procee.md) - **Guideline:** In any planning/design interview with this user (grill-docs-style P2 rounds, feature scoping, content-brainstorm triage), never pose open-ended q
+- [Brainstorm pacing: one idea + one grill question per turn, branch ledger](./brainstorm-pacing-one-idea-one-grill-question-per-turn-branc.md) - **Guideline:** In ideation/brainstorm sessions with this user, do **not** batch multiple questions or a big idea menu into one turn. Each turn carries **exactly
+- [Style with semantic theme tokens only — never hardcode colors](./style-with-semantic-theme-tokens-only-never-hardcode-colors.md) - **Guideline:** Every color in components and raw CSS must reference the semantic theme tokens (\`var(--canvas)\`, \`var(--ink)\`, \`var(--accent)\`, …) — never hardco
+- [Redesign surfaces via the Gestalt diagnosis-then-map method](./redesign-surfaces-via-the-gestalt-diagnosis-then-map-method.md) - **Guideline:** When a redesign request lands ("make X read/enjoy better"), run the nine Gestalt principles (common region, closure, proximity, figure-ground, co
+- [Probe responsive overflow programmatically; don't eyeball screenshots](./probe-responsive-overflow-programmatically-don-t-eyeball-scr.md) - **Guideline:** For any responsive change, verify overflow by measurement, not by looking at screenshots. Build (\`npm run build\`), serve \`node build\` on a known
+- [OG endpoint assets must fail soft: lazy-read with try/catch, omit gracefully](./og-endpoint-assets-must-fail-soft-lazy-read-with-try-catch-o.md) - **Guideline:** Any binary asset an OG/social-card renderer depends on (mascot PNG, fonts, future images) must be loaded **tolerantly**: a lazy (memoized) read w
+- [Back up and dry-run the restore before any destructive bulk delete](./back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md) - **Guideline:** Before a destructive bulk DELETE against \`te9_dev\` (e.g. wiping a table like \`feed_items\`), run the three-step interlock — and prove the restore
+- [Verify production runtime env vars before declaring a send pipeline armed](./verify-production-runtime-env-vars-before-declaring-a-send-p.md) - **Guideline:** Before declaring any external-send or API-integration pipeline operational (utobo email, Drum approval mails, The Digest sends, Voyage, chat prov
 `,
   "rules/instrument-grade-design-principles-avoid-banned.md": `---
 type: Rule
@@ -3815,6 +6348,27 @@ All user-facing UI work on this app. Neutrals are tinted toward the brand hue (g
 - \`src/app.css\` — token + prose implementation.
 - Supersedes the agentos-sdk.dev warm-paper direction (see the design ADR).
 `,
+  "rules/interview-questions-ship-with-lettered-options-plus-a-procee.md": `---
+type: Rule
+title: Interview questions ship with lettered options plus a proceed/notes/add-your-own round
+description: "**Guideline:** In any planning/design interview with this user (grill-docs-style P2 rounds, feature scoping, content-brainstorm triage), never pose open-ended q"
+tags: [interview, planning, process, grill-docs, magazine]
+timestamp: "2026-11-06T18:52:44.026Z"
+---
+
+# Interview questions ship with lettered options plus a proceed/notes/add-your-own round
+
+**Guideline:** In any planning/design interview with this user (grill-docs-style P2 rounds, feature scoping, content-brainstorm triage), never pose open-ended questions alone. Every question must ship:
+
+- **Concrete lettered options** (A/B/C/D…), each with a one-line characterization, and the interviewer's own lean marked where one exists.
+- **A recurring scorecard round over each idea/proposal**: "proceed? / your notes" per row, plus an explicit invitation "do *you* have additional ideas this round?"
+
+Answers then come back cheap (letters + table notes), and one round converges the slate.
+
+**When it applies:** any multi-question interview where the user must choose between directions or triage a list of proposals.
+
+**Rationale / evidence:** Set 2026-11-06 during the corpus-magazine brainstorm, when the user rejected the free-form interview: "no i want the interview to be different, ask questions like: 1a — Who narrates? … + the options you normally provide … 1b — what ideas do you want to proceed with … + each idea + do you have additional ideas?" The reformat was immediately locked in and produced a 14-idea scorecard with per-question options for the [[add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos]] decision.
+`,
   "rules/keep-view-llm-surfaces-free-of-human-ui-chrome.md": `---
 type: Rule
 title: Keep ?view=llm surfaces free of human UI chrome
@@ -3834,6 +6388,24 @@ timestamp: "2026-11-01T15:36:40.481Z"
 **Related but distinct:** [Every ?view=llm branch must render an LLM document — including no-parameter fallbacks](./every-view-llm-branch-must-render-an-llm-document.md) covers *content* completeness per route; this rule covers *layout chrome* leakage into LLM documents.
 
 Tags: llms-view, dual-view, layout, chrome
+`,
+  "rules/og-endpoint-assets-must-fail-soft-lazy-read-with-try-catch-o.md": `---
+type: Rule
+title: "OG endpoint assets must fail soft: lazy-read with try/catch, omit gracefully"
+description: "**Guideline:** Any binary asset an OG/social-card renderer depends on (mascot PNG, fonts, future images) must be loaded **tolerantly**: a lazy (memoized) read w"
+tags: [[og-images, robustness, convention, resvg]]
+timestamp: "2026-11-07T12:16:44.524Z"
+---
+
+# OG endpoint assets must fail soft: lazy-read with try/catch, omit gracefully
+
+**Guideline:** Any binary asset an OG/social-card renderer depends on (mascot PNG, fonts, future images) must be loaded **tolerantly**: a lazy (memoized) read wrapped in try/catch that returns \`null\`/empty on failure, with the SVG template omitting that element rather than throwing.
+
+**Applies to:** \`src/lib/server/og.ts\` and any future OG endpoint under \`src/routes/api/feed/og/\`. Never \`readFileSync\` an OG asset at module scope — an eager top-level read crashes server boot when the asset is missing.
+
+**Pattern in code:** \`mascotDataUri()\` in \`og.ts\` — memoized on first card render, \`try/catch\` → \`null\`, and \`cardSvg()\` renders the \`<image>\` element only when non-null. Comment in code: "an OG asset must never take the server down at boot."
+
+**Rationale:** OG rendering is a nicety layered on the search product; asset fragility has already bitten once (the OG font incident — garbage EOT bytes shipped to production, cards rendered with no text). Fail soft so a missing/broken asset degrades one card, never the server.
 `,
   "rules/pool-then-rerank-with-graceful-fallback-for.md": `---
 type: Rule
@@ -3881,6 +6453,46 @@ timestamp: "2026-11-06T09:23:28.981Z"
 - Dry-run it before use: strip BEGIN/COMMIT, wrap in an outer transaction, count affected rows, verify positive-id rows untouched, then ROLLBACK.
 
 **Why:** derived rows are generated by separate scripts after the insert; once they exist, "undo" means knowing every child table in the right order. Having a verified rollback file sitting ready *before* step 2 means any point of failure has a one-command exit. Complements the existing rule on validating the insert itself with a BEGIN…ROLLBACK dry run — that rule proves the insert is safe to run; this one guarantees the committed state is reversible.
+`,
+  "rules/probe-responsive-overflow-programmatically-don-t-eyeball-scr.md": `---
+type: Rule
+title: Probe responsive overflow programmatically; don't eyeball screenshots
+description: "**Guideline:** For any responsive change, verify overflow by measurement, not by looking at screenshots. Build (\`npm run build\`), serve \`node build\` on a known "
+tags: [qa, responsive, frontend, testing, playwright]
+timestamp: "2026-11-06T23:46:41.434Z"
+---
+
+# Probe responsive overflow programmatically; don't eyeball screenshots
+
+**Guideline:** For any responsive change, verify overflow by measurement, not by looking at screenshots. Build (\`npm run build\`), serve \`node build\` on a known port, then drive \`playwright-core\` (install with \`--no-save\` so package.json stays untouched; browser binaries already on this machine) to load each surface at real viewports (320 / 390 / 768 / 1280) and evaluate:
+
+- total overflow: \`document.scrollingElement.scrollWidth - document.scrollingElement.clientWidth\`
+- culprits: scan \`document.querySelectorAll('*')\` bounding rects and list elements whose right edge exceeds the viewport width
+
+Screenshots judge looks; the probe judges truth.
+
+**When it applies:** any responsive/layout change, before declaring done. Pair with the headless-Chrome width-clamp learning when interpreting screenshot widths.
+
+**Rationale:** in the 2026-11-06 mobile adaptation pass, screenshots at all three viewports looked beautiful while a 54px phone overflow (three closed 300px tipboxes) and an 11px tablet overflow (header \`shrink-0\` cluster) hid underneath; the probe pinpointed both culprits in one pass and verified 0px after the fixes.
+`,
+  "rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-method.md": `---
+type: Rule
+title: Redesign surfaces via the Gestalt diagnosis-then-map method
+description: "**Guideline:** When a redesign request lands ("make X read/enjoy better"), run the nine Gestalt principles (common region, closure, proximity, figure-ground, co"
+tags: [design, frontend, method]
+timestamp: "2026-11-06T20:56:50.681Z"
+---
+
+# Redesign surfaces via the Gestalt diagnosis-then-map method
+
+**Guideline:** When a redesign request lands ("make X read/enjoy better"), run the nine Gestalt principles (common region, closure, proximity, figure-ground, continuity, symmetry & order, Prägnanz, similarity, common fate) as a two-step method, not as a mood board:
+
+1. **Diagnose** — audit the current surface against each principle and state the concrete violation in one line (e.g. "cards aren't regions — hairlines only; meta floats unbounded").
+2. **Map** — translate each violation into a specific *structural* treatment (bounding, spines, hierarchy shifts), never a cosmetic tweak (spacing/font nudges).
+
+**When it applies.** Any visual/UX redesign of an existing page surface in this project.
+
+**Rationale.** Used 2026-11-06 for the \`/feed\` redesign ([[decisions/redesign-the-drum-feed-around-the-nine-gestalt-principles]]): the diagnosis table directly produced the treatment mapping and the result shipped in a single pass. Structural violations — no regions, no rhythm, no figure — are invisible to cosmetic tweaks; the principle audit is what surfaces them.
 `,
   "rules/reverse-engineer-hosted-component-bundles-into.md": `---
 type: Rule
@@ -3989,6 +6601,28 @@ is bound to the DOM.
 - \`src/routes/+page.svelte\` — renders \`marked.parse(answer)\` into \`.md\` block
 - \`decisions/\` — no formal ADR; this rule documents the deliberate omission.
 `,
+  "rules/style-with-semantic-theme-tokens-only-never-hardcode-colors.md": `---
+type: Rule
+title: Style with semantic theme tokens only — never hardcode colors
+description: "**Guideline:** Every color in components and raw CSS must reference the semantic theme tokens (\`var(--canvas)\`, \`var(--ink)\`, \`var(--accent)\`, …) — never hardco"
+tags: [css, theming, dark-mode, design-system, svelte]
+timestamp: "2026-11-06T19:17:28.285Z"
+---
+
+# Style with semantic theme tokens only — never hardcode colors
+
+**Guideline:** Every color in components and raw CSS must reference the semantic theme tokens (\`var(--canvas)\`, \`var(--ink)\`, \`var(--accent)\`, …) — never hardcode \`oklch(...)\`, \`#hex\`, \`text-white\`, \`bg-white\`, or literal alpha colors.
+
+**When it applies:** all styling work in \`src/\` — Tailwind utility classes, \`<style>\` blocks in Svelte components, and raw CSS in \`src/app.css\`. Since commit \`c06dfe4\` (2026-11-06) the site supports light and dark themes simultaneously.
+
+**Derivations:**
+
+- Alpha/tints of a token → \`color-mix(in oklab, var(--ink) 12%, transparent)\` (alpha) or \`color-mix(..., var(--canvas))\` (tint toward background).
+- Text that must sit on the accent color → \`text-canvas\` (theme-aware), **not** \`text-white\` — white fails AA contrast on the lightened dark-theme accent \`oklch(0.72 0.15 264.2)\`.
+- Raw CSS may reference the bare vars (\`var(--ink)\`), which always exist; do not rely on \`@theme inline\`-emitted utility names from raw CSS.
+
+**Rationale/evidence:** the dark theme (2026-11-06) is a single class swap on \`html.dark\`; any hardcoded color silently breaks one theme. Sweep found hardcoded colors in InfoTip shadow, WaveLoader accent ramp, homepage pulse/mark, and \`text-white\` on admin/auth accent buttons — all fixed this way. See the dark-theme ADR and the token-architecture learning.
+`,
   "rules/sweep-every-render-path-when-renaming-display.md": `---
 type: Rule
 title: Sweep every render path when renaming display vocabulary
@@ -4028,6 +6662,24 @@ What the dry run proves with zero side effects:
 
 When it applies: any time SQL is generated by a script or written by hand for the Railway \`te9_dev\` database — ingest files, migrations, backfills. Cheap, fast, and the only failure mode is forgetting the ROLLBACK. See [[insert-missing-repos-active-30d-sql]] for the applied example.
 `,
+  "rules/verify-production-runtime-env-vars-before-declaring-a-send-p.md": `---
+type: Rule
+title: Verify production runtime env vars before declaring a send pipeline armed
+description: "**Guideline:** Before declaring any external-send or API-integration pipeline operational (utobo email, Drum approval mails, The Digest sends, Voyage, chat prov"
+tags: [true]
+timestamp: "2026-11-12T17:01:27.850Z"
+---
+
+# Verify production runtime env vars before declaring a send pipeline armed
+
+**Guideline:** Before declaring any external-send or API-integration pipeline operational (utobo email, Drum approval mails, The Digest sends, Voyage, chat providers), verify the required env vars exist in the **actual production runtime** (Railway: \`railway variables\`), not just in the local \`.env\` or GitHub Actions secrets.
+
+**When it applies:** arming or changing any pipeline that calls an external SaaS at runtime from the Railway deployment — especially after wiring a new secret "everywhere".
+
+**Rationale/evidence:** 2026-11-12 — the Drum approval email pipeline looked fully working because the first approval email arrived. It had been sent from the local machine's \`.env\`; the Railway runtime never had \`UTOBO_EMAIL_API_KEY\`, so every production click of "Generate new" silently hit the fail-soft path with no email. Same gap would have broken The Digest's real sends. See [[learnings/utobo-email-api-key-was-missing-from-the-railway-runtime-local-s]].
+
+**Corollary:** a successful local send is evidence about your laptop, not about production. The three secret stores (local \`.env\`, GitHub Actions secrets, Railway runtime env) are independent copies — arming one does not arm the others.
+`,
   "rules/verify-the-serving-process-on-a-test-port-before-trusting-sm.md": `---
 type: Rule
 title: Verify the serving process on a test port before trusting smoke tests
@@ -4050,24 +6702,53 @@ var WIKI_PAGES = [
   { path: "memory.md", label: "Memory — the live contract", group: "" },
   { path: "overview.md", label: "Overview", group: "" },
   { path: "architecture/file-tree.md", label: "File tree", group: "Architecture" },
+  { path: "decisions/adapt-every-public-surface-for-touch-mobile-rethink-don-t-sc.md", label: "Adapt every public surface for touch/mobile — rethink, don't scale", group: "Decisions" },
+  { path: "decisions/add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos.md", label: "Add a corpus-narrated magazine feed to productsear.ch (proposed)", group: "Decisions" },
   { path: "decisions/adopt-agentos-sdk-dev-visual-design-system.md", label: "Adopt agentos-sdk.dev visual design system", group: "Decisions" },
   { path: "decisions/adopt-cross-encoder-reranking-voyage-rerank-2-5.md", label: "Adopt cross-encoder reranking (Voyage rerank-2.5-lite) on top of RRF hybrid search", group: "Decisions" },
+  { path: "decisions/adopt-dark-theme-via-semantic-token-swap-on-html-dark-revers.md", label: "Adopt dark theme via semantic token swap on html.dark (reverses earlier deferral)", group: "Decisions" },
+  { path: "decisions/adopt-full-search-engine-and-llm-discovery-infrastructure.md", label: "Adopt full search-engine and LLM discovery infrastructure", group: "Decisions" },
   { path: "decisions/adopt-product-search-bookmark-ribbon-mascot-as-the.md", label: "Adopt product-search bookmark-ribbon mascot as the brand character", group: "Decisions" },
   { path: "decisions/content-negotiate-llms-views-raw-text-markdown-for.md", label: "Content-negotiate llms views: raw text/markdown for LLM clients, rendered markdown for browsers", group: "Decisions" },
+  { path: "decisions/corpus-feed-anatomy-stream-stack-ambition-path-accepted-the-.md", label: "Corpus feed anatomy: stream + stack; Ambition Path accepted; The Pulse pitched (proposed)", group: "Decisions" },
   { path: "decisions/index.md", label: "Decisions", group: "Decisions" },
+  { path: "decisions/detect-llm-clients-by-user-agent-allowlist-not-accept-header.md", label: "Detect LLM clients by user-agent allowlist, not Accept header alone, for raw-markdown negotiation", group: "Decisions" },
+  { path: "decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time.md", label: "Drum draw cadence: once daily at 07:00 Amsterdam time", group: "Decisions" },
+  { path: "decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md", label: "Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)", group: "Decisions" },
+  { path: "decisions/drum-draw-schedule-made-miss-proof-cron-redundancy.md", label: "Drum draw schedule made miss-proof (cron redundancy)", group: "Decisions" },
+  { path: "decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md", label: "Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes", group: "Decisions" },
   { path: "decisions/dual-view-surfaces-humans-llms-tabs-with-view-llm.md", label: "Dual-view surfaces: humans | llms tabs with ?view=llm on every route", group: "Decisions" },
+  { path: "decisions/elegant-shared-og-cards-one-card-builder-in-lib-server-og-pl.md", label: "Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint", group: "Decisions" },
   { path: "decisions/embedding-provider-voyage-voyage-4-large-1024-dim.md", label: "Embedding provider: Voyage voyage-4-large (1024-dim)", group: "Decisions" },
   { path: "decisions/enrich-reranker-input-with-page-content-show-30.md", label: "Enrich reranker input with page content; show 30 results", group: "Decisions" },
+  { path: "decisions/feed-round-10-tombola-selection-corpus-derived-origin-card-p.md", label: "Feed round 10: Tombola selection corpus-derived; Origin card parked; The Floor pitched (aggregated search misses)", group: "Decisions" },
+  { path: "decisions/feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us.md", label: "Feed round 11: The Floor in (type #10), Impress the Boss in as user-originated type #11; The Drum pitched (countdown mechanic)", group: "Decisions" },
+  { path: "decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-.md", label: "Feed round 12 wrap: approvals are per-item admin toggles; The Digest in as admin-toggled dark launch (off by default); The Backlog pitched (launch pre-draft)", group: "Decisions" },
+  { path: "decisions/feed-round-12-editorial-workflow-in-corpus-drafted-admin-app.md", label: "Feed round 12: editorial workflow in (corpus-drafted, admin-approved); artifact source D hybrid+origin tags; The Drum in; The Digest pitched (utobo email)", group: "Decisions" },
+  { path: "decisions/feed-round-13-stream-order-fixed-round-robin-the-backlog-in-.md", label: "Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)", group: "Decisions" },
+  { path: "decisions/feed-round-14-same-day-last-year-out-the-feed-is-named-the-d.md", label: "Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)", group: "Decisions" },
+  { path: "decisions/feed-round-6-bluesky-only-share-receipt-cards-accepted.md", label: "Feed round 6: Bluesky-only share; Receipt cards accepted", group: "Decisions" },
+  { path: "decisions/feed-round-7-v1-ships-all-7-item-types-the-walk-pitched.md", label: "Feed round 7: v1 ships all 7 item types; The Walk pitched", group: "Decisions" },
+  { path: "decisions/feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-.md", label: "Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched", group: "Decisions" },
+  { path: "decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to.md", label: "Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in as type #9; The Origin card pitched", group: "Decisions" },
+  { path: "decisions/feed-stream-runs-on-rotation-personalization-post-accounts-t.md", label: "Feed stream runs on rotation (personalization post-accounts); The Pulse accepted; Receipt cards pitched (proposed)", group: "Decisions" },
+  { path: "decisions/homepage-content-system-metadata-split-auto-opening-search-d.md", label: "Homepage content/system-metadata split: auto-opening search drawer", group: "Decisions" },
   { path: "decisions/hybrid-semantic-search-stack-pgvector-tsvector.md", label: "Hybrid semantic search stack: pgvector + tsvector with RRF fusion", group: "Decisions" },
   { path: "decisions/machine-readout-console-identity-for-view-llm.md", label: "Machine-readout console identity for ?view=llm surfaces", group: "Decisions" },
   { path: "decisions/product-search-corpus-pipeline-is-self-contained-in-products.md", label: "Product-search corpus pipeline is self-contained in productsear.ch", group: "Decisions" },
+  { path: "decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md", label: "Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)", group: "Decisions" },
+  { path: "decisions/redesign-the-drum-feed-around-the-nine-gestalt-principles.md", label: "Redesign The Drum /feed around the nine Gestalt principles", group: "Decisions" },
   { path: "decisions/remove-ask-mode-productsear-ch-becomes-search-only.md", label: "Remove Ask mode — productsear.ch becomes search-only", group: "Decisions" },
   { path: "decisions/rename-compendium-to-collections-routes-moved-308-redirects.md", label: "Rename compendium to collections (routes moved, 308 redirects)", group: "Decisions" },
   { path: "decisions/repo-scan-pipeline-cheapest-first-phases-npm-pypi.md", label: "Repo-scan pipeline: cheapest-first phases; npm/PyPI registry lookups replace GitHub slug-guessing", group: "Decisions" },
+  { path: "decisions/reshape-the-corpus-feed-as-a-listings-feed-of-item-types-pit.md", label: "Reshape the corpus feed as a listings feed of item types: pitches, One Save, Two Futures (proposed)", group: "Decisions" },
   { path: "decisions/serve-the-llm-usage-guide-at-skill-md-and-distill.md", label: "Serve the LLM usage guide at /skill.md and distill it into the llms-view preamble", group: "Decisions" },
   { path: "decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md", label: "Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)", group: "Decisions" },
   { path: "decisions/shift-visual-design-to-instrument-grade-precision.md", label: "Shift visual design to instrument-grade precision-tool system (OKLCH)", group: "Decisions" },
   { path: "decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md", label: "Store bookmark archetypes as multi-entry JSONB on an app-owned table", group: "Decisions" },
+  { path: "decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md", label: "The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md", group: "Decisions" },
+  { path: "decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md", label: "The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable", group: "Decisions" },
+  { path: "decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md", label: "Trim sitemap.xml to hub surfaces only — no individual listing URLs", group: "Decisions" },
   { path: "decisions/use-plausible-for-privacy-friendly-site-analytics.md", label: "Use Plausible for privacy-friendly site analytics, wired in app.html", group: "Decisions" },
   { path: "decisions/user-facing-vocabulary-is-listings-display-terms.md", label: "User-facing vocabulary is \"listings\" — display-terms-only rename, URLs stay /archive", group: "Decisions" },
   { path: "learnings/env-dynamic-private-breaks-under-plain-tsx-use.md", label: "$env/dynamic/private breaks under plain tsx — use process.env in shared server modules", group: "Learnings" },
@@ -4077,28 +6758,43 @@ var WIKI_PAGES = [
   { path: "learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md", label: "Analyzed metric 100%: analyzer fallback patch + what the metric actually counts", group: "Learnings" },
   { path: "learnings/await-dotenv-imports-anchor-env-path.md", label: "Await dotenv imports; anchor .env path", group: "Learnings" },
   { path: "learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md", label: "better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed", group: "Learnings" },
+  { path: "learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md", label: "Bluesky caches og:image aggressively — bump a ?v=N cache-bust on card URLs after redesigns", group: "Learnings" },
+  { path: "learnings/bluesky-link-card-cache-is-keyed-by-the-shared-url-bust-the-.md", label: "Bluesky link-card cache is keyed by the shared URL — bust the share URL, not just og:image", group: "Learnings" },
   { path: "learnings/bookmark-ingestion-chain-is-gap-catching-archetypes-classifi.md", label: "Bookmark ingestion chain is gap-catching; archetypes classifier lives at src/lib/archetypes.ts", group: "Learnings" },
   { path: "learnings/bookmarks-table-is-a-read-only-mirror-the-raindrop.md", label: "bookmarks table is a read-only mirror — the Raindrop→DB sync lives outside this repo", group: "Learnings" },
   { path: "learnings/browserclaw-owns-ipv4-9222-harness-chrome-lands-on.md", label: "BrowserClaw owns IPv4 :9222; harness Chrome lands on IPv6 — discover CDP WS URL via curl, not undici fetch", group: "Learnings" },
   { path: "learnings/check-active-js-active-is-user-defined-as-pushed-within-30-d.md", label: "check-active.js: \"active\" is user-defined as pushed within 30 days; --resplit re-splits cached data without API calls", group: "Learnings" },
   { path: "learnings/corpus-schema-facts-raindrop-created-at-analysis.md", label: "Corpus schema facts: raindrop_created_at, analysis who/what/how/when fields, 1,320 messy categories", group: "Learnings" },
+  { path: "learnings/dark-theme-token-architecture-theme-inline-html-dark-swap-no.md", label: "Dark theme token architecture: @theme inline + html.dark swap, no hardcoded oklch", group: "Learnings" },
   { path: "learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md", label: "Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only", group: "Learnings" },
+  { path: "learnings/don-t-name-a-domain-type-node-in-dom-lib-code-shadowing-the-.md", label: "Don't name a domain type Node in DOM-lib code — shadowing the global bites", group: "Learnings" },
   { path: "learnings/driving-html-video-nexu-io-headlessly-to-render-a.md", label: "Driving html-video (nexu-io) headlessly to render a product video", group: "Learnings" },
+  { path: "learnings/drizzle-s-sql-tag-expands-js-arrays-into-a-param-tuple-not-a.md", label: "Drizzle's sql tag expands JS arrays into a param tuple — not an array literal", group: "Learnings" },
+  { path: "learnings/drizzle-s-sql-tag-has-no-json-use-explicit-json-stringify-js.md", label: "Drizzle's sql tag has no .json() — use explicit JSON.stringify(...)::jsonb casts", group: "Learnings" },
+  { path: "learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md", label: "Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email", group: "Learnings" },
   { path: "learnings/explicit-outer-select-silently-drops-columns.md", label: "Explicit outer SELECT silently drops columns carried by CTE `scored.*`", group: "Learnings" },
   { path: "learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md", label: "External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first", group: "Learnings" },
   { path: "learnings/extracted-svelte-scoped-css-needs-scope-classes.md", label: "Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing", group: "Learnings" },
+  { path: "learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis.md", label: "Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id", group: "Learnings" },
+  { path: "learnings/fixed-locally-but-never-committed-verify-head-bytes-when-pro.md", label: "Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)", group: "Learnings" },
   { path: "learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md", label: "Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed", group: "Learnings" },
+  { path: "learnings/github-actions-cron-is-utc-only-amsterdam-local-schedules-dr.md", label: "GitHub Actions cron is UTC-only — Amsterdam-local schedules drift an hour with DST", group: "Learnings" },
+  { path: "learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md", label: "GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires", group: "Learnings" },
   { path: "learnings/github-disables-scheduled-workflows-after-60-days.md", label: "GitHub disables scheduled workflows after 60 days without commits — cron runs don't count", group: "Learnings" },
   { path: "learnings/github-requires-workflow-scope-on-the-token-to.md", label: "GitHub requires `workflow` scope on the token to push commits touching `.github/workflows/`", group: "Learnings" },
   { path: "learnings/gold-accent-fails-wcag-aa-contrast-when-used-for.md", label: "Gold accent fails WCAG AA contrast when used for chip/tag text", group: "Learnings" },
+  { path: "learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user-agent.md", label: "gstatic css2 legacy-UA downloads are EOT files, not TTFs — pull real TTFs from the official repo", group: "Learnings" },
   { path: "learnings/headless-chrome-clamps-window-width-500px-390px.md", label: "Headless Chrome clamps window width (~500px) — \"390px\" screenshots are crops, not reflows", group: "Learnings" },
   { path: "learnings/headless-chrome-screenshots-don-t-advance-css.md", label: "Headless-Chrome screenshots don't advance CSS animations — freeze frames with animation-play-state", group: "Learnings" },
   { path: "learnings/homepage-analyzed-vital-sign-analyzed-total-ratio-bulk-inser.md", label: "Homepage \"analyzed\" vital sign = analyzed/total ratio — bulk inserts regress it until the external analysis pass runs", group: "Learnings" },
+  { path: "learnings/in-a-from-list-join-binds-tighter-than-comma-put-set-returni.md", label: "In a FROM list, JOIN binds tighter than comma — put set-returning functions last", group: "Learnings" },
+  { path: "learnings/interview-brevity-refinement-bare-lettered-options-no-prose-.md", label: "Interview brevity refinement: bare lettered options, no prose — \"way too complex\"", group: "Learnings" },
   { path: "learnings/index.md", label: "Learnings", group: "Learnings" },
   { path: "learnings/llm-usage-skill-lives-outside-the-repo-e-skills.md", label: "LLM usage skill lives outside the repo (E:\\skills.te9.dev\\productsear.ch\\SKILL.md) and must stay in sync", group: "Learnings" },
   { path: "learnings/llmview-ts-skill-doc-ts-template-literals-contain-escaped-ba.md", label: "llmview.ts / skill-doc.ts template literals contain escaped backticks; multi-hunk edit calls are atomic", group: "Learnings" },
   { path: "learnings/mcp-server-names-no-dots.md", label: "MCP server names in .pi/mcp.json forbid dots — name them with letters/digits/_/- only", group: "Learnings" },
   { path: "learnings/negative-synthetic-ids-for-manual-bookmarks-table-inserts-ne.md", label: "Negative synthetic ids for manual bookmarks-table inserts (never collide with the external sync)", group: "Learnings" },
+  { path: "learnings/opacity-0-elements-still-occupy-layout-space-closed-tipboxes.md", label: "opacity-0 elements still occupy layout space — closed tipboxes caused 54px of phantom overflow", group: "Learnings" },
   { path: "learnings/pi-skill-name-fallback-and-prompts-dir.md", label: "pi loads every standalone .md in .agents/skills/ as a skill named after its parent dir; slash commands live in .pi/prompts/", group: "Learnings" },
   { path: "learnings/pi-project-mcp-config-location.md", label: "pi reads project MCP config from .pi/mcp.json — root .mcp.json is ignored", group: "Learnings" },
   { path: "learnings/postgres-fts-word-too-long-notice-for-2047-char.md", label: "Postgres FTS \"word too long\" NOTICE for >2047-char tokens is harmless", group: "Learnings" },
@@ -4106,23 +6802,37 @@ var WIKI_PAGES = [
   { path: "learnings/postgres-js-double-encodes-plain-strings-sent-to.md", label: "postgres-js double-encodes plain strings sent to jsonb — use sql.json()", group: "Learnings" },
   { path: "learnings/production-runs-railway-commits-only-local-uncommitted-work-.md", label: "Production runs Railway commits only — local uncommitted work is invisible on the live site", group: "Learnings" },
   { path: "learnings/railpack-railway-build-driver-requires-a-start.md", label: "Railpack (Railway build driver) requires a start command", group: "Learnings" },
+  { path: "learnings/railway-cli-sets-env-vars-via-the-variable-set-subcommand-th.md", label: "Railway CLI sets env vars via the `variable set` subcommand — the --set flag is legacy", group: "Learnings" },
   { path: "learnings/raindrop-db-sync-runs-outside-this-repo-published.md", label: "Raindrop→DB sync runs outside this repo; published page count sums all collections", group: "Learnings" },
   { path: "learnings/relevance-floor-0-45-sits-exactly-in-the-measured.md", label: "Relevance floor 0.45 sits exactly in the measured gap between noise and matches", group: "Learnings" },
+  { path: "learnings/select-distinct-order-by-random-is-illegal-in-postgres.md", label: "SELECT DISTINCT ... ORDER BY random() is illegal in Postgres", group: "Learnings" },
   { path: "learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md", label: "Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe", group: "Learnings" },
   { path: "learnings/skill-skill-md-description-must-quote-colons-to.md", label: "Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors", group: "Learnings" },
   { path: "learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md", label: "Splitting npm dependency versions: direct dep for the new, pinned deps nest auto", group: "Learnings" },
   { path: "learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md", label: "Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first", group: "Learnings" },
+  { path: "learnings/standalone-tsx-scripts-hang-after-success-close-the-postgres.md", label: "Standalone tsx scripts hang after success — close the postgres pool or call process.exit()", group: "Learnings" },
   { path: "learnings/svelte-5-values-captured-in-plain-consts-go-stale.md", label: "Svelte 5: values captured in plain consts go stale across param navigation — use $derived", group: "Learnings" },
+  { path: "learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c.md", label: "Svelte script blocks terminate at a literal </script> — even in comments", group: "Learnings" },
   { path: "learnings/sveltekit-blocks-lib-server-imports-in-client.md", label: "SvelteKit blocks $lib/server imports in client components — even for pure-data modules", group: "Learnings" },
   { path: "learnings/sveltekit-dev-server-does-not-populate-process-env.md", label: "SvelteKit dev server does not populate process.env from .env — load dotenv yourself", group: "Learnings" },
   { path: "learnings/sveltekit-normalizes-event-url-for-data-requests.md", label: "SvelteKit normalizes event.url for data requests — always early-return on event.isDataRequest in handle hooks", group: "Learnings" },
   { path: "learnings/synced-at-runs-4-days-ahead-of-wall-clock-sync.md", label: "synced_at runs ~4 days ahead of wall clock; sync rewrites all rows every pass", group: "Learnings" },
+  { path: "learnings/the-digest-is-deactivated-at-two-layers-feature-gate-disable.md", label: "The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented", group: "Learnings" },
+  { path: "learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr.md", label: "The Digest send pipeline verifies in stages — \"no active subscribers\" is the expected stop when armed but empty", group: "Learnings" },
+  { path: "learnings/the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md", label: "The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly", group: "Learnings" },
+  { path: "learnings/the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md", label: "The Walk is the only failure-proof drum type; The Floor starves silently", group: "Learnings" },
+  { path: "learnings/translucent-overlays-ghost-background-content-auto-opening-d.md", label: "Translucent overlays ghost background content — auto-opening drawers go canvas-solid", group: "Learnings" },
   { path: "learnings/transparent-cutout-qa-previews-don-t-honor-alpha.md", label: "Transparent-cutout QA: previews don't honor alpha — verify the alpha channel programmatically", group: "Learnings" },
+  { path: "learnings/ts-interfaces-lack-implicit-index-signatures-type-aliases-ha.md", label: "TS interfaces lack implicit index signatures — type aliases have them", group: "Learnings" },
+  { path: "learnings/utobo-api-key-provisioning-dashboard-path-shown-once-send-on.md", label: "Utobo API key provisioning: dashboard path, shown once, Send-only scope", group: "Learnings" },
+  { path: "learnings/utobo-email-api-key-was-missing-from-the-railway-runtime-loc.md", label: "UTOBO_EMAIL_API_KEY was missing from the Railway runtime — local-send success masked the prod gap", group: "Learnings" },
   { path: "learnings/vercel-ai-sdk-v4-streamtext-exposes-async.md", label: "Vercel AI SDK v4 streamText exposes async textStream, not toReadableStream()", group: "Learnings" },
   { path: "learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md", label: "Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly", group: "Learnings" },
   { path: "learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md", label: "Voyage free-tier rate limit (3 RPM / 10K TPM) blocks bulk backfill without a payment method", group: "Learnings" },
   { path: "learnings/voyage-rerank-2-5-lite-has-run-to-run-rank.md", label: "Voyage rerank-2.5-lite has run-to-run rank variance (±2 positions)", group: "Learnings" },
+  { path: "learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md", label: "When LLM providers are down, the drum degenerates into consecutive Walk items", group: "Learnings" },
   { path: "learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md", label: "wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs", group: "Learnings" },
+  { path: "learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md", label: "Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully", group: "Learnings" },
   { path: "pages/TEMPLATES.md", label: "Page Templates", group: "Pages" },
   { path: "pages/index.md", label: "Pages", group: "Pages" },
   { path: "pages/artifacts/agentos-sdk-dev-design-system-extraction.md", label: "agentos-sdk.dev design system extraction", group: "Pages / Artifacts" },
@@ -4135,11 +6845,14 @@ var WIKI_PAGES = [
   { path: "pages/artifacts/impeccable-pattern-one-pager-p3.md", label: "Impeccable pattern one-pager (P3)", group: "Pages / Artifacts" },
   { path: "pages/artifacts/insert-missing-repos-active-30d-sql.md", label: "insert-missing-repos-active-30d.sql", group: "Pages / Artifacts" },
   { path: "pages/artifacts/productsear-ch-promo-video.md", label: "productsear.ch promo video", group: "Pages / Artifacts" },
+  { path: "pages/artifacts/the-drum-feed-spec.md", label: "The Drum feed spec", group: "Pages / Artifacts" },
   { path: "pages/concepts/index.md", label: "Concepts", group: "Pages / Concepts" },
   { path: "pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md", label: "Hybrid search via Reciprocal Rank Fusion", group: "Pages / Concepts" },
   { path: "pages/concepts/llm-content-negotiation.md", label: "LLM content negotiation", group: "Pages / Concepts" },
+  { path: "pages/concepts/search-and-llm-discovery-layer.md", label: "Search and LLM discovery layer", group: "Pages / Concepts" },
   { path: "pages/concepts/url-driven-search-state.md", label: "URL-driven search state", group: "Pages / Concepts" },
   { path: "pages/entities/admin-console-admin.md", label: "Admin console (/admin)", group: "Pages / Entities" },
+  { path: "pages/entities/admin-feed-console-admin-feed.md", label: "Admin feed console (/admin/feed)", group: "Pages / Entities" },
   { path: "pages/entities/api-ask-endpoint.md", label: "API ask endpoint", group: "Pages / Entities" },
   { path: "pages/entities/api-search-endpoint.md", label: "API search endpoint", group: "Pages / Entities" },
   { path: "pages/entities/archive-page.md", label: "Archive page", group: "Pages / Entities" },
@@ -4147,34 +6860,52 @@ var WIKI_PAGES = [
   { path: "pages/entities/compendium-pages.md", label: "Collections pages", group: "Pages / Entities" },
   { path: "pages/entities/corpus-enrichment-pipeline-sync-crawl-analyze.md", label: "Corpus enrichment pipeline (sync/crawl/analyze)", group: "Pages / Entities" },
   { path: "pages/entities/daily-embed-new-bookmarks-workflow.md", label: "Daily embed-new-bookmarks workflow", group: "Pages / Entities" },
+  { path: "pages/entities/drum-email-approval-pipeline.md", label: "Drum email approval pipeline", group: "Pages / Entities" },
+  { path: "pages/entities/dynamic-xml-sitemap-endpoint.md", label: "Dynamic XML sitemap endpoint", group: "Pages / Entities" },
   { path: "pages/entities/embed-bookmarks-backfill-script.md", label: "Embed-bookmarks backfill script", group: "Pages / Entities" },
   { path: "pages/entities/index.md", label: "Entities", group: "Pages / Entities" },
+  { path: "pages/entities/feed-feature-flags.md", label: "Feed feature flags", group: "Pages / Entities" },
+  { path: "pages/entities/feed-xml-rss-endpoint.md", label: "feed.xml RSS endpoint", group: "Pages / Entities" },
+  { path: "pages/entities/homepage-system-drawer.md", label: "Homepage system drawer", group: "Pages / Entities" },
   { path: "pages/entities/infotip-component.md", label: "InfoTip component", group: "Pages / Entities" },
+  { path: "pages/entities/jsonld-svelte-component.md", label: "JsonLd.svelte component", group: "Pages / Entities" },
   { path: "pages/entities/llmdoc-component.md", label: "LlmDoc component", group: "Pages / Entities" },
+  { path: "pages/entities/llms-txt-agent-index.md", label: "llms.txt agent index", group: "Pages / Entities" },
   { path: "pages/entities/product-search-mascot-illo-character-pack.md", label: "product-search mascot (illo character pack)", group: "Pages / Entities" },
+  { path: "pages/entities/receipt-card-og-image-route.md", label: "Receipt-card OG image route", group: "Pages / Entities" },
   { path: "pages/entities/repo-scan-pipeline.md", label: "repo-scan pipeline", group: "Pages / Entities" },
   { path: "pages/entities/rerank-service.md", label: "Rerank service", group: "Pages / Entities" },
   { path: "pages/entities/search-diagnostics.md", label: "Search diagnostics", group: "Pages / Entities" },
+  { path: "pages/entities/the-digest-email-digest-pipeline.md", label: "The Digest (email digest pipeline)", group: "Pages / Entities" },
+  { path: "pages/entities/the-drum-feed.md", label: "The Drum feed", group: "Pages / Entities" },
   { path: "pages/entities/utobo-email-transactional-email-service.md", label: "utobo Email (transactional email service)", group: "Pages / Entities" },
   { path: "pages/entities/utobo-email-platform.md", label: "utobo email platform", group: "Pages / Entities" },
   { path: "pages/entities/utobo-sending-domain-dns-records.md", label: "Utobo sending-domain DNS records", group: "Pages / Entities" },
   { path: "pages/entities/waveloader-component.md", label: "WaveLoader component", group: "Pages / Entities" },
   { path: "rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md", label: "Attribute build failures before fixing; never touch a concurrent session's in-progress work", group: "Rules" },
+  { path: "rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md", label: "Back up and dry-run the restore before any destructive bulk delete", group: "Rules" },
+  { path: "rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc.md", label: "Brainstorm pacing: one idea + one grill question per turn, branch ledger", group: "Rules" },
   { path: "rules/check-the-index-before-committing-use-pathspec-scoped-commit.md", label: "Check the index before committing; use pathspec-scoped commits in repos with pre-staged changes", group: "Rules" },
   { path: "rules/corroborate-product-repo-matches-with-multi-signal.md", label: "Corroborate product→repo matches with multi-signal checks; stars never validate homepage/npm links", group: "Rules" },
   { path: "rules/diagnose-search-misses-stage-by-stage-before.md", label: "Diagnose search misses stage-by-stage before tuning", group: "Rules" },
   { path: "rules/every-view-llm-branch-must-render-an-llm-document.md", label: "Every ?view=llm branch must render an LLM document — including no-parameter fallbacks", group: "Rules" },
   { path: "rules/guard-min-content-width-on-wrapping-sensitive-text.md", label: "Guard min-content width on wrapping-sensitive text", group: "Rules" },
   { path: "rules/instrument-grade-design-principles-avoid-banned.md", label: "Instrument-grade design principles; avoid banned tells", group: "Rules" },
+  { path: "rules/interview-questions-ship-with-lettered-options-plus-a-procee.md", label: "Interview questions ship with lettered options plus a proceed/notes/add-your-own round", group: "Rules" },
   { path: "rules/keep-view-llm-surfaces-free-of-human-ui-chrome.md", label: "Keep ?view=llm surfaces free of human UI chrome", group: "Rules" },
+  { path: "rules/og-endpoint-assets-must-fail-soft-lazy-read-with-try-catch-o.md", label: "OG endpoint assets must fail soft: lazy-read with try/catch, omit gracefully", group: "Rules" },
   { path: "rules/pool-then-rerank-with-graceful-fallback-for.md", label: "Pool-then-rerank with graceful fallback for retrieval", group: "Rules" },
   { path: "rules/prepare-and-dry-run-the-rollback-script-before-generating-de.md", label: "Prepare and dry-run the rollback script before generating derived rows", group: "Rules" },
+  { path: "rules/probe-responsive-overflow-programmatically-don-t-eyeball-scr.md", label: "Probe responsive overflow programmatically; don't eyeball screenshots", group: "Rules" },
+  { path: "rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-method.md", label: "Redesign surfaces via the Gestalt diagnosis-then-map method", group: "Rules" },
   { path: "rules/reverse-engineer-hosted-component-bundles-into.md", label: "Reverse-engineer hosted component bundles into plain CSS, never add the dependency", group: "Rules" },
   { path: "rules/rewrite-delimiter-dense-code-blocks-wholesale-via.md", label: "Rewrite delimiter-dense code blocks wholesale via the write path", group: "Rules" },
   { path: "rules/index.md", label: "Rules", group: "Rules" },
   { path: "rules/sanitize-text-at-the-embedding-api-boundary.md", label: "Sanitize text at the embedding API boundary", group: "Rules" },
   { path: "rules/skip-html-sanitizer-for-server-owned-llm-output.md", label: "Skip HTML sanitizer for server-owned LLM output; add one if untrusted input flows in", group: "Rules" },
+  { path: "rules/style-with-semantic-theme-tokens-only-never-hardcode-colors.md", label: "Style with semantic theme tokens only — never hardcode colors", group: "Rules" },
   { path: "rules/sweep-every-render-path-when-renaming-display.md", label: "Sweep every render path when renaming display vocabulary", group: "Rules" },
   { path: "rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r.md", label: "Validate generated SQL inserts with a rollback-wrapped dry run against the live DB", group: "Rules" },
+  { path: "rules/verify-production-runtime-env-vars-before-declaring-a-send-p.md", label: "Verify production runtime env vars before declaring a send pipeline armed", group: "Rules" },
   { path: "rules/verify-the-serving-process-on-a-test-port-before-trusting-sm.md", label: "Verify the serving process on a test port before trusting smoke tests", group: "Rules" }
 ];

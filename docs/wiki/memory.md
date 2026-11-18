@@ -1,5 +1,5 @@
 ---
-okf_version: "0.1"
+okf_version: "0.2"
 ---
 
 <!-- wiki-memory:start -->
@@ -8,10 +8,17 @@ okf_version: "0.1"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-10T11:26:57.816Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15:31:18.685Z.
 
 ## Recent Decisions
 
+- [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md) — Context (2026-11-18)
+- [Drum draw schedule made miss-proof (cron redundancy)](decisions/drum-draw-schedule-made-miss-proof-cron-redundancy.md) — Context (2026-11-13)
+- [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) — Context (2026-11-12)
+- [Drum draw cadence: once daily at 07:00 Amsterdam time](decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time.md) — Context (2026-11-12)
+- [Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes](decisions/drum-items-gate-on-email-approval-preview-approve-generate-n.md) — Context (2026-11-12)
+- [Trim sitemap.xml to hub surfaces only — no individual listing URLs](decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md) — Context (2026-11-10)
+- [Adopt full search-engine and LLM discovery infrastructure](decisions/adopt-full-search-engine-and-llm-discovery-infrastructure.md) — Context (2026-11-10)
 - [Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint](decisions/elegant-shared-og-cards-one-card-builder-in-lib-server-og-pl.md) — Context (2026-11-07)
 - [Homepage content/system-metadata split: auto-opening search drawer](decisions/homepage-content-system-metadata-split-auto-opening-search-d.md) — **Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text … (2026-11-07)
 - [Adapt every public surface for touch/mobile — rethink, don't scale](decisions/adapt-every-public-surface-for-touch-mobile-rethink-don-t-sc.md) — **Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt… (2026-11-06)
@@ -20,16 +27,10 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-10T11
 - [The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md](decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) — Context (2026-11-06)
 - [Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)](decisions/feed-round-14-same-day-last-year-out-the-feed-is-named-the-d.md) — Context (2026-11-06)
 - [Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)](decisions/feed-round-13-stream-order-fixed-round-robin-the-backlog-in-.md) — Context (2026-11-06)
-- [Feed round 12 wrap: approvals are per-item admin toggles; The Digest in as admin-toggled dark launch (off by default); The Backlog pitched (launch pre-draft)](decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-.md) — Context (2026-11-06)
-- [Feed round 12: editorial workflow in (corpus-drafted, admin-approved); artifact source D hybrid+origin tags; The Drum in; The Digest pitched (utobo email)](decisions/feed-round-12-editorial-workflow-in-corpus-drafted-admin-app.md) — Context (2026-11-06)
-- [Feed round 11: The Floor in (type #10), Impress the Boss in as user-originated type #11; The Drum pitched (countdown mechanic)](decisions/feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us.md) — Context (2026-11-06)
-- [Feed round 10: Tombola selection corpus-derived; Origin card parked; The Floor pitched (aggregated search misses)](decisions/feed-round-10-tombola-selection-corpus-derived-origin-card-p.md) — Context (2026-11-06)
-- [Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in as type #9; The Origin card pitched](decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to.md) — Context (2026-11-06)
-- [Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched](decisions/feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-.md) — Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched (2026-11-06)
-- [Feed round 7: v1 ships all 7 item types; The Walk pitched](decisions/feed-round-7-v1-ships-all-7-item-types-the-walk-pitched.md) — Context (2026-11-06)
 
 ## Active Rules
 
+- [Verify production runtime env vars before declaring a send pipeline armed](rules/verify-production-runtime-env-vars-before-declaring-a-send-p.md) — **Guideline:** Before declaring any external-send or API-integration pipeline operational (utobo email, Drum approval mails, The Digest send… (2026-11-12)
 - [Back up and dry-run the restore before any destructive bulk delete](rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md) — **Guideline:** Before a destructive bulk DELETE against `te9_dev` (e.g. wiping a table like `feed_items`), run the three-step interlock — an… (2026-11-07)
 - [OG endpoint assets must fail soft: lazy-read with try/catch, omit gracefully](rules/og-endpoint-assets-must-fail-soft-lazy-read-with-try-catch-o.md) — **Guideline:** Any binary asset an OG/social-card renderer depends on (mascot PNG, fonts, future images) must be loaded **tolerantly**: a la… (2026-11-07)
 - [Probe responsive overflow programmatically; don't eyeball screenshots](rules/probe-responsive-overflow-programmatically-don-t-eyeball-scr.md) — **Guideline:** For any responsive change, verify overflow by measurement, not by looking at screenshots. Build (`npm run build`), serve `nod… (2026-11-06)
@@ -57,6 +58,15 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-10T11
 
 ## Recent Learnings — development patterns
 
+- [Feed generators self-gate by returning null; rotation falls through](learnings/feed-generators-self-gate-by-returning-null-rotation-falls-t.md) — Frequency control is implemented inside each generator: `walk.ts` returns `null` when <20 days since the last *published* walk, and the rota… (2026-11-18)
+- [Walk item URLs were already stored, only human renderer ignored them](learnings/walk-item-urls-were-already-stored-only-human-renderer-ignor.md) — Walk body items have carried `body.items[].url` in the DB all along (including the three live rows), but `+page.svelte` rendered `li.label` … (2026-11-18)
+- [The Walk is the only failure-proof drum type; The Floor starves silently](learnings/the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md) — Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can … (2026-11-18)
+- [When LLM providers are down, the drum degenerates into consecutive Walk items](learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md) — **The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items… (2026-11-18)
+- [Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email](learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md) — **The fact (established 2026-11-13 while answering "should I have gotten an email already?"):** the Drum approval-email cadence is a **24h c… (2026-11-13)
+- [UTOBO_EMAIL_API_KEY was missing from the Railway runtime — local-send success masked the prod gap](learnings/utobo-email-api-key-was-missing-from-the-railway-runtime-loc.md) — **The incident (2026-11-12, "Generate new produced no new approval email"):** The Drum approval send failed silently in production — Railway… (2026-11-12)
+- [Railway CLI sets env vars via the `variable set` subcommand — the --set flag is legacy](learnings/railway-cli-sets-env-vars-via-the-variable-set-subcommand-th.md) — **The gotcha (found 2026-11-12 while wiring `DRUM_APPROVAL_SECRET` across environments):** on Railway CLI 5.x (5.62.1), setting env vars goe… (2026-11-12)
+- [GitHub Actions cron is UTC-only — Amsterdam-local schedules drift an hour with DST](learnings/github-actions-cron-is-utc-only-amsterdam-local-schedules-dr.md) — **The fact (found 2026-11-12 while retiming the drum draw):** GitHub Actions `schedule:` accepts cron expressions in **UTC only** — there is… (2026-11-12)
+- [Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id](learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis.md) — **The coupling (found 2026-11-10, fixed in commit `e4ecd86`):** feed surfaces link `/listings/{id}` for their drawn items — Drum cards and T… (2026-11-10)
 - [Svelte script blocks terminate at a literal </script> — even in comments](learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c.md) — **The gotcha (found 2026-11-10 while adding JSON-LD via a `JsonLd.svelte` head component):** (2026-11-10)
 - [The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented](learnings/the-digest-is-deactivated-at-two-layers-feature-gate-disable.md) — **The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out: (2026-11-09)
 - [GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires](learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md) — **The gotcha (found 2026-11-09):** a `run:` value containing `Drum draw:` — a `colon+space` inside a plain (unquoted) YAML scalar — made `.g… (2026-11-09)
@@ -68,22 +78,14 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-10T11
 - [opacity-0 elements still occupy layout space — closed tipboxes caused 54px of phantom overflow](learnings/opacity-0-elements-still-occupy-layout-space-closed-tipboxes.md) — Discovered 2026-11-06 while probing 54px of hidden horizontal overflow on 390px phones: the three closed tipboxes were hidden with `opacity:… (2026-11-06)
 - [The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly](learnings/the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md) — Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port nu… (2026-11-06)
 - [The Digest send pipeline verifies in stages — "no active subscribers" is the expected stop when armed but empty](learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr.md) — **The behavior (verified 2026-11-06 after the operator added the utobo secrets):** `scripts/digest-send.ts` gates its send path in stages, a… (2026-11-06)
-- [Utobo API key provisioning: dashboard path, shown once, Send-only scope](learnings/utobo-api-key-provisioning-dashboard-path-shown-once-send-on.md) — **The how-to (settled 2026-11-06 while wiring The Digest's sends):** the utobo API key for `UTOBO_EMAIL_API_KEY` is created in the **email.u… (2026-11-06)
-- [gstatic css2 legacy-UA downloads are EOT files, not TTFs — pull real TTFs from the official repo](learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user-agent.md) — The legacy user-agent trick against Google Fonts' css2 API returns URLs whose downloaded bytes are legacy EOT, not TTF — @resvg/resvg-js sil… (2026-11-06)
-- [Don't name a domain type Node in DOM-lib code — shadowing the global bites](learnings/don-t-name-a-domain-type-node-in-dom-lib-code-shadowing-the-.md) — With `lib.dom` in the tsconfig (SvelteKit default), declaring your own `interface Node` / `type Node` shadows the global DOM `Node`. Whereve… (2026-11-06)
-- [In a FROM list, JOIN binds tighter than comma — put set-returning functions last](learnings/in-a-from-list-join-binds-tighter-than-comma-put-set-returni.md) — **The gotcha (2026-11-06, Ambition Path query):** when a FROM list mixes comma joins and explicit JOINs, Postgres parses the JOIN as binding… (2026-11-06)
-- [SELECT DISTINCT ... ORDER BY random() is illegal in Postgres](learnings/select-distinct-order-by-random-is-illegal-in-postgres.md) — **The rule:** with `SELECT DISTINCT`, every `ORDER BY` expression must appear in the select list. `random()` is not in the list, so Postgres… (2026-11-06)
-- [TS interfaces lack implicit index signatures — type aliases have them](learnings/ts-interfaces-lack-implicit-index-signatures-type-aliases-ha.md) — **The rule (hit 2026-11-06 in The Drum slice C):** a TypeScript `interface` is **not** assignable to `Record<string, unknown>` — `Index sign… (2026-11-06)
-- [Drizzle's sql tag expands JS arrays into a param tuple — not an array literal](learnings/drizzle-s-sql-tag-expands-js-arrays-into-a-param-tuple-not-a.md) — **The gotcha (2026-11-06, The Drum slice C):** interpolating a JS array into a drizzle `sql` template sends it as a list of separate bind pa… (2026-11-06)
-- [Drizzle's sql tag has no .json() — use explicit JSON.stringify(...)::jsonb casts](learnings/drizzle-s-sql-tag-has-no-json-use-explicit-json-stringify-js.md) — Discovered 2026-11-06 during The Drum slice A seed (`scripts/` feeding `feed_items` jsonb payloads). (2026-11-06)
-- [Standalone tsx scripts hang after success — close the postgres pool or call process.exit()](learnings/standalone-tsx-scripts-hang-after-success-close-the-postgres.md) — Discovered 2026-11-06 while seeding The Drum (`feed-draw` seed script run via tsx). (2026-11-06)
 
 ## Architecture
 
-- [File tree](architecture/file-tree.md) — Complete project file listing with per-file descriptions. (2026-11-06)
+- [File tree](architecture/file-tree.md) — Complete project file listing with per-file descriptions. (2026-11-10)
 
 ## Global Patterns
 
+- [Search and LLM discovery layer](pages/concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine cra… (2026-11-10)
 - [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it? (2026-11-06)
 - [URL-driven search state](pages/concepts/url-driven-search-state.md) — What is it? (2026-08-25)
 - [Hybrid search via Reciprocal Rank Fusion](pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md) — What is it? (2026-07-03)

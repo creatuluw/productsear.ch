@@ -68,3 +68,16 @@ _older below_
 - **Update**: Wiki marked synced (2026-07-04T11:14:42.399Z).
 ## 2026-07-03
 - **Creation**: Initial OKF bundle scaffolded by /wiki:init.
+
+## 2026-11-18
+- **Update**: Wiki marked synced (2026-11-18T15:30:58.829Z).
+
+_older below_
+
+## 2026-11-18
+- **Update**: Wiki marked synced (2026-11-18T15:23:06.735Z).
+
+_older below_
+
+## 2026-11-18 (migration)
+- **Schema**: 0.1 → 0.2 — created journal/; regenerated memory.md; regenerated nav map.
