@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { hybridSearch } from '$lib/server/search';
+import { logSearch } from '$lib/server/search-logs';
 import { searchLlmView } from '$lib/server/llmview';
 	import { corpusOverviewMd } from '$lib/server/llms';
 import { getFeedSettings, listPublished } from '$lib/server/feed/queries';
@@ -34,7 +35,10 @@ export const load: PageServerLoad = async ({ url }) => {
 		const q = url.searchParams.get('q')?.trim() ?? '';
 		const page = Math.max(1, Number(url.searchParams.get('page') ?? 1) || 1);
 		if (q) {
+			const started = performance.now();
 			const res = await hybridSearch(q, page, 20);
+			// agent twin searches land in the same log, tagged 'llm'
+			logSearch(q, 'llm', res.total, performance.now() - started);
 			return { ...data, llm: searchLlmView(q, res, 0) };
 		}
 		return { ...data, llm: await corpusOverviewMd() };

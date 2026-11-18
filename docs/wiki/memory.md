@@ -8,7 +8,7 @@ okf_version: "0.2"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15:31:18.685Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15:47:44.206Z.
 
 ## Recent Decisions
 

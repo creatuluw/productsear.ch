@@ -115,7 +115,7 @@
 		drawerOpen = true;
 		try {
 			const res = await fetch(
-				`/api/search?q=${encodeURIComponent(q)}&page=${pageNum}`
+				`/api/search?q=${encodeURIComponent(q)}&page=${pageNum}&src=web`
 			);
 			if (!res.ok) throw new Error(await res.text());
 			const data = (await res.json()) as {

@@ -43,4 +43,5 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [JsonLd.svelte component](./entities/jsonld-svelte-component.md) — `src/lib/components/JsonLd.svelte` — a head component that renders a schema.org JSON-LD `<script type="application/ld+json">` block from server-owned data.
 - [llms.txt agent index](./entities/llms-txt-agent-index.md) — `/llms.txt` — the curated, llmstxt.org-convention index of productsear.ch for LLMs and AI agents, generated at request time with live corpus stats so agents alw
 - [Search and LLM discovery layer](./concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
-- [Drum email approval pipeline](./entities/drum-email-approval-pipeline.md) — **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner 
+- [Drum email approval pipeline](./entities/drum-email-approval-pipeline.md) — **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner
+- [Search logging (search_logs)](./entities/search-logging-search-logs.md) — What it is

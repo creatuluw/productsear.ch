@@ -13,7 +13,8 @@
 		{ href: '/admin/extensions', label: 'extensions' },
 		{ href: '/admin/agents', label: 'agents' },
 		{ href: '/admin/settings', label: 'settings' },
-		{ href: '/admin/features', label: 'features' }
+		{ href: '/admin/features', label: 'features' },
+		{ href: '/admin/searches', label: 'searches' }
 	];
 
 	const isActive = (href: string) =>

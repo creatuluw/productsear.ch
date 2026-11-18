@@ -2,6 +2,7 @@ import { json, error } from '@sveltejs/kit';
 import { sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { hybridSearch } from '$lib/server/search';
+import { logSearch } from '$lib/server/search-logs';
 import { searchApiMd } from '$lib/server/llmview';
 import type { RequestHandler } from './$types';
 
@@ -15,6 +16,10 @@ export const GET: RequestHandler = async ({ url, request }) => {
 	const started = performance.now();
 	const res = await hybridSearch(q, page, pageSize);
 	const tookMs = Math.round(performance.now() - started);
+
+	// Analytics: every search gets a row (search_logs); the site's own UI tags
+	// itself with src=web so external API/agent traffic stays distinguishable.
+	logSearch(q, url.searchParams.get('src') === 'web' ? 'web' : 'api', res.total, tookMs);
 
 	// The Floor's raw material: log zero-result searches (below the 0.45
 	// relevance floor). Fire-and-forget — logging must never slow a search.
