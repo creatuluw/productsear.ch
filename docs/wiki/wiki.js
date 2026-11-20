@@ -2250,7 +2250,7 @@ okf_version: "0.2"
 <!-- wiki-nav:start -->
 ## Navigation map
 
-Auto-generated detailed index of every docs/wiki/ concept — the map the LLM uses to locate information. 200 concept(s). Regenerated on init and on wiki_mark_synced. Generated 2026-11-18T15:23:06.815Z.
+Auto-generated detailed index of every docs/wiki/ concept — the map the LLM uses to locate information. 212 concept(s). Regenerated on init and on wiki_mark_synced. Generated 2026-11-19T10:26:47.908Z.
 
 Each entry: [title](concept-id.md) — description. Links are clickable in /wiki; pass the concept-id (link target minus .md) to wiki_get.
 
@@ -2274,10 +2274,12 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Impeccable pattern one-pager (P3)](pages/artifacts/impeccable-pattern-one-pager-p3.md) — The **pattern one-pager** is the P3 gate deliverable of the impeccable design-studio redesign: a single self-contained HTML page showing the "80% base" layout f
 - [insert-missing-repos-active-30d.sql](pages/artifacts/insert-missing-repos-active-30d-sql.md) — What is it?
 - [productsear.ch promo video](pages/artifacts/productsear-ch-promo-video.md) — An animated ~6-scene promo MP4 that introduces productsear.ch: semantic bookmark search via hybrid retrieval ([[hybrid-search-via-reciprocal-rank-fusion]]) plus
+- [Spotlight write-up examples (16 formats)](pages/artifacts/spotlight-write-up-examples-16-formats.md) — What it is
 - [The Drum feed spec](pages/artifacts/the-drum-feed-spec.md) — **The Drum feed spec** — the formal, converged specification for the [The Drum feed](../entities/the-drum-feed.md) entity, committed at \`docs/specs/the-drum.md\` after the 15-turn diverge/con
 - [Hybrid search via Reciprocal Rank Fusion](pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md) — What is it?
 - [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it?
 - [Search and LLM discovery layer](pages/concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
+- [Spotlight write-up format taxonomy](pages/concepts/spotlight-write-up-format-taxonomy.md) — Editorial catalog of 16 write-up structures in 4 families for promoting database listings: A) single-listing (Teardown, First-Run Guide, Curator's Note, Comebac
 - [URL-driven search state](pages/concepts/url-driven-search-state.md) — What is it?
 - [Admin console (/admin)](pages/entities/admin-console-admin.md) — What it is
 - [Admin feed console (/admin/feed)](pages/entities/admin-feed-console-admin-feed.md) — What it is
@@ -2303,6 +2305,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [repo-scan pipeline](pages/entities/repo-scan-pipeline.md) — One-off checkpointed Node pipeline (\`.archive/repo-scan/\`) that matched all 4,224 bookmarks against open-source GitHub repos — provenance for the digital-products repo index
 - [Rerank service](pages/entities/rerank-service.md) — \`src/lib/server/rerank.ts\` — a thin client for the Voyage \`rerank-2.5-lite\` cross-encoder rerank API.
 - [Search diagnostics](pages/entities/search-diagnostics.md) — Search-quality diagnostic tooling shipped with the 2026-11-01 rerank fix: a trace script for the retrieval stages, a debug env flag for the rerank stage, and a 
+- [Search logging (search_logs)](pages/entities/search-logging-search-logs.md) — What it is
 - [The Digest (email digest pipeline)](pages/entities/the-digest-email-digest-pipeline.md) — The Digest (email digest pipeline)
 - [The Drum feed](pages/entities/the-drum-feed.md) — **The Drum** is productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of 11 item types — 10 drawing today — published on a **da
 - [utobo email platform](pages/entities/utobo-email-platform.md) — utobo.com (**utobo Email**) — the external SaaS that provides productsear.ch's outbound email infrastructure: transactional email, newsletters, campaigns, and a
@@ -2357,6 +2360,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Shift visual design to instrument-grade precision-tool system (OKLCH)](decisions/shift-visual-design-to-instrument-grade-precision.md) — Context
 - [Store bookmark archetypes as multi-entry JSONB on an app-owned table](decisions/store-bookmark-archetypes-as-multi-entry-jsonb-on.md) — Context
 - [The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md](decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) — Context
+- [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md) — Context
 - [Trim sitemap.xml to hub surfaces only — no individual listing URLs](decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md) — Context
 - [Use Plausible for privacy-friendly site analytics, wired in app.html](decisions/use-plausible-for-privacy-friendly-site-analytics.md) — Context
 - [User-facing vocabulary is "listings" — display-terms-only rename, URLs stay /archive](decisions/user-facing-vocabulary-is-listings-display-terms.md) — Context
@@ -2394,6 +2398,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [21st.dev CDN preview pages inline the animation CSS inside the JS bundle, not the HTML](learnings/21st-dev-cdn-preview-pages-inline-the-animation.md) — When the user shares a component URL like \`https://cdn.21st.dev/loading-ui/symmetric-wave/default/bundle.<id>.html\`, the HTML page is just a **React bundle shel
 - [adapter-node requires ORIGIN env var for CSRF protection](learnings/adapter-node-requires-origin-env-var-for-csrf.md) — When deploying SvelteKit with \`@sveltejs/adapter-node\`, requests with a mismatched \`Host\`/\`Origin\` header are rejected unless the \`ORIGIN\` environment variable
 - [agentos-sdk.dev is a light warm-paper theme, not dark](learnings/agentos-sdk-dev-is-a-light-warm-paper-theme-not.md) — When extracting the design system from https://agentos-sdk.dev/, the \`:root\` CSS contains leftover shadcn dark-mode HSL variables (e.g. \`--background: 240 10% 3
+- [All human searches flow through /api/search](learnings/all-human-searches-flow-through-api-search.md) — The homepage search is a client-side fetch to \`GET /api/search\` (not a server load), so instrumenting that one endpoint covers all human searches. The homepage'
 - [Analyzed metric 100%: analyzer fallback patch + what the metric actually counts](learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md) — Discovered 2026-11-06 while driving the homepage \`analyzed\` vital sign to 100%.
 - [Await dotenv imports; anchor .env path](learnings/await-dotenv-imports-anchor-env-path.md) — Two failures when \`missing-repos.js\` (a plain Node script in \`.archive/repo-scan/\`) loaded \`DATABASE_URL\`, discovered 2026-11-06:
 - [better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed](learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md) — Two runtime crashes when deploying better-auth 1.7.18 in a SvelteKit @sveltejs/adapter-node build (2026-11-06):
@@ -2415,6 +2420,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Explicit outer SELECT silently drops columns carried by CTE \`scored.*\`](learnings/explicit-outer-select-silently-drops-columns.md) — The gotcha
 - [External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first](learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md) — Discovered 2026-11-06 while answering "where is the sync/analysis pipeline?" (user's best guess: \`E:\\te9.dev\` — confirmed correct).
 - [Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing](learnings/extracted-svelte-scoped-css-needs-scope-classes.md) — When extracting compiled Svelte CSS into a standalone test harness (e.g. a plain HTML file to screenshot), naive selector stripping breaks everything silently: 
+- [Feed generators self-gate by returning null; rotation falls through](learnings/feed-generators-self-gate-by-returning-null-rotation-falls-t.md) — Frequency control is implemented inside each generator: \`walk.ts\` returns \`null\` when <20 days since the last *published* walk, and the rotation's existing catc
 - [Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id](learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis.md) — **The coupling (found 2026-11-10, fixed in commit \`e4ecd86\`):** feed surfaces link \`/listings/{id}\` for their drawn items — Drum cards and The Walk — and 522 co
 - [Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)](learnings/fixed-locally-but-never-committed-verify-head-bytes-when-pro.md) — **The incident (2026-11-07, commit \`faf3818\`):** production Bluesky cards rendered with **all text missing** while the local working tree rendered fine. The rea
 - [Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed](learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md) — Discovered 2026-11-06 while killing an orphaned preview server on port 3199 (exact-PID kill, per the global no-name-kill rule):
@@ -2444,10 +2450,13 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Railway CLI sets env vars via the \`variable set\` subcommand — the --set flag is legacy](learnings/railway-cli-sets-env-vars-via-the-variable-set-subcommand-th.md) — **The gotcha (found 2026-11-12 while wiring \`DRUM_APPROVAL_SECRET\` across environments):** on Railway CLI 5.x (5.62.1), setting env vars goes through the **\`var
 - [Raindrop→DB sync runs outside this repo; published page count sums all collections](learnings/raindrop-db-sync-runs-outside-this-repo-published.md) — **Architecture:** The \`te9_dev.bookmarks\` table (and \`bookmark_content\`, \`bookmark_analysis\`) is a **read-only mirror populated by an EXTERNAL Raindrop-sync pro
 - [Relevance floor 0.45 sits exactly in the measured gap between noise and matches](learnings/relevance-floor-0-45-sits-exactly-in-the-measured.md) — \`RELEVANCE_FLOOR = 0.45\` in \`src/lib/server/search.ts\` is not a guess — it was calibrated (2026-11-01) against real rerank-2.5-lite score distributions using \`s
+- [Search Demand Memo is the unique differentiator](learnings/search-demand-memo-is-the-unique-differentiator.md) — Of the 16 spotlight formats, only the Search Demand Memo (C3) can't be replicated by competitors — it's built from the \`search_logs\` table, which only this proj
+- [Search logging must be fire-and-forget](learnings/search-logging-must-be-fire-and-forget.md) — Logging inserts into the search path follow the same contract as the existing \`search_misses\` insert: never awaited, never thrown into the caller — a logging fa
 - [SELECT DISTINCT ... ORDER BY random() is illegal in Postgres](learnings/select-distinct-order-by-random-is-illegal-in-postgres.md) — **The rule:** with \`SELECT DISTINCT\`, every \`ORDER BY\` expression must appear in the select list. \`random()\` is not in the list, so Postgres rejects the query w
 - [Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe](learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md) — The site-wide accent (set 2026-11-01) is \`#0021FF\`, expressed in the OKLCH token system as:
 - [Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors](learnings/skill-skill-md-description-must-quote-colons-to.md) — In \`.agents/skills/*/SKILL.md\`, a plain-scalar \`description:\` value containing \`: \` (colon-space — e.g. from embedded text like \`Triggers:\` or \`Use when:\`) caus
 - [Splitting npm dependency versions: direct dep for the new, pinned deps nest auto](learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md) — When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct dependency — packag
+- [Spotlight pipeline maps to existing stored fields](learnings/spotlight-pipeline-maps-to-existing-stored-fields.md) — Every spotlight structure can be drafted by an LLM from fields the corpus already stores (purpose/howToUse/whenToUse/analysis, embeddings, feed history) plus se
 - [Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first](learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md) — Discovered 2026-11-06 while verifying the new "last 30 days" homepage tile on a local production build:
 - [Standalone tsx scripts hang after success — close the postgres pool or call process.exit()](learnings/standalone-tsx-scripts-hang-after-success-close-the-postgres.md) — Discovered 2026-11-06 while seeding The Drum (\`feed-draw\` seed script run via tsx).
 - [Svelte 5: values captured in plain consts go stale across param navigation — use $derived](learnings/svelte-5-values-captured-in-plain-consts-go-stale.md) — A Svelte 5 component instance **persists across navigation** to the same route with different params (e.g. \`/archive/page/2\` → \`/archive/page/3\`). A plain \`cons
@@ -2459,6 +2468,7 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented](learnings/the-digest-is-deactivated-at-two-layers-feature-gate-disable.md) — **The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out:
 - [The Digest send pipeline verifies in stages — "no active subscribers" is the expected stop when armed but empty](learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr.md) — **The behavior (verified 2026-11-06 after the operator added the utobo secrets):** \`scripts/digest-send.ts\` gates its send path in stages, and the *failure poin
 - [The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly](learnings/the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md) — Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port number on different st
+- [The Walk is the only failure-proof drum type; The Floor starves silently](learnings/the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md) — Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can never 503. All 5 LLM
 - [Translucent overlays ghost background content — auto-opening drawers go canvas-solid](learnings/translucent-overlays-ghost-background-content-auto-opening-d.md) — Discovered 2026-11-07 while building the homepage system drawer (\`src/routes/+page.svelte\`, commit \`9168e3d\`).
 - [Transparent-cutout QA: previews don't honor alpha — verify the alpha channel programmatically](learnings/transparent-cutout-qa-previews-don-t-honor-alpha.md) — When producing a transparent cutout of the [[product-search-mascot-illo-character-pack]] (or any character) for web use, the cutout engine warns of possible **m
 - [TS interfaces lack implicit index signatures — type aliases have them](learnings/ts-interfaces-lack-implicit-index-signatures-type-aliases-ha.md) — **The rule (hit 2026-11-06 in The Drum slice C):** a TypeScript \`interface\` is **not** assignable to \`Record<string, unknown>\` — \`Index signature for type 'stri
@@ -2468,9 +2478,14 @@ Each entry: [title](concept-id.md) — description. Links are clickable in /wiki
 - [Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly](learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — Discovered 2026-11-06 while setting up the utobo sending-domain records for productsear.ch via the GoDaddy Domains API:
 - [Voyage free-tier rate limit (3 RPM / 10K TPM) blocks bulk backfill without a payment method](learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md) — Gotcha
 - [Voyage rerank-2.5-lite has run-to-run rank variance (±2 positions)](learnings/voyage-rerank-2-5-lite-has-run-to-run-rank.md) — The gotcha
+- [Walk item URLs were already stored, only human renderer ignored them](learnings/walk-item-urls-were-already-stored-only-human-renderer-ignor.md) — Walk body items have carried \`body.items[].url\` in the DB all along (including the three live rows), but \`+page.svelte\` rendered \`li.label\` as plain text. The \`
 - [When LLM providers are down, the drum degenerates into consecutive Walk items](learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md) — **The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items** — the same type d
 - [wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs](learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md) — Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-service]] entity page and cross-linking it to the utobo sending-domain ADR in \`docs/w
 - [Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully](learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md) — Discovered 2026-11-07 while wiping all Drum items and handing the surface back to the normal draw flow.
+
+### Preferences
+
+- [Suggested v1 spotlight starting five](preferences/suggested-v1-spotlight-starting-five.md) — Starting set: Teardown, Head-to-Head Comparison, Ranked Listicle, State-of-the-Archetype Report, Search Demand Memo — chosen so no two overlap in job or length.
 <!-- wiki-nav:end -->
 
 An [OKF](https://github.com/earendil-works/okf) bundle documenting this project.
@@ -2536,6 +2551,18 @@ timestamp: "2026-07-03T16:09:45.329Z"
 When extracting the design system from https://agentos-sdk.dev/, the \`:root\` CSS contains leftover shadcn dark-mode HSL variables (e.g. \`--background: 240 10% 3.9%\`). These are **unused dead defaults** — the site is actually a **light** warm-paper theme (\`#EFEFEF\` background + SVG grain).
 
 If you copy the \`:root\` vars blindly you'll get a dark site that does not match the reference. The real tokens live in the component classes and Tailwind config (\`bg-paper\`, \`text-ink\`, \`bg-cream\`), not in those shadcn defaults.
+`,
+  "learnings/all-human-searches-flow-through-api-search.md": `---
+type: Learning
+title: All human searches flow through /api/search
+description: The homepage search is a client-side fetch to \`GET /api/search\` (not a server load), so instrumenting that one endpoint covers all human searches. The homepage'
+tags: [search, api]
+timestamp: "2026-11-18T15:50:53.908Z"
+---
+
+# All human searches flow through /api/search
+
+The homepage search is a client-side fetch to \`GET /api/search\` (not a server load), so instrumenting that one endpoint covers all human searches. The homepage's \`+page.server.ts\` \`?view=llm&q=\` branch is the separate agent path, and \`?view=llm\` must stay excluded from 'web' tagging.
 `,
   "learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md": `---
 type: Learning
@@ -2808,6 +2835,18 @@ Discovered 2026-11-06 while committing/pushing the pipeline work (5 commits, \`1
 
 When doing a final-commit sweep of the repo, these paths are expected leftovers, not missed files. Never move \`.ghtoken\` (or copies of it) into tracked paths.
 `,
+  "learnings/docs-write-up-examples-folder-structure-and-standalone-rende.md": `---
+type: Learning
+title: docs/write-up-examples/ folder structure and standalone rendering
+description: "The \`docs/write-up-examples/\` folder contains 18 files: \`index.html\` (directory of all 16 format examples grouped into families A single-listing / B cluster / C"
+tags: [docs, frontend]
+timestamp: "2026-11-19T10:28:13.632Z"
+---
+
+# docs/write-up-examples/ folder structure and standalone rendering
+
+The \`docs/write-up-examples/\` folder contains 18 files: \`index.html\` (directory of all 16 format examples grouped into families A single-listing / B cluster / C data-research / D explainer-narrative), 16 format pages, and \`_spotlight.css\` (master stylesheet). Every page inlines a copy of the CSS so it renders standalone; \`_spotlight.css\` is kept as the single source for design tweaks.
+`,
   "learnings/don-t-name-a-domain-type-node-in-dom-lib-code-shadowing-the-.md": `---
 type: Learning
 title: Don't name a domain type Node in DOM-lib code — shadowing the global bites
@@ -2990,6 +3029,18 @@ A crude strip of the hash (\`.izzyoe\`) leaves \`:where(.svelte-izzyoe)\` behind
 - Or replicate the scope class on the test markup (add \`class="svelte-izzyoe"\` to each element).
 
 The real app is unaffected — its markup carries the scope classes; only extracted-CSS test harnesses hit this. Related QA technique: freeze animations with \`animation-play-state: paused\` before screenshotting.
+`,
+  "learnings/feed-generators-self-gate-by-returning-null-rotation-falls-t.md": `---
+type: Learning
+title: Feed generators self-gate by returning null; rotation falls through
+description: "Frequency control is implemented inside each generator: \`walk.ts\` returns \`null\` when <20 days since the last *published* walk, and the rotation's existing catc"
+tags: [feed, walk, generators]
+timestamp: "2026-11-18T15:31:18.672Z"
+---
+
+# Feed generators self-gate by returning null; rotation falls through
+
+Frequency control is implemented inside each generator: \`walk.ts\` returns \`null\` when <20 days since the last *published* walk, and the rotation's existing catch-and-skip semantics advance to the next type. No rotation logic changes are needed to throttle a generator — this is the established pattern for gating cadence.
 `,
   "learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis.md": `---
 type: Learning
@@ -3293,6 +3344,15 @@ parses as \`ba, (generate_series(...) JOIN bookmarks ON ...)\` — the JOIN is a
 - [Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email](./drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md) - **The fact (established 2026-11-13 while answering "should I have gotten an email already?"):** the Drum approval-email cadence is a **24h clock measured from t
 - [When LLM providers are down, the drum degenerates into consecutive Walk items](./when-llm-providers-are-down-the-drum-degenerates-into-consec.md) - **The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items** — the same type d
 - [The Walk is the only failure-proof drum type; The Floor starves silently](./the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md) - Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can never 503. All 5 LLM
+- [Walk item URLs were already stored, only human renderer ignored them](./walk-item-urls-were-already-stored-only-human-renderer-ignor.md) - Walk body items have carried \`body.items[].url\` in the DB all along (including the three live rows), but \`+page.svelte\` rendered \`li.label\` as plain text. The \`
+- [Feed generators self-gate by returning null; rotation falls through](./feed-generators-self-gate-by-returning-null-rotation-falls-t.md) - Frequency control is implemented inside each generator: \`walk.ts\` returns \`null\` when <20 days since the last *published* walk, and the rotation's existing catc
+- [All human searches flow through /api/search](./all-human-searches-flow-through-api-search.md) - The homepage search is a client-side fetch to \`GET /api/search\` (not a server load), so instrumenting that one endpoint covers all human searches. The homepage'
+- [Search logging must be fire-and-forget](./search-logging-must-be-fire-and-forget.md) - Logging inserts into the search path follow the same contract as the existing \`search_misses\` insert: never awaited, never thrown into the caller — a logging fa
+- [Search Demand Memo is the unique differentiator](./search-demand-memo-is-the-unique-differentiator.md) - Of the 16 spotlight formats, only the Search Demand Memo (C3) can't be replicated by competitors — it's built from the \`search_logs\` table, which only this proj
+- [Spotlight pipeline maps to existing stored fields](./spotlight-pipeline-maps-to-existing-stored-fields.md) - Every spotlight structure can be drafted by an LLM from fields the corpus already stores (purpose/howToUse/whenToUse/analysis, embeddings, feed history) plus se
+- [Site styling tokens live in src/app.css](./site-styling-tokens-live-in-src-app-css.md) - The canonical design system for productsear.ch pages is extracted from \`src/app.css\`: Hanken Grotesk + Martian Mono fonts, OKLCH warm-paper palette, \`#0021FF\` a
+- [Write-up example corpus data](./write-up-example-corpus-data.md) - Real database data grounds the 16 format examples: n8n saved July 2023 (comeback), Perplexica saved twice, ai-coding-agent saves grew 3 (2022) → 492 (2026), day
+- [docs/write-up-examples/ folder structure and standalone rendering](./docs-write-up-examples-folder-structure-and-standalone-rende.md) - The \`docs/write-up-examples/\` folder contains 18 files: \`index.html\` (directory of all 16 format examples grouped into families A single-listing / B cluster / C
 `,
   "learnings/interview-brevity-refinement-bare-lettered-options-no-prose-.md": `---
 type: Learning
@@ -3631,6 +3691,30 @@ timestamp: "2026-11-01T01:12:01.418Z"
 
 **Related**: rerank scores have run-to-run variance (±2 rank positions) — see [[voyage-rerank-2-5-lite-has-run-to-run-rank]]. Re-calibrate with \`scripts/calibrate-floor.ts\` if the corpus or rerank model changes.
 `,
+  "learnings/search-demand-memo-is-the-unique-differentiator.md": `---
+type: Learning
+title: Search Demand Memo is the unique differentiator
+description: Of the 16 spotlight formats, only the Search Demand Memo (C3) can't be replicated by competitors — it's built from the \`search_logs\` table, which only this proj
+tags: [spotlight, search-logs]
+timestamp: "2026-11-19T10:12:16.233Z"
+---
+
+# Search Demand Memo is the unique differentiator
+
+Of the 16 spotlight formats, only the Search Demand Memo (C3) can't be replicated by competitors — it's built from the \`search_logs\` table, which only this project has. It anchors the suggested v1 starting five.
+`,
+  "learnings/search-logging-must-be-fire-and-forget.md": `---
+type: Learning
+title: Search logging must be fire-and-forget
+description: "Logging inserts into the search path follow the same contract as the existing \`search_misses\` insert: never awaited, never thrown into the caller — a logging fa"
+tags: [convention, telemetry]
+timestamp: "2026-11-18T15:50:53.934Z"
+---
+
+# Search logging must be fire-and-forget
+
+Logging inserts into the search path follow the same contract as the existing \`search_misses\` insert: never awaited, never thrown into the caller — a logging failure cannot slow or break a search. Extend this pattern for any future telemetry.
+`,
   "learnings/select-distinct-order-by-random-is-illegal-in-postgres.md": `---
 type: Learning
 title: SELECT DISTINCT ... ORDER BY random() is illegal in Postgres
@@ -3670,6 +3754,18 @@ The site-wide accent (set 2026-11-01) is \`#0021FF\`, expressed in the OKLCH tok
 
 Contrast on the paper background is **7.89:1** — WCAG AA ✓ even at the small mono label sizes it drives (wordmark, domain labels, links, focus ring + caret). Unlike the old gold accent (see the gold/AA learning), this blue is safe for text at any size used on the site. Tokens live in \`src/app.css\`.
 `,
+  "learnings/site-styling-tokens-live-in-src-app-css.md": `---
+type: Learning
+title: Site styling tokens live in src/app.css
+description: "The canonical design system for productsear.ch pages is extracted from \`src/app.css\`: Hanken Grotesk + Martian Mono fonts, OKLCH warm-paper palette, \`#0021FF\` a"
+tags: [frontend, design-system, docs]
+timestamp: "2026-11-19T10:27:19.426Z"
+---
+
+# Site styling tokens live in src/app.css
+
+The canonical design system for productsear.ch pages is extracted from \`src/app.css\`: Hanken Grotesk + Martian Mono fonts, OKLCH warm-paper palette, \`#0021FF\` accent, mono eyebrows. Write-up examples inline this CSS so each page is fully self-contained and renders correctly opened directly from Explorer.
+`,
   "learnings/skill-skill-md-description-must-quote-colons-to.md": `---
 type: Learning
 title: Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors
@@ -3700,6 +3796,18 @@ timestamp: "2026-11-06T14:18:49.894Z"
 # Splitting npm dependency versions: direct dep for the new, pinned deps nest auto
 
 When different versions of a package must coexist (npm hoists only ONE version to top-level node_modules), declare the newer one as a direct dependency — packages with a pinned dependency get their version nested under themselves, while packages with a peer dep on the top-level resolve the hoisted one. E.g. zod@4 direct + @ai-sdk packages pinning zod@3 → clean split. Don't install just the version a lib needs as a direct dep when a peer-dep'd consumer still needs the old one.
+`,
+  "learnings/spotlight-pipeline-maps-to-existing-stored-fields.md": `---
+type: Learning
+title: Spotlight pipeline maps to existing stored fields
+description: Every spotlight structure can be drafted by an LLM from fields the corpus already stores (purpose/howToUse/whenToUse/analysis, embeddings, feed history) plus se
+tags: [spotlight, content]
+timestamp: "2026-11-19T10:12:16.251Z"
+---
+
+# Spotlight pipeline maps to existing stored fields
+
+Every spotlight structure can be drafted by an LLM from fields the corpus already stores (purpose/howToUse/whenToUse/analysis, embeddings, feed history) plus search demand data — no new data collection needed for v1.
 `,
   "learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md": `---
 type: Learning
@@ -4131,6 +4239,18 @@ Also: run-to-run shuffles also mean "minor top-5 reordering" on control queries 
 
 Related: the fix context in [[enrich-reranker-input-with-page-content-show-30]]; methodology in [[diagnose-search-misses-stage-by-step-before-tuning]].
 `,
+  "learnings/walk-item-urls-were-already-stored-only-human-renderer-ignor.md": `---
+type: Learning
+title: Walk item URLs were already stored, only human renderer ignored them
+description: "Walk body items have carried \`body.items[].url\` in the DB all along (including the three live rows), but \`+page.svelte\` rendered \`li.label\` as plain text. The \`"
+tags: [feed, walk, svelte]
+timestamp: "2026-11-18T15:31:18.651Z"
+---
+
+# Walk item URLs were already stored, only human renderer ignored them
+
+Walk body items have carried \`body.items[].url\` in the DB all along (including the three live rows), but \`+page.svelte\` rendered \`li.label\` as plain text. The \`?view=llm\` twin already printed the URLs. So making items clickable needed no data migration — just a renderer fix.
+`,
   "learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md": `---
 type: Learning
 title: When LLM providers are down, the drum degenerates into consecutive Walk items
@@ -4196,6 +4316,18 @@ Discovered 2026-11-07 while wiping all Drum items and handing the surface back t
 
 **Restore proven before the wipe:** 10 rows backed up to \`.work/feed-items-backup-2026-11-07T12-25-03-519Z.json\`; \`.work/feed-items-tool.ts restore <backup-file>\` re-inserts them (dry-run verified 10/10 in a rolled-back transaction). \`.work/\` is local scratch — the tool/backup may not persist; the procedure (see the destructive-bulk-delete rule) is what carries over.
 `,
+  "learnings/write-up-example-corpus-data.md": `---
+type: Learning
+title: Write-up example corpus data
+description: "Real database data grounds the 16 format examples: n8n saved July 2023 (comeback), Perplexica saved twice, ai-coding-agent saves grew 3 (2022) → 492 (2026), day"
+tags: [database, content]
+timestamp: "2026-11-19T10:27:19.491Z"
+---
+
+# Write-up example corpus data
+
+Real database data grounds the 16 format examples: n8n saved July 2023 (comeback), Perplexica saved twice, ai-coding-agent saves grew 3 (2022) → 492 (2026), day-one search log included "local postgres" (26 hits), rag-search has 120 listings, agent-framework taxonomy 792 listings.
+`,
   "memory.md": `---
 okf_version: "0.2"
 ---
@@ -4206,7 +4338,7 @@ okf_version: "0.2"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15:30:37.021Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-19T10:28:13.645Z.
 
 ## Recent Decisions
 
@@ -4254,8 +4386,21 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15
 - [Pool-then-rerank with graceful fallback for retrieval](rules/pool-then-rerank-with-graceful-fallback-for.md) — Guideline (2026-07-04)
 - [Sanitize text at the embedding API boundary](rules/sanitize-text-at-the-embedding-api-boundary.md) — Guideline (2026-07-04)
 
+## Preferences & Conventions
+
+- [Suggested v1 spotlight starting five](preferences/suggested-v1-spotlight-starting-five.md) — Starting set: Teardown, Head-to-Head Comparison, Ranked Listicle, State-of-the-Archetype Report, Search Demand Memo — chosen so no two overl… (2026-11-19)
+
 ## Recent Learnings — development patterns
 
+- [docs/write-up-examples/ folder structure and standalone rendering](learnings/docs-write-up-examples-folder-structure-and-standalone-rende.md) — The \`docs/write-up-examples/\` folder contains 18 files: \`index.html\` (directory of all 16 format examples grouped into families A single-lis… (2026-11-19)
+- [Write-up example corpus data](learnings/write-up-example-corpus-data.md) — Real database data grounds the 16 format examples: n8n saved July 2023 (comeback), Perplexica saved twice, ai-coding-agent saves grew 3 (202… (2026-11-19)
+- [Site styling tokens live in src/app.css](learnings/site-styling-tokens-live-in-src-app-css.md) — The canonical design system for productsear.ch pages is extracted from \`src/app.css\`: Hanken Grotesk + Martian Mono fonts, OKLCH warm-paper … (2026-11-19)
+- [Spotlight pipeline maps to existing stored fields](learnings/spotlight-pipeline-maps-to-existing-stored-fields.md) — Every spotlight structure can be drafted by an LLM from fields the corpus already stores (purpose/howToUse/whenToUse/analysis, embeddings, f… (2026-11-19)
+- [Search Demand Memo is the unique differentiator](learnings/search-demand-memo-is-the-unique-differentiator.md) — Of the 16 spotlight formats, only the Search Demand Memo (C3) can't be replicated by competitors — it's built from the \`search_logs\` table, … (2026-11-19)
+- [Search logging must be fire-and-forget](learnings/search-logging-must-be-fire-and-forget.md) — Logging inserts into the search path follow the same contract as the existing \`search_misses\` insert: never awaited, never thrown into the c… (2026-11-18)
+- [All human searches flow through /api/search](learnings/all-human-searches-flow-through-api-search.md) — The homepage search is a client-side fetch to \`GET /api/search\` (not a server load), so instrumenting that one endpoint covers all human sea… (2026-11-18)
+- [Feed generators self-gate by returning null; rotation falls through](learnings/feed-generators-self-gate-by-returning-null-rotation-falls-t.md) — Frequency control is implemented inside each generator: \`walk.ts\` returns \`null\` when <20 days since the last *published* walk, and the rota… (2026-11-18)
+- [Walk item URLs were already stored, only human renderer ignored them](learnings/walk-item-urls-were-already-stored-only-human-renderer-ignor.md) — Walk body items have carried \`body.items[].url\` in the DB all along (including the three live rows), but \`+page.svelte\` rendered \`li.label\` … (2026-11-18)
 - [The Walk is the only failure-proof drum type; The Floor starves silently](learnings/the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md) — Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can … (2026-11-18)
 - [When LLM providers are down, the drum degenerates into consecutive Walk items](learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md) — **The fact (established 2026-11-18):** when the LLM drafting chain is down, The Drum's round-robin degenerates into **consecutive Walk items… (2026-11-18)
 - [Drum 24h cadence clock runs from the last draw — a manual redraw legitimately skips the next morning email](learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr.md) — **The fact (established 2026-11-13 while answering "should I have gotten an email already?"):** the Drum approval-email cadence is a **24h c… (2026-11-13)
@@ -4267,15 +4412,6 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15
 - [The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented](learnings/the-digest-is-deactivated-at-two-layers-feature-gate-disable.md) — **The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out: (2026-11-09)
 - [GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires](learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md) — **The gotcha (found 2026-11-09):** a \`run:\` value containing \`Drum draw:\` — a \`colon+space\` inside a plain (unquoted) YAML scalar — made \`.g… (2026-11-09)
 - [Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully](learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md) — Discovered 2026-11-07 while wiping all Drum items and handing the surface back to the normal draw flow. (2026-11-07)
-- [Bluesky link-card cache is keyed by the shared URL — bust the share URL, not just og:image](learnings/bluesky-link-card-cache-is-keyed-by-the-shared-url-bust-the-.md) — **The mechanism (discovered 2026-11-07, commit \`80cadc8\`):** Bluesky's link-card cache is keyed by **the shared URL itself** (\`/listings/227… (2026-11-07)
-- [Bluesky caches og:image aggressively — bump a ?v=N cache-bust on card URLs after redesigns](learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md) — **The incident (2026-11-07, commit \`6b3aeb0\`):** after the receipt-card redesign, the user pasted a Bluesky compose screenshot showing the *… (2026-11-07)
-- [Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)](learnings/fixed-locally-but-never-committed-verify-head-bytes-when-pro.md) — **The incident (2026-11-07, commit \`faf3818\`):** production Bluesky cards rendered with **all text missing** while the local working tree re… (2026-11-07)
-- [Translucent overlays ghost background content — auto-opening drawers go canvas-solid](learnings/translucent-overlays-ghost-background-content-auto-opening-d.md) — Discovered 2026-11-07 while building the homepage system drawer (\`src/routes/+page.svelte\`, commit \`9168e3d\`). (2026-11-07)
-- [opacity-0 elements still occupy layout space — closed tipboxes caused 54px of phantom overflow](learnings/opacity-0-elements-still-occupy-layout-space-closed-tipboxes.md) — Discovered 2026-11-06 while probing 54px of hidden horizontal overflow on 390px phones: the three closed tipboxes were hidden with \`opacity:… (2026-11-06)
-- [The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly](learnings/the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md) — Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port nu… (2026-11-06)
-- [The Digest send pipeline verifies in stages — "no active subscribers" is the expected stop when armed but empty](learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr.md) — **The behavior (verified 2026-11-06 after the operator added the utobo secrets):** \`scripts/digest-send.ts\` gates its send path in stages, a… (2026-11-06)
-- [Utobo API key provisioning: dashboard path, shown once, Send-only scope](learnings/utobo-api-key-provisioning-dashboard-path-shown-once-send-on.md) — **The how-to (settled 2026-11-06 while wiring The Digest's sends):** the utobo API key for \`UTOBO_EMAIL_API_KEY\` is created in the **email.u… (2026-11-06)
-- [gstatic css2 legacy-UA downloads are EOT files, not TTFs — pull real TTFs from the official repo](learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user-agent.md) — The legacy user-agent trick against Google Fonts' css2 API returns URLs whose downloaded bytes are legacy EOT, not TTF — @resvg/resvg-js sil… (2026-11-06)
 
 ## Architecture
 
@@ -4283,6 +4419,7 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15
 
 ## Global Patterns
 
+- [Spotlight write-up format taxonomy](pages/concepts/spotlight-write-up-format-taxonomy.md) — Editorial catalog of 16 write-up structures in 4 families for promoting database listings: A) single-listing (Teardown, First-Run Guide, Cur… (2026-11-19)
 - [Search and LLM discovery layer](pages/concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine cra… (2026-11-10)
 - [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it? (2026-11-06)
 - [URL-driven search state](pages/concepts/url-driven-search-state.md) — What is it? (2026-08-25)
@@ -4437,6 +4574,18 @@ timestamp: "2026-11-06T08:25:12.015Z"
 - \`confidence\` reuses build-html.js \`qualityOk()\` buckets: \`solid\` (corroborated match) vs \`review\` (mostly \`name-search\` hits — filter before ingesting)
 - Re-run: \`node .archive/repo-scan/missing-repos.js\` (needs \`.env\` DATABASE_URL at project root)
 `,
+  "pages/artifacts/docs-write-up-examples-gallery-17-files.md": `---
+type: Artifact
+title: docs/write-up-examples gallery (17 files)
+description: "16 self-contained HTML write-up examples (Families A–D) plus \`index.html\` gallery, stored in \`E:\\productsear.ch\\docs\\write-up-examples\`. Each demonstrates one S"
+tags: [docs, spotlight]
+timestamp: "2026-11-19T10:27:19.537Z"
+---
+
+# docs/write-up-examples gallery (17 files)
+
+16 self-contained HTML write-up examples (Families A–D) plus \`index.html\` gallery, stored in \`E:\\productsear.ch\\docs\\write-up-examples\`. Each demonstrates one Spotlight format with real corpus data and site-accurate styling (CSS inlined, light+dark via system preference).
+`,
   "pages/artifacts/host0-ai-and-clawrun-sh-design-references.md": `---
 type: Artifact
 title: host0.ai and clawrun.sh design references
@@ -4568,6 +4717,8 @@ _Documents, diagrams, and deliverables will be listed here._
 - [digital-products-repos activity split CSVs](./digital-products-repos-activity-split-csvs.md) - What is it?
 - [insert-missing-repos-active-30d.sql](./insert-missing-repos-active-30d-sql.md) - What is it?
 - [The Drum feed spec](./the-drum-feed-spec.md) - **The Drum feed spec** — the formal, converged specification for [[entities/the-drum-feed]], committed at \`docs/specs/the-drum.md\` after the 15-turn diverge/con
+- [Spotlight write-up examples (16 formats)](./spotlight-write-up-examples-16-formats.md) - What it is
+- [docs/write-up-examples gallery (17 files)](./docs-write-up-examples-gallery-17-files.md) - 16 self-contained HTML write-up examples (Families A–D) plus \`index.html\` gallery, stored in \`E:\\productsear.ch\\docs\\write-up-examples\`. Each demonstrates one S
 `,
   "pages/artifacts/insert-missing-repos-active-30d-sql.md": `---
 type: Artifact
@@ -4628,6 +4779,39 @@ An animated ~6-scene promo MP4 that introduces productsear.ch: semantic bookmark
 ## Source
 
 - [driving-html-video-nexu-io-headlessly-to-render-a](../../learnings/driving-html-video-nexu-io-headlessly-to-render-a.md) — the full how-to and the gotchas (prereqs, why the Studio was skipped, the freeze/unfreeze breakage, the multi-frame fix).
+`,
+  "pages/artifacts/spotlight-write-up-examples-16-formats.md": `---
+type: Artifact
+title: Spotlight write-up examples (16 formats)
+description: What it is
+tags: [spotlight, write-ups, examples, editorial, design-system]
+timestamp: "2026-11-19T10:26:43.255Z"
+---
+
+# Spotlight write-up examples (16 formats)
+
+## What it is
+
+Sixteen fully-drafted example write-ups — one per Spotlight format — each built from **live te9_dev corpus data** and styled with the **exact productsear.ch design system**, stored at \`docs/write-up-examples/\` (16 pages + \`index.html\` gallery + \`_spotlight.css\` master stylesheet, pages self-contained with inlined CSS).
+
+## What it documents
+
+- The editorial core of the [the-drum-feed](./the-drum-feed.md)'s planned sibling surface: the **Spotlight feature** (admin search → promote listing(s) → pick format → draft → email approval → \`/spotlight/[slug]\`)
+- Format families: **A** single-listing (Teardown, First-Run Guide, Curator's Note, Comeback Review, Underdog vs Default) · **B** clusters (Head-to-Head, Listicle, Alternatives, Toolkit/Stack, Collection Tour) · **C** data research (State-of Report, Trend Brief, Search Demand Memo, Graveyard Report) · **D** explainer/narrative (Field Guide, Workflow Story)
+- Real data used per example: Hindsight (#978), Better Fullstack (#583), HMML (#508766), n8n (#-2, saved 2023), Perplexica (#1343/#711), Paseo/Shannon/AgentOS, GuppyLM/Dot/Doberman/Openship, Fabric & pluto, archetype stats (ai-coding-agent 538 with the 2022:3→2026:492 curve; agent-framework 792; rag-search 120), 30-day intake (458 saves/148 domains), and day-one [search-logging-search-logs](./search-logging-search-logs.md) rows
+- **Format**: standalone HTML, exact site tokens (Hanken Grotesk + Martian Mono, OKLCH warm-paper palette, #0021FF accent, light/dark) — generated 2026-11-19 in the planning session for the Spotlight feature
+- Generated from: live DB queries (archetype counts, per-year saves, domain concentration, recent saves, search logs, dead-repo scan)
+
+## Decisions embedded
+
+- All 16 formats enter the Spotlight workflow (user: "add me all types to the workflow")
+- Every example carries the site's trust pattern: corpus-evidence boxes with real listing ids, question-style closer, "not published" disclaimer
+- The Search Demand Memo (13) is positioned as the format **only productsear.ch can run** (search_logs + corpus in one place)
+
+## Lifecycle
+
+- First created: 2026-11-19 — user asked for every format demonstrated with real data before building the admin feature. Next: pick none/all already settled (all 16) → build the Spotlight admin + publishing surface.
+- 2026-11-19 — \`HANDOFF.md\` added to this folder: the pickup document for the Spotlight build (goal, existing assets, proposed shape, dependencies incl. the open Railway LLM-gateway blocker, and the acceptance-criteria checklist).
 `,
   "pages/artifacts/the-drum-feed-spec.md": `---
 type: Artifact
@@ -4695,6 +4879,7 @@ _Abstract ideas and definitions will be listed here._
 - [URL-driven search state](./url-driven-search-state.md) - What is it?
 - [Hybrid search via Reciprocal Rank Fusion](./hybrid-search-via-reciprocal-rank-fusion.md) - What is it?
 - [Search and LLM discovery layer](./search-and-llm-discovery-layer.md) - The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
+- [Spotlight write-up format taxonomy](./spotlight-write-up-format-taxonomy.md) - Editorial catalog of 16 write-up structures in 4 families for promoting database listings: A) single-listing (Teardown, First-Run Guide, Curator's Note, Comebac
 `,
   "pages/concepts/llm-content-negotiation.md": `---
 type: Concept
@@ -4778,6 +4963,18 @@ A search app that search engines and AI agents cannot discover undercuts its own
 - \`static/robots.txt\`, \`src/hooks.server.ts\`, \`src/app.html\` — crawl control + announcement channels
 - \`src/routes/sitemap.xml/+server.ts\`, \`src/routes/llms.txt/+server.ts\`, \`src/routes/feed.xml/+server.ts\`, \`src/routes/.well-known/security.txt/+server.ts\` — discovery surfaces
 - \`src/routes/+page.svelte\` et al. — per-page meta/JSON-LD
+`,
+  "pages/concepts/spotlight-write-up-format-taxonomy.md": `---
+type: Concept
+title: Spotlight write-up format taxonomy
+description: "Editorial catalog of 16 write-up structures in 4 families for promoting database listings: A) single-listing (Teardown, First-Run Guide, Curator's Note, Comebac"
+tags: [spotlight, editorial]
+timestamp: "2026-11-19T10:12:16.210Z"
+---
+
+# Spotlight write-up format taxonomy
+
+Editorial catalog of 16 write-up structures in 4 families for promoting database listings: A) single-listing (Teardown, First-Run Guide, Curator's Note, Comeback Review, Underdog vs The Default), B) cluster (Head-to-Head, Ranked Listicle, Alternatives Page, Toolkit/Stack Build, Collection Tour), C) data research (State-of-the-Archetype Report, Trend Brief, Search Demand Memo, Graveyard Report), D) explainer/narrative (Field Guide, Workflow Story).
 `,
   "pages/concepts/url-driven-search-state.md": `---
 type: Concept
@@ -5350,7 +5547,8 @@ Role: doubles as the "engine room" readout during flight (the latency cell pulse
 - [llms.txt agent index](./llms-txt-agent-index.md) - \`/llms.txt\` — the curated, llmstxt.org-convention index of productsear.ch for LLMs and AI agents, generated at request time with live corpus stats so agents alw
 - [Dynamic XML sitemap endpoint](./dynamic-xml-sitemap-endpoint.md) - \`/sitemap.xml\` — the dynamic XML sitemap serving the **hub URLs** of productsear.ch: 6 static surfaces + all 30 archetype collections = **36 URLs**. Listing pag
 - [The Drum feed](./the-drum-feed.md) - **The Drum** is productsear.ch's corpus-narrated magazine feed — a machine-drafted, human-gated stream of 11 item types — 10 drawing today — published on a **da
-- [Drum email approval pipeline](./drum-email-approval-pipeline.md) - **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner 
+- [Drum email approval pipeline](./drum-email-approval-pipeline.md) - **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner
+- [Search logging (search_logs)](./search-logging-search-logs.md) - What it is
 `,
   "pages/entities/infotip-component.md": `---
 type: Entity
@@ -5649,6 +5847,43 @@ Makes "why didn't search find X" a 2-minute answer instead of an archaeology dig
 ## Lifecycle
 
 - First added: 2026-11-01, during the MotionClone rerank-miss diagnosis (commit \`decb723\`).
+`,
+  "pages/entities/search-logging-search-logs.md": `---
+type: Entity
+title: Search logging (search_logs)
+description: What it is
+tags: [search, analytics, logging, admin, search-logs]
+timestamp: "2026-11-18T15:47:44.157Z"
+---
+
+# Search logging (search_logs)
+
+## What it is
+
+The search analytics log — **one append-only row per executed search** on productsear.ch, stored in \`te9_dev.search_logs\`, surfaced read-only in the admin console at \`/admin/searches\`. Answers "what are people (and agents) searching for?".
+
+## Why it matters?
+
+Before this, the only search signal was [the-drum-feed](./the-drum-feed.md)'s \`search_misses\` table — zero-result queries only, feeding The Floor's aggregated themes. There was no way to see *successful* searches, search volume, or what the corpus gets asked for most. The log turns search from an invisible read path into a measurable one.
+
+## Details
+
+- **Location**: \`src/lib/server/search-logs.ts\` (helper), \`scripts/migration-search-logs.sql\` (table)
+- **Schema**: \`query\` (truncated to 300 chars), \`source\` (\`web\` = the site's own UI, \`api\` = external callers of GET /api/search, \`llm\` = the homepage \`?view=llm\` machine twin), \`results\` (honest total above the 0.45 relevance floor), \`took_ms\`, \`created_at\`; indexed on \`created_at DESC\`
+- **Contract**: fire-and-forget — \`logSearch()\` never awaits, never throws into the search path (same contract as the [the-drum-feed](./the-drum-feed.md) misses insert). A logging failure can never slow or break a search.
+- **Wiring**: \`/api/search\` logs every query (source \`web\` when the site's own homepage client tags \`&src=web\`, else \`api\`); the homepage \`?view=llm&q=\` branch logs source \`llm\`
+- **Admin surface**: \`/admin/searches\` — last-24h / 7-day / zero-result counters, top queries and top zero-result queries over 7 days, latest 50 raw rows
+- **Privacy**: raw queries are for the owner's analysis only; public surfaces keep publishing aggregated themes, never raw queries (The Floor rule, unchanged)
+
+## Relationships
+
+- [api-search-endpoint](./api-search-endpoint.md) — the logging hook lives in its GET handler; \`&src=web\` is the new UI tag
+- [the-drum-feed](./the-drum-feed.md) — \`search_misses\` stays the Floor's raw material; \`search_logs\` is the superset analytics twin
+- admin console — \`/admin/searches\` joins the console nav (overview / extensions / agents / settings / features / searches)
+
+## Lifecycle
+
+- First added: 2026-11-18 — owner asked to log all searches to see what people search for; migration dry-run then committed against the shared Railway DB, helper tested end-to-end before deploy.
 `,
   "pages/entities/the-digest-email-digest-pipeline.md": `---
 type: Entity
@@ -6039,7 +6274,11 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [JsonLd.svelte component](./entities/jsonld-svelte-component.md) — \`src/lib/components/JsonLd.svelte\` — a head component that renders a schema.org JSON-LD \`<script type="application/ld+json">\` block from server-owned data.
 - [llms.txt agent index](./entities/llms-txt-agent-index.md) — \`/llms.txt\` — the curated, llmstxt.org-convention index of productsear.ch for LLMs and AI agents, generated at request time with live corpus stats so agents alw
 - [Search and LLM discovery layer](./concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
-- [Drum email approval pipeline](./entities/drum-email-approval-pipeline.md) — **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner 
+- [Drum email approval pipeline](./entities/drum-email-approval-pipeline.md) — **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner
+- [Search logging (search_logs)](./entities/search-logging-search-logs.md) — What it is
+- [Spotlight write-up format taxonomy](./concepts/spotlight-write-up-format-taxonomy.md) — Editorial catalog of 16 write-up structures in 4 families for promoting database listings: A) single-listing (Teardown, First-Run Guide, Curator's Note, Comebac
+- [Spotlight write-up examples (16 formats)](./artifacts/spotlight-write-up-examples-16-formats.md) — What it is
+- [docs/write-up-examples gallery (17 files)](./artifacts/docs-write-up-examples-gallery-17-files.md) — 16 self-contained HTML write-up examples (Families A–D) plus \`index.html\` gallery, stored in \`E:\\productsear.ch\\docs\\write-up-examples\`. Each demonstrates one S
 `,
   "pages/TEMPLATES.md": `---
 type: Concept
@@ -6112,6 +6351,22 @@ a stable structure so pages are consistent, skimmable, and well-linked.
 ## Source
 - Generated from: [what data, process, or session produced it]
 \`\`\`
+`,
+  "preferences/index.md": `# Preferences
+
+- [Suggested v1 spotlight starting five](./suggested-v1-spotlight-starting-five.md) - Starting set: Teardown, Head-to-Head Comparison, Ranked Listicle, State-of-the-Archetype Report, Search Demand Memo — chosen so no two overlap in job or length.
+`,
+  "preferences/suggested-v1-spotlight-starting-five.md": `---
+type: Preference
+title: Suggested v1 spotlight starting five
+description: "Starting set: Teardown, Head-to-Head Comparison, Ranked Listicle, State-of-the-Archetype Report, Search Demand Memo — chosen so no two overlap in job or length."
+tags: [spotlight, v1]
+timestamp: "2026-11-19T10:12:16.263Z"
+---
+
+# Suggested v1 spotlight starting five
+
+Starting set: Teardown, Head-to-Head Comparison, Ranked Listicle, State-of-the-Archetype Report, Search Demand Memo — chosen so no two overlap in job or length. Awaiting user confirmation on the v1 cut, naming (is 'Spotlight' the surface or just admin section?), and single vs multi-item scope.
 `,
   "rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md": `---
 type: Rule
@@ -6755,6 +7010,7 @@ var WIKI_PAGES = [
   { path: "learnings/21st-dev-cdn-preview-pages-inline-the-animation.md", label: "21st.dev CDN preview pages inline the animation CSS inside the JS bundle, not the HTML", group: "Learnings" },
   { path: "learnings/adapter-node-requires-origin-env-var-for-csrf.md", label: "adapter-node requires ORIGIN env var for CSRF protection", group: "Learnings" },
   { path: "learnings/agentos-sdk-dev-is-a-light-warm-paper-theme-not.md", label: "agentos-sdk.dev is a light warm-paper theme, not dark", group: "Learnings" },
+  { path: "learnings/all-human-searches-flow-through-api-search.md", label: "All human searches flow through /api/search", group: "Learnings" },
   { path: "learnings/analyzed-metric-100-analyzer-fallback-patch-what-the-metric-.md", label: "Analyzed metric 100%: analyzer fallback patch + what the metric actually counts", group: "Learnings" },
   { path: "learnings/await-dotenv-imports-anchor-env-path.md", label: "Await dotenv imports; anchor .env path", group: "Learnings" },
   { path: "learnings/better-auth-on-sveltekit-adapter-node-zod4-opentelemetry-api.md", label: "better-auth on SvelteKit adapter-node: zod4 + @opentelemetry/api must be installed", group: "Learnings" },
@@ -6767,6 +7023,7 @@ var WIKI_PAGES = [
   { path: "learnings/corpus-schema-facts-raindrop-created-at-analysis.md", label: "Corpus schema facts: raindrop_created_at, analysis who/what/how/when fields, 1,320 messy categories", group: "Learnings" },
   { path: "learnings/dark-theme-token-architecture-theme-inline-html-dark-swap-no.md", label: "Dark theme token architecture: @theme inline + html.dark swap, no hardcoded oklch", group: "Learnings" },
   { path: "learnings/deliberately-untracked-paths-archive-is-gitignored-holds-ght.md", label: "Deliberately untracked paths: .archive/ is gitignored (holds .ghtoken); wave-loader-demo.html stays local-only", group: "Learnings" },
+  { path: "learnings/docs-write-up-examples-folder-structure-and-standalone-rende.md", label: "docs/write-up-examples/ folder structure and standalone rendering", group: "Learnings" },
   { path: "learnings/don-t-name-a-domain-type-node-in-dom-lib-code-shadowing-the-.md", label: "Don't name a domain type Node in DOM-lib code — shadowing the global bites", group: "Learnings" },
   { path: "learnings/driving-html-video-nexu-io-headlessly-to-render-a.md", label: "Driving html-video (nexu-io) headlessly to render a product video", group: "Learnings" },
   { path: "learnings/drizzle-s-sql-tag-expands-js-arrays-into-a-param-tuple-not-a.md", label: "Drizzle's sql tag expands JS arrays into a param tuple — not an array literal", group: "Learnings" },
@@ -6775,6 +7032,7 @@ var WIKI_PAGES = [
   { path: "learnings/explicit-outer-select-silently-drops-columns.md", label: "Explicit outer SELECT silently drops columns carried by CTE `scored.*`", group: "Learnings" },
   { path: "learnings/external-crawler-analyzer-lives-at-e-te9-dev-analyzer-requir.md", label: "External crawler/analyzer lives at E:\\te9.dev — analyzer requires crawled content, processes 100 rows/run newest-first", group: "Learnings" },
   { path: "learnings/extracted-svelte-scoped-css-needs-scope-classes.md", label: "Extracted Svelte scoped CSS needs scope classes handled or standalone test harnesses match nothing", group: "Learnings" },
+  { path: "learnings/feed-generators-self-gate-by-returning-null-rotation-falls-t.md", label: "Feed generators self-gate by returning null; rotation falls through", group: "Learnings" },
   { path: "learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis.md", label: "Feed surfaces link synthetic negative-id listings — public listing routes must accept any integer id", group: "Learnings" },
   { path: "learnings/fixed-locally-but-never-committed-verify-head-bytes-when-pro.md", label: "Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)", group: "Learnings" },
   { path: "learnings/git-bash-mangles-pid-style-flags-in-taskkill-use-pid-escapin.md", label: "Git Bash mangles /PID-style flags in taskkill — use //PID escaping and verify the port is freed", group: "Learnings" },
@@ -6805,10 +7063,14 @@ var WIKI_PAGES = [
   { path: "learnings/railway-cli-sets-env-vars-via-the-variable-set-subcommand-th.md", label: "Railway CLI sets env vars via the `variable set` subcommand — the --set flag is legacy", group: "Learnings" },
   { path: "learnings/raindrop-db-sync-runs-outside-this-repo-published.md", label: "Raindrop→DB sync runs outside this repo; published page count sums all collections", group: "Learnings" },
   { path: "learnings/relevance-floor-0-45-sits-exactly-in-the-measured.md", label: "Relevance floor 0.45 sits exactly in the measured gap between noise and matches", group: "Learnings" },
+  { path: "learnings/search-demand-memo-is-the-unique-differentiator.md", label: "Search Demand Memo is the unique differentiator", group: "Learnings" },
+  { path: "learnings/search-logging-must-be-fire-and-forget.md", label: "Search logging must be fire-and-forget", group: "Learnings" },
   { path: "learnings/select-distinct-order-by-random-is-illegal-in-postgres.md", label: "SELECT DISTINCT ... ORDER BY random() is illegal in Postgres", group: "Learnings" },
   { path: "learnings/site-accent-is-0021ff-oklch-0-468-0-303-264-2-7-89.md", label: "Site accent is #0021FF = oklch(0.468 0.303 264.2), 7.89:1 AA-safe", group: "Learnings" },
+  { path: "learnings/site-styling-tokens-live-in-src-app-css.md", label: "Site styling tokens live in src/app.css", group: "Learnings" },
   { path: "learnings/skill-skill-md-description-must-quote-colons-to.md", label: "Skill SKILL.md description must quote colons to avoid YAML nested-mapping errors", group: "Learnings" },
   { path: "learnings/splitting-npm-dependency-versions-direct-dep-for-the-new-pin.md", label: "Splitting npm dependency versions: direct dep for the new, pinned deps nest auto", group: "Learnings" },
+  { path: "learnings/spotlight-pipeline-maps-to-existing-stored-fields.md", label: "Spotlight pipeline maps to existing stored fields", group: "Learnings" },
   { path: "learnings/stale-orphan-server-on-a-test-port-makes-fresh-changes-look-.md", label: "Stale orphan server on a test port makes fresh changes look missing — verify what serves the port first", group: "Learnings" },
   { path: "learnings/standalone-tsx-scripts-hang-after-success-close-the-postgres.md", label: "Standalone tsx scripts hang after success — close the postgres pool or call process.exit()", group: "Learnings" },
   { path: "learnings/svelte-5-values-captured-in-plain-consts-go-stale.md", label: "Svelte 5: values captured in plain consts go stale across param navigation — use $derived", group: "Learnings" },
@@ -6830,9 +7092,11 @@ var WIKI_PAGES = [
   { path: "learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md", label: "Verify GoDaddy DNS writes by polling the authoritative nameservers — API writes are visible instantly", group: "Learnings" },
   { path: "learnings/voyage-free-tier-rate-limit-3-rpm-10k-tpm-blocks.md", label: "Voyage free-tier rate limit (3 RPM / 10K TPM) blocks bulk backfill without a payment method", group: "Learnings" },
   { path: "learnings/voyage-rerank-2-5-lite-has-run-to-run-rank.md", label: "Voyage rerank-2.5-lite has run-to-run rank variance (±2 positions)", group: "Learnings" },
+  { path: "learnings/walk-item-urls-were-already-stored-only-human-renderer-ignor.md", label: "Walk item URLs were already stored, only human renderer ignored them", group: "Learnings" },
   { path: "learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md", label: "When LLM providers are down, the drum degenerates into consecutive Walk items", group: "Learnings" },
   { path: "learnings/wiki-note-auto-converts-wikilinks-to-relative-links-cross-fo.md", label: "wiki_note_* auto-converts wikilinks to relative links — cross-folder references need path-qualified slugs", group: "Learnings" },
   { path: "learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md", label: "Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully", group: "Learnings" },
+  { path: "learnings/write-up-example-corpus-data.md", label: "Write-up example corpus data", group: "Learnings" },
   { path: "pages/TEMPLATES.md", label: "Page Templates", group: "Pages" },
   { path: "pages/index.md", label: "Pages", group: "Pages" },
   { path: "pages/artifacts/agentos-sdk-dev-design-system-extraction.md", label: "agentos-sdk.dev design system extraction", group: "Pages / Artifacts" },
@@ -6840,16 +7104,19 @@ var WIKI_PAGES = [
   { path: "pages/artifacts/digital-products-repo-index.md", label: "digital-products-repo index", group: "Pages / Artifacts" },
   { path: "pages/artifacts/digital-products-repos-activity-split-csvs.md", label: "digital-products-repos activity split CSVs", group: "Pages / Artifacts" },
   { path: "pages/artifacts/digital-products-repos-missing-csv.md", label: "digital-products-repos-missing CSV", group: "Pages / Artifacts" },
+  { path: "pages/artifacts/docs-write-up-examples-gallery-17-files.md", label: "docs/write-up-examples gallery (17 files)", group: "Pages / Artifacts" },
   { path: "pages/artifacts/host0-ai-and-clawrun-sh-design-references.md", label: "host0.ai and clawrun.sh design references", group: "Pages / Artifacts" },
   { path: "pages/artifacts/impeccable-design-brief-p4.md", label: "Impeccable design brief (P4)", group: "Pages / Artifacts" },
   { path: "pages/artifacts/impeccable-pattern-one-pager-p3.md", label: "Impeccable pattern one-pager (P3)", group: "Pages / Artifacts" },
   { path: "pages/artifacts/insert-missing-repos-active-30d-sql.md", label: "insert-missing-repos-active-30d.sql", group: "Pages / Artifacts" },
   { path: "pages/artifacts/productsear-ch-promo-video.md", label: "productsear.ch promo video", group: "Pages / Artifacts" },
+  { path: "pages/artifacts/spotlight-write-up-examples-16-formats.md", label: "Spotlight write-up examples (16 formats)", group: "Pages / Artifacts" },
   { path: "pages/artifacts/the-drum-feed-spec.md", label: "The Drum feed spec", group: "Pages / Artifacts" },
   { path: "pages/concepts/index.md", label: "Concepts", group: "Pages / Concepts" },
   { path: "pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md", label: "Hybrid search via Reciprocal Rank Fusion", group: "Pages / Concepts" },
   { path: "pages/concepts/llm-content-negotiation.md", label: "LLM content negotiation", group: "Pages / Concepts" },
   { path: "pages/concepts/search-and-llm-discovery-layer.md", label: "Search and LLM discovery layer", group: "Pages / Concepts" },
+  { path: "pages/concepts/spotlight-write-up-format-taxonomy.md", label: "Spotlight write-up format taxonomy", group: "Pages / Concepts" },
   { path: "pages/concepts/url-driven-search-state.md", label: "URL-driven search state", group: "Pages / Concepts" },
   { path: "pages/entities/admin-console-admin.md", label: "Admin console (/admin)", group: "Pages / Entities" },
   { path: "pages/entities/admin-feed-console-admin-feed.md", label: "Admin feed console (/admin/feed)", group: "Pages / Entities" },
@@ -6876,12 +7143,15 @@ var WIKI_PAGES = [
   { path: "pages/entities/repo-scan-pipeline.md", label: "repo-scan pipeline", group: "Pages / Entities" },
   { path: "pages/entities/rerank-service.md", label: "Rerank service", group: "Pages / Entities" },
   { path: "pages/entities/search-diagnostics.md", label: "Search diagnostics", group: "Pages / Entities" },
+  { path: "pages/entities/search-logging-search-logs.md", label: "Search logging (search_logs)", group: "Pages / Entities" },
   { path: "pages/entities/the-digest-email-digest-pipeline.md", label: "The Digest (email digest pipeline)", group: "Pages / Entities" },
   { path: "pages/entities/the-drum-feed.md", label: "The Drum feed", group: "Pages / Entities" },
   { path: "pages/entities/utobo-email-transactional-email-service.md", label: "utobo Email (transactional email service)", group: "Pages / Entities" },
   { path: "pages/entities/utobo-email-platform.md", label: "utobo email platform", group: "Pages / Entities" },
   { path: "pages/entities/utobo-sending-domain-dns-records.md", label: "Utobo sending-domain DNS records", group: "Pages / Entities" },
   { path: "pages/entities/waveloader-component.md", label: "WaveLoader component", group: "Pages / Entities" },
+  { path: "preferences/index.md", label: "Preferences", group: "Preferences" },
+  { path: "preferences/suggested-v1-spotlight-starting-five.md", label: "Suggested v1 spotlight starting five", group: "Preferences" },
   { path: "rules/attribute-build-failures-before-fixing-never-touch-a-concurr.md", label: "Attribute build failures before fixing; never touch a concurrent session's in-progress work", group: "Rules" },
   { path: "rules/back-up-and-dry-run-the-restore-before-any-destructive-bulk-.md", label: "Back up and dry-run the restore before any destructive bulk delete", group: "Rules" },
   { path: "rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc.md", label: "Brainstorm pacing: one idea + one grill question per turn, branch ledger", group: "Rules" },

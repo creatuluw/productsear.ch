@@ -45,3 +45,7 @@ Knowledge graph: concepts, entities, and artifacts that make up this project.
 - [Search and LLM discovery layer](./concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine crawlers/agents, and so
 - [Drum email approval pipeline](./entities/drum-email-approval-pipeline.md) — **The Drum email approval pipeline** — the code path that turns every drum draw into a **draft first, decision second**: the drawn card is emailed to the owner
 - [Search logging (search_logs)](./entities/search-logging-search-logs.md) — What it is
+- [Spotlight write-up format taxonomy](./concepts/spotlight-write-up-format-taxonomy.md) — Editorial catalog of 16 write-up structures in 4 families for promoting database listings: A) single-listing (Teardown, First-Run Guide, Curator's Note, Comebac
+- [Spotlight write-up examples (16 formats)](./artifacts/spotlight-write-up-examples-16-formats.md) — What it is
+- [docs/write-up-examples gallery (17 files)](./artifacts/docs-write-up-examples-gallery-17-files.md) — 16 self-contained HTML write-up examples (Families A–D) plus `index.html` gallery, stored in `E:\productsear.ch\docs\write-up-examples`. Each demonstrates one S
+- [Spotlight hand-off document (HANDOFF.md)](./artifacts/spotlight-hand-off-document-handoff-md.md) — `docs/write-up-examples/HANDOFF.md` is the cold-start pickup document for the Spotlight build: goal (admin search → promote → LLM draft in one of 16 formats → e

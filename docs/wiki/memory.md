@@ -8,10 +8,11 @@ okf_version: "0.2"
 Auto-generated digest of the most recent conventions, decisions, rules and
 development patterns, plus architecture and global patterns — newest first.
 The actual files live in the wiki subfolders; follow the links (clickable in /wiki).
-Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15:47:44.206Z.
+Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-20T13:38:51.488Z.
 
 ## Recent Decisions
 
+- [Drum rotation never draws the same type twice in a row](decisions/drum-rotation-never-draws-the-same-type-twice-in-a-row.md) — Context (2026-11-20)
 - [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](decisions/the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md) — Context (2026-11-18)
 - [Drum draw schedule made miss-proof (cron redundancy)](decisions/drum-draw-schedule-made-miss-proof-cron-redundancy.md) — Context (2026-11-13)
 - [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) — Context (2026-11-12)
@@ -26,7 +27,6 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15
 - [Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)](decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md) — Context (2026-11-06)
 - [The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md](decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) — Context (2026-11-06)
 - [Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)](decisions/feed-round-14-same-day-last-year-out-the-feed-is-named-the-d.md) — Context (2026-11-06)
-- [Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)](decisions/feed-round-13-stream-order-fixed-round-robin-the-backlog-in-.md) — Context (2026-11-06)
 
 ## Active Rules
 
@@ -56,8 +56,19 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15
 - [Pool-then-rerank with graceful fallback for retrieval](rules/pool-then-rerank-with-graceful-fallback-for.md) — Guideline (2026-07-04)
 - [Sanitize text at the embedding API boundary](rules/sanitize-text-at-the-embedding-api-boundary.md) — Guideline (2026-07-04)
 
+## Preferences & Conventions
+
+- [Suggested v1 spotlight starting five](preferences/suggested-v1-spotlight-starting-five.md) — Starting set: Teardown, Head-to-Head Comparison, Ranked Listicle, State-of-the-Archetype Report, Search Demand Memo — chosen so no two overl… (2026-11-19)
+
 ## Recent Learnings — development patterns
 
+- [docs/write-up-examples/ folder structure and standalone rendering](learnings/docs-write-up-examples-folder-structure-and-standalone-rende.md) — The `docs/write-up-examples/` folder contains 18 files: `index.html` (directory of all 16 format examples grouped into families A single-lis… (2026-11-19)
+- [Write-up example corpus data](learnings/write-up-example-corpus-data.md) — Real database data grounds the 16 format examples: n8n saved July 2023 (comeback), Perplexica saved twice, ai-coding-agent saves grew 3 (202… (2026-11-19)
+- [Site styling tokens live in src/app.css](learnings/site-styling-tokens-live-in-src-app-css.md) — The canonical design system for productsear.ch pages is extracted from `src/app.css`: Hanken Grotesk + Martian Mono fonts, OKLCH warm-paper … (2026-11-19)
+- [Spotlight pipeline maps to existing stored fields](learnings/spotlight-pipeline-maps-to-existing-stored-fields.md) — Every spotlight structure can be drafted by an LLM from fields the corpus already stores (purpose/howToUse/whenToUse/analysis, embeddings, f… (2026-11-19)
+- [Search Demand Memo is the unique differentiator](learnings/search-demand-memo-is-the-unique-differentiator.md) — Of the 16 spotlight formats, only the Search Demand Memo (C3) can't be replicated by competitors — it's built from the `search_logs` table, … (2026-11-19)
+- [Search logging must be fire-and-forget](learnings/search-logging-must-be-fire-and-forget.md) — Logging inserts into the search path follow the same contract as the existing `search_misses` insert: never awaited, never thrown into the c… (2026-11-18)
+- [All human searches flow through /api/search](learnings/all-human-searches-flow-through-api-search.md) — The homepage search is a client-side fetch to `GET /api/search` (not a server load), so instrumenting that one endpoint covers all human sea… (2026-11-18)
 - [Feed generators self-gate by returning null; rotation falls through](learnings/feed-generators-self-gate-by-returning-null-rotation-falls-t.md) — Frequency control is implemented inside each generator: `walk.ts` returns `null` when <20 days since the last *published* walk, and the rota… (2026-11-18)
 - [Walk item URLs were already stored, only human renderer ignored them](learnings/walk-item-urls-were-already-stored-only-human-renderer-ignor.md) — Walk body items have carried `body.items[].url` in the DB all along (including the three live rows), but `+page.svelte` rendered `li.label` … (2026-11-18)
 - [The Walk is the only failure-proof drum type; The Floor starves silently](learnings/the-walk-is-the-only-failure-proof-drum-type-the-floor-starv.md) — Of the drum's 10 types, The Walk is the only generator with no LLM/external dependency — it's pure pgvector nearest-neighbor SQL, so it can … (2026-11-18)
@@ -71,13 +82,6 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15
 - [The Digest is deactivated at two layers (feature gate + disabled cron); re-arm procedure documented](learnings/the-digest-is-deactivated-at-two-layers-feature-gate-disable.md) — **The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out: (2026-11-09)
 - [GitHub Actions invalid YAML: startup failure with zero jobs; the schedule silently never fires](learnings/github-actions-invalid-yaml-startup-failure-with-zero-jobs-t.md) — **The gotcha (found 2026-11-09):** a `run:` value containing `Drum draw:` — a `colon+space` inside a plain (unquoted) YAML scalar — made `.g… (2026-11-09)
 - [Wiping feed_items: due = max(created_at), rotation resets, empty state degrades gracefully](learnings/wiping-feed-items-due-max-created-at-rotation-resets-empty-s.md) — Discovered 2026-11-07 while wiping all Drum items and handing the surface back to the normal draw flow. (2026-11-07)
-- [Bluesky link-card cache is keyed by the shared URL — bust the share URL, not just og:image](learnings/bluesky-link-card-cache-is-keyed-by-the-shared-url-bust-the-.md) — **The mechanism (discovered 2026-11-07, commit `80cadc8`):** Bluesky's link-card cache is keyed by **the shared URL itself** (`/listings/227… (2026-11-07)
-- [Bluesky caches og:image aggressively — bump a ?v=N cache-bust on card URLs after redesigns](learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md) — **The incident (2026-11-07, commit `6b3aeb0`):** after the receipt-card redesign, the user pasted a Bluesky compose screenshot showing the *… (2026-11-07)
-- [Fixed locally but never committed — verify HEAD bytes when prod diverges (OG font incident)](learnings/fixed-locally-but-never-committed-verify-head-bytes-when-pro.md) — **The incident (2026-11-07, commit `faf3818`):** production Bluesky cards rendered with **all text missing** while the local working tree re… (2026-11-07)
-- [Translucent overlays ghost background content — auto-opening drawers go canvas-solid](learnings/translucent-overlays-ghost-background-content-auto-opening-d.md) — Discovered 2026-11-07 while building the homepage system drawer (`src/routes/+page.svelte`, commit `9168e3d`). (2026-11-07)
-- [opacity-0 elements still occupy layout space — closed tipboxes caused 54px of phantom overflow](learnings/opacity-0-elements-still-occupy-layout-space-closed-tipboxes.md) — Discovered 2026-11-06 while probing 54px of hidden horizontal overflow on 390px phones: the three closed tipboxes were hidden with `opacity:… (2026-11-06)
-- [The same port number can be live on IPv4 and IPv6 with different owners — hit 127.0.0.1 explicitly](learnings/the-same-port-number-can-be-live-on-ipv4-and-ipv6-with-diffe.md) — Discovered 2026-11-06 during the mobile-adaptation preview loop. On Windows, two different processes can simultaneously own the SAME port nu… (2026-11-06)
-- [The Digest send pipeline verifies in stages — "no active subscribers" is the expected stop when armed but empty](learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr.md) — **The behavior (verified 2026-11-06 after the operator added the utobo secrets):** `scripts/digest-send.ts` gates its send path in stages, a… (2026-11-06)
 
 ## Architecture
 
@@ -85,6 +89,7 @@ Regenerated on every wiki write and on wiki_mark_synced. Generated 2026-11-18T15
 
 ## Global Patterns
 
+- [Spotlight write-up format taxonomy](pages/concepts/spotlight-write-up-format-taxonomy.md) — Editorial catalog of 16 write-up structures in 4 families for promoting database listings: A) single-listing (Teardown, First-Run Guide, Cur… (2026-11-19)
 - [Search and LLM discovery layer](pages/concepts/search-and-llm-discovery-layer.md) — The site-wide layer that makes productsear.ch findable and legible to three machine audiences — search-engine crawlers, AI answer-engine cra… (2026-11-10)
 - [LLM content negotiation](pages/concepts/llm-content-negotiation.md) — What is it? (2026-11-06)
 - [URL-driven search state](pages/concepts/url-driven-search-state.md) — What is it? (2026-08-25)

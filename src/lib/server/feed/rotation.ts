@@ -3,7 +3,7 @@
 // configurable, spec Q8). A generator returning null skips to the next type.
 
 import { DEFAULT_TYPE_ORDER, type FeedItem, type FeedType } from './types';
-import { getFeedSettings, insertFeedItem, lastDrawAt, totalDraws } from './queries';
+import { getFeedSettings, insertFeedItem, lastDrawAt, lastPublishedType, totalDraws } from './queries';
 import { sendApprovalRequest } from './approval';
 import { GENERATORS } from './generators';
 
@@ -53,8 +53,13 @@ export async function drawNext(force = false): Promise<FeedItem | null> {
 	if (!force && !info.due) return null;
 
 	const draws = await totalDraws();
+	// owner rule (2026-11-19): never the same type twice in a row — whatever the
+	// reader last saw is skipped this draw, even if the cursor points at it and
+	// it's the only generator that can succeed. An empty day beats a duplicate.
+	const lastPublished = await lastPublishedType();
 	for (let i = 0; i < info.typeOrder.length; i++) {
 		const type = info.typeOrder[(draws + i) % info.typeOrder.length];
+		if (type === lastPublished) continue; // no consecutive repeats
 		const generate = GENERATORS[type];
 		if (!generate) continue; // type not implemented yet — rotation skips it
 		try {

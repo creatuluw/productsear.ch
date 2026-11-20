@@ -50,3 +50,4 @@ _Major decisions and direction shifts (ADRs) will be listed here._
 - [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](./drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) - Context
 - [Drum draw schedule made miss-proof (cron redundancy)](./drum-draw-schedule-made-miss-proof-cron-redundancy.md) - Context
 - [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](./the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md) - Context
+- [Drum rotation never draws the same type twice in a row](./drum-rotation-never-draws-the-same-type-twice-in-a-row.md) - Context

@@ -121,6 +121,19 @@ export async function lastDrawAt(): Promise<string | null> {
 	return rows[0]?.t ?? null;
 }
 
+/** The type the reader saw most recently — top of the /feed stream. The
+ * rotation never draws this type again on the very next draw (no consecutive
+ * repeats, owner rule 2026-11-19). */
+export async function lastPublishedType(): Promise<FeedType | null> {
+	const rows = await db.execute<{ t: FeedType | null }>(
+		sql`SELECT type AS t FROM te9_dev.feed_items
+			WHERE status = 'published'
+			ORDER BY published_at DESC NULLS LAST, created_at DESC
+			LIMIT 1`
+	);
+	return rows[0]?.t ?? null;
+}
+
 export interface InsertFeedItemInput {
 	type: FeedType;
 	listingId?: number;

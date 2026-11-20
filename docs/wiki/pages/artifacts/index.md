@@ -12,3 +12,6 @@ _Documents, diagrams, and deliverables will be listed here._
 - [digital-products-repos activity split CSVs](./digital-products-repos-activity-split-csvs.md) - What is it?
 - [insert-missing-repos-active-30d.sql](./insert-missing-repos-active-30d-sql.md) - What is it?
 - [The Drum feed spec](./the-drum-feed-spec.md) - **The Drum feed spec** — the formal, converged specification for [[entities/the-drum-feed]], committed at `docs/specs/the-drum.md` after the 15-turn diverge/con
+- [Spotlight write-up examples (16 formats)](./spotlight-write-up-examples-16-formats.md) - What it is
+- [docs/write-up-examples gallery (17 files)](./docs-write-up-examples-gallery-17-files.md) - 16 self-contained HTML write-up examples (Families A–D) plus `index.html` gallery, stored in `E:\productsear.ch\docs\write-up-examples`. Each demonstrates one S
+- [Spotlight hand-off document (HANDOFF.md)](./spotlight-hand-off-document-handoff-md.md) - `docs/write-up-examples/HANDOFF.md` is the cold-start pickup document for the Spotlight build: goal (admin search → promote → LLM draft in one of 16 formats → e
