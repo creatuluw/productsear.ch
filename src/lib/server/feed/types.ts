@@ -29,7 +29,7 @@ export const FEED_TYPES: FeedTypeDef[] = [
 	{ slug: 'target-user-pitch', name: 'Target-User Pitch', blurb: 'who this is for, in the voice of the people it helps', implemented: true },
 	{ slug: 'two-futures', name: 'Two Futures', blurb: 'your Tuesday without it vs. with it', implemented: true },
 	{ slug: 'ambition-path', name: 'Ambition Path', blurb: 'several listings chained into a route toward one ambition', implemented: true },
-	{ slug: 'pulse', name: 'The Pulse', blurb: 'what the corpus says this month — drift, obituaries, rising domains', implemented: true },
+	{ slug: 'pulse', name: 'The Pulse', blurb: 'what the saves said last month — archetype drift, rising domains; once a month, opening the month', implemented: true },
 	{ slug: 'resurrections', name: 'Resurrections', blurb: 'a save untouched for months gets a second life', implemented: true },
 	{ slug: 'walk', name: 'The Walk', blurb: 'a trail of listings connected by embedding hops', implemented: true },
 	{ slug: 'tombola', name: 'The Tombola', blurb: 'drawn from the last 10 saves, picked by corpus signals', implemented: true },

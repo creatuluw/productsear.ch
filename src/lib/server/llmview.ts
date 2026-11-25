@@ -282,7 +282,7 @@ export function methodologyLlmView(): string {
 		'- **Target-User Pitch** — who a listing is for, voiced by a synthetic persona drafted from corpus analysis',
 		'- **Two Futures** — your Tuesday without it vs. with it',
 		'- **Ambition Path** — several listings chained into a route toward one ambition',
-		'- **The Pulse** — archetype drift and rising domains from the save stream (the data section)',
+		'- **The Pulse** — archetype drift and rising domains from the save stream (the monthly data section; opens each month covering the previous one)',
 		'- **Resurrections** — a save untouched for months gets a second life',
 		'- **The Walk** — a trail of listings connected by raw embedding hops, no rerank',
 		'- **The Tombola** — drawn from the last 10 saves, picked by corpus signals',

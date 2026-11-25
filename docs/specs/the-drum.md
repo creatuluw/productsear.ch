@@ -37,7 +37,7 @@
 | 2 | **Target-User Pitch** | motivation | analysis `who` field → persona pitch | synthetic voices (Q2-A); helps target users motivate each other |
 | 3 | **Two Futures** | real life, emotion | "your Tuesday without it vs. with it" micro-story | before/after life snapshots |
 | 4 | **Ambition Path** | ambitions | archetype + semantic clusters → multi-listing route | paths/maps share better than steps |
-| 5 | **The Pulse** | 20% data surprise | archetype drift, repo inactivity (obituaries), rising domains | weekly; reads like market intelligence |
+| 5 | **The Pulse** | 20% data surprise | archetype drift, repo inactivity (obituaries), rising domains | monthly (demoted 2026-11-25); opens each month covering the last; reads like market intelligence |
 | 6 | **Receipt cards** | share primitive | claim + proof (listing + 2 nearest neighbors) | server-rendered card in riso/instrument identity |
 | 7 | **Resurrections** | emotion (guilt/hope) | saves untouched 300+ days | date query + draft; cheapest type |
 | 8 | **The Walk** | serendipity | embedding-hop trail, 3–5 listings | also a stack-page mechanic ("keep walking →") |

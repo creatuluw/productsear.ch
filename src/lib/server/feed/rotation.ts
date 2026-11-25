@@ -6,6 +6,7 @@ import { DEFAULT_TYPE_ORDER, type FeedItem, type FeedType } from './types';
 import { getFeedSettings, insertFeedItem, lastDrawAt, lastPublishedType, totalDraws } from './queries';
 import { sendApprovalRequest } from './approval';
 import { GENERATORS } from './generators';
+import { pulseEligible } from './generators/pulse';
 
 export interface DueInfo {
 	due: boolean;
@@ -33,9 +34,13 @@ export async function nextDueInfo(): Promise<DueInfo> {
 		due = Date.now() >= nextMs;
 	}
 
+	// The Pulse opens the month while eligible (first week, none published yet
+	// this month) — the header's "next type" reflects that override.
+	const pulseLeads = order.includes('pulse') && (await pulseEligible());
+
 	return {
 		due,
-		nextType: order.length > 0 ? order[draws % order.length] : null,
+		nextType: pulseLeads ? 'pulse' : order.length > 0 ? order[draws % order.length] : null,
 		lastDrawAt: last,
 		nextDrawAt,
 		cadenceHours,
@@ -57,14 +62,13 @@ export async function drawNext(force = false): Promise<FeedItem | null> {
 	// reader last saw is skipped this draw, even if the cursor points at it and
 	// it's the only generator that can succeed. An empty day beats a duplicate.
 	const lastPublished = await lastPublishedType();
-	for (let i = 0; i < info.typeOrder.length; i++) {
-		const type = info.typeOrder[(draws + i) % info.typeOrder.length];
-		if (type === lastPublished) continue; // no consecutive repeats
+
+	const tryType = async (type: FeedType): Promise<FeedItem | null> => {
 		const generate = GENERATORS[type];
-		if (!generate) continue; // type not implemented yet — rotation skips it
+		if (!generate) return null; // type not implemented yet — rotation skips it
 		try {
 			const draft = await generate();
-			if (!draft) continue; // nothing to draw for this type right now
+			if (!draft) return null; // nothing to draw for this type right now
 			// approval-by-email: every draw lands as a draft and is mailed to the
 			// operator for approve / regenerate / skip before it publishes. A failed
 			// send must never lose the item — it stays a draft for the admin console.
@@ -79,7 +83,25 @@ export async function drawNext(force = false): Promise<FeedItem | null> {
 		} catch (e) {
 			// a broken generator must never stall the drum — log and move on
 			console.error(`[feed] generator ${type} failed:`, e);
+			return null;
 		}
+	};
+
+	// month opener (2026-11-25): while The Pulse is eligible — first week of
+	// the month, none published yet — it leads the draw ahead of the cursor, so
+	// every month opens with the monthly edition. null → the normal loop runs
+	// (catch-and-skip) and the pulse gets another lead chance next draw.
+	if (lastPublished !== 'pulse' && (await pulseEligible())) {
+		const opener = await tryType('pulse');
+		if (opener) return opener;
+	}
+
+	for (let i = 0; i < info.typeOrder.length; i++) {
+		const type = info.typeOrder[(draws + i) % info.typeOrder.length];
+		if (type === lastPublished) continue; // no consecutive repeats
+		if (type === 'pulse') continue; // lead attempt above ran (or gate returned null) — never tried twice
+		const item = await tryType(type);
+		if (item) return item;
 	}
 	return null;
 }
