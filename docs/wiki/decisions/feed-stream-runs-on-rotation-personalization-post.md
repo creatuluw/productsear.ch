@@ -4,7 +4,7 @@ title: Feed stream runs on rotation (personalization post-accounts); The Pulse a
 description: Context
 tags: [feed, listings, item-types, rotation, the-pulse, receipt-cards, accounts, brainstorm, proposed]
 status: proposed
-supersedes: corpus-feed-anatomy-stream-stack-ambition-path-accepted-the-
+supersedes: corpus-feed-anatomy-stream-stack-ambition-path
 timestamp: "2026-11-06T19:10:50.639Z"
 ---
 
@@ -39,7 +39,7 @@ Resurfaces the receipt-cards primitive from the original magazine proposal, now 
 - **Accounts** (new, spawned this round): when/if readers get accounts, personalization layers onto the rotation. better-auth already in stack.
 - **Rotation calendar** (new, parked): which type leads which day.
 - **Receipt cards: in / out / tweaked** — asked as Q5 alongside the unit-of-sharing question.
-- Carried: persona-attribution disclosure line; 2a The Floor privacy; 2b obituary tone; 3a writing budget; 3b share destination; G audience sequencing. Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Carried: persona-attribution disclosure line; 2a The Floor privacy; 2b obituary tone; 3a writing budget; 3b share destination; G audience sequencing. Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

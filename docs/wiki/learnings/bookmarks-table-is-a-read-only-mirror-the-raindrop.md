@@ -8,7 +8,7 @@ timestamp: "2026-08-06T08:42:23.876Z"
 
 # bookmarks table is a read-only mirror — the Raindrop→DB sync lives outside this repo
 
-> **Update 2026-11-06:** the Raindrop→DB sync now ALSO lives in this repo — `scripts/sync-raindrop.js` (`npm run sync`) was imported from `E:\te9.dev` when the corpus pipeline became self-contained (see the [self-containment ADR](../decisions/product-search-corpus-pipeline-is-self-contained-in-products.md) and [[corpus-enrichment-pipeline-sync-crawl-analyze]]). The sync is **upsert-only** (`ON CONFLICT (raindrop_id) DO UPDATE` — it never deletes), so manual negative-id rows survive syncs. te9.dev's copy keeps running; both are idempotent upserts against the same tables. The "no sync code in this repo" statements below are historical (pre-import).
+> **Update 2026-11-06:** the Raindrop→DB sync now ALSO lives in this repo — `scripts/sync-raindrop.js` (`npm run sync`) was imported from `E:\te9.dev` when the corpus pipeline became self-contained (see the [self-containment ADR](../decisions/product-search-corpus-pipeline-is-self-contained.md) and [[corpus-enrichment-pipeline-sync-crawl-analyze]]). The sync is **upsert-only** (`ON CONFLICT (raindrop_id) DO UPDATE` — it never deletes), so manual negative-id rows survive syncs. te9.dev's copy keeps running; both are idempotent upserts against the same tables. The "no sync code in this repo" statements below are historical (pre-import).
 
 ## The gotcha
 

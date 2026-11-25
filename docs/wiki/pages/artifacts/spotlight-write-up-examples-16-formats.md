@@ -14,9 +14,9 @@ Sixteen fully-drafted example write-ups — one per Spotlight format — each bu
 
 ## What it documents
 
-- The editorial core of the [the-drum-feed](./the-drum-feed.md)'s planned sibling surface: the **Spotlight feature** (admin search → promote listing(s) → pick format → draft → email approval → `/spotlight/[slug]`)
+- The editorial core of the [the-drum-feed(../entities/the-drum-feed.md)'s planned sibling surface: the **Spotlight feature** (admin search → promote listing(s) → pick format → draft → email approval → `/spotlight/[slug]`)
 - Format families: **A** single-listing (Teardown, First-Run Guide, Curator's Note, Comeback Review, Underdog vs Default) · **B** clusters (Head-to-Head, Listicle, Alternatives, Toolkit/Stack, Collection Tour) · **C** data research (State-of Report, Trend Brief, Search Demand Memo, Graveyard Report) · **D** explainer/narrative (Field Guide, Workflow Story)
-- Real data used per example: Hindsight (#978), Better Fullstack (#583), HMML (#508766), n8n (#-2, saved 2023), Perplexica (#1343/#711), Paseo/Shannon/AgentOS, GuppyLM/Dot/Doberman/Openship, Fabric & pluto, archetype stats (ai-coding-agent 538 with the 2022:3→2026:492 curve; agent-framework 792; rag-search 120), 30-day intake (458 saves/148 domains), and day-one [search-logging-search-logs](./search-logging-search-logs.md) rows
+- Real data used per example: Hindsight (#978), Better Fullstack (#583), HMML (#508766), n8n (#-2, saved 2023), Perplexica (#1343/#711), Paseo/Shannon/AgentOS, GuppyLM/Dot/Doberman/Openship, Fabric & pluto, archetype stats (ai-coding-agent 538 with the 2022:3→2026:492 curve; agent-framework 792; rag-search 120), 30-day intake (458 saves/148 domains), and day-one [search-logging-search-logs(../entities/search-logging-search-logs.md) rows
 - **Format**: standalone HTML, exact site tokens (Hanken Grotesk + Martian Mono, OKLCH warm-paper palette, #0021FF accent, light/dark) — generated 2026-11-19 in the planning session for the Spotlight feature
 - Generated from: live DB queries (archetype counts, per-year saves, domain concentration, recent saves, search logs, dead-repo scan)
 

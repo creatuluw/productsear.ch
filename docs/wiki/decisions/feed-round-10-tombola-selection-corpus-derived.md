@@ -4,7 +4,7 @@ title: "Feed round 10: Tombola selection corpus-derived; Origin card parked; The
 description: Context
 tags: [[feed, listings, item-types, the-tombola, the-floor, disclosure, origin-card, brainstorm, proposed]]
 status: proposed
-supersedes: feed-round-9-cadence-1-item-2-days-admin-configurable-the-to
+supersedes: feed-round-9-cadence-1-item-2-days-admin
 timestamp: "2026-11-06T19:24:54.611Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-06T19:24:54.611Z"
 
 ## Context
 
-Round 10 of the corpus-feed brainstorm (2026-11-06). Answers the round-9 grill Q9 — the user's answer: *"q9 - b"*. See [[decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to]] for the cadence + Tombola-in context.
+Round 10 of the corpus-feed brainstorm (2026-11-06). Answers the round-9 grill Q9 — the user's answer: *"q9 - b"*. See [[decisions/feed-round-9-cadence-1-item-2-days-admin]] for the cadence + Tombola-in context.
 
 ## Newly settled this round
 
@@ -38,7 +38,7 @@ The **last unclaimed meaty type** (was parked; now actively pitched as type #10 
 
 - **Q10 disclosure** — asked, awaiting A/B/C + The Floor verdict.
 - Carried parked: persona attribution · accounts (personalization post-accounts) · share expansion · Marginalia · Confessions · **Origin card (newly parked this round)**.
-- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

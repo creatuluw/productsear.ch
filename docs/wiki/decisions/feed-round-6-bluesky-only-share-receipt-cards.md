@@ -4,7 +4,7 @@ title: "Feed round 6: Bluesky-only share; Receipt cards accepted"
 description: Context
 tags: [[feed, listings, item-types, receipt-cards, bluesky, share, resurrections, brainstorm, proposed]]
 status: proposed
-supersedes: feed-stream-runs-on-rotation-personalization-post-accounts-t
+supersedes: feed-stream-runs-on-rotation-personalization-post
 timestamp: "2026-11-06T19:16:36.555Z"
 ---
 
@@ -44,7 +44,7 @@ Plus: is Resurrections in, out, or parked?
 
 - **Q6 v1 scope** — asked, awaiting A/B/C + Resurrections verdict.
 - **Share expansion** (new, parked this round): copy-image/link, other networks — the deferred A/B/C unit-of-sharing question lives here.
-- Carried parked: persona attribution · accounts (personalization post-accounts) · rotation calendar. Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Carried parked: persona attribution · accounts (personalization post-accounts) · rotation calendar. Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

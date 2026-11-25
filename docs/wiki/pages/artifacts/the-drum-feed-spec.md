@@ -13,7 +13,7 @@ timestamp: "2026-11-06T19:39:44.066Z"
 ## What it documents
 
 - [The Drum feed](../entities/the-drum-feed.md) — the full feature: identity, surfaces (`/feed`, homepage 3-latest slot, listing stacks), cadence (1 item / 2 days, admin-configurable), the fixed round-robin over the 11 item types, editorial workflow (draft → inline editor → per-item approval → publish), trust & attribution, sharing (Receipt cards + Bluesky, The Digest dark by default), data model sketch, and parked phase-2 scope
-- [the convergence decision](../../decisions/the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) — the convergence decision that closed the Q15 loop and commissioned this spec
+- [the convergence decision](../../decisions/the-drum-converged-q15-a-formal-spec-written.md) — the convergence decision that closed the Q15 loop and commissioned this spec
 - **Format**: Markdown spec, 10 numbered sections plus an original-criteria goal check
 - Generated from: the 15-round feed brainstorm; per-round verdicts logged in `docs/wiki/decisions/feed-round-*`
 

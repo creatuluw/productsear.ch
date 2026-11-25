@@ -4,7 +4,7 @@ title: "Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in a
 description: Context
 tags: [feed, listings, item-types, the-tombola, cadence, admin-console, origin-card, brainstorm, proposed]
 status: proposed
-supersedes: feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-
+supersedes: feed-round-8-homepage-shows-3-latest-feed-cards
 timestamp: "2026-11-06T19:23:36.322Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-06T19:23:36.322Z"
 
 ## Context
 
-Round 9 of the corpus-feed brainstorm (2026-11-06). Answers the round-8 grill Q8 (cadence — see [[decisions/feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-]]) plus the pending Ribbon's Diary verdict. The user's answer: *"q8 - 1 item every 2 days, but make it a setting in the admin"* — and *"the idea -> make it: last 10 tombola - where we narrate 1 item from the last 10 most relevant to current trends or sentiments"*.
+Round 9 of the corpus-feed brainstorm (2026-11-06). Answers the round-8 grill Q8 (cadence — see [[decisions/feed-round-8-homepage-shows-3-latest-feed-cards]]) plus the pending Ribbon's Diary verdict. The user's answer: *"q8 - 1 item every 2 days, but make it a setting in the admin"* — and *"the idea -> make it: last 10 tombola - where we narrate 1 item from the last 10 most relevant to current trends or sentiments"*.
 
 ## Newly settled this round
 
@@ -34,7 +34,7 @@ A **stack-spine primitive, not a feed type**: every listing's stack page opens w
 
 - **Q9 tombola selection brain** — asked, awaiting A/B/C + Origin card verdict.
 - Carried parked: persona attribution · accounts (personalization post-accounts) · share expansion · Marginalia · Confessions · The Floor.
-- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

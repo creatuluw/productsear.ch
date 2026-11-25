@@ -13,7 +13,7 @@ timestamp: "2026-11-13T09:57:16.982Z"
 
 On 2026-11-13 the user asked for the Drum approval email at **06:00 Amsterdam time every day — "so also still for today"**. Two problems made a single daily cron insufficient:
 
-- GitHub's scheduler had **silently skipped** the scheduled run that followed the Nov 12 cron change (see [[learnings/drum-24h-cadence-clock-runs-from-the-last-draw-a-manual-redr]], whose watch item read: *"if the morning email also misses, add a second daily draw attempt so the morning email can't be missed"*).
+- GitHub's scheduler had **silently skipped** the scheduled run that followed the Nov 12 cron change (see [[learnings/drum-24h-cadence-clock-runs-from-the-last-draw]], whose watch item read: *"if the morning email also misses, add a second daily draw attempt so the morning email can't be missed"*).
 - The 24h cadence clock (measured from the last draw) had drifted off the morning anchor, so the next cron check would not be precisely due at 06:00.
 
 ## Choice
@@ -29,7 +29,7 @@ Same session: today's approval mail was sent immediately via a manual draw (the 
 ## Alternatives considered
 
 - **Keep the single 05:03 UTC cron** — rejected: GitHub's scheduler demonstrably skips scheduled runs (the Nov 12 post-change run never appeared); one silent skip = one lost morning edition.
-- **DST-aware / seasonal cron entries** — the earlier timing ADR ([[decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif]]) rejected a second entry for fear of double-firing. That objection **dissolves now**: the cadence gate makes every extra attempt idempotent, so double-firing is the resilience mechanism, not a bug.
+- **DST-aware / seasonal cron entries** — the earlier timing ADR ([[decisions/drum-draw-retimed-to-06-00-amsterdam-cron-05-03]]) rejected a second entry for fear of double-firing. That objection **dissolves now**: the cadence gate makes every extra attempt idempotent, so double-firing is the resilience mechanism, not a bug.
 
 ## Rationale
 

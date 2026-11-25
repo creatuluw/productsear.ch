@@ -30,7 +30,7 @@ Slice D of [the-drum](../pages/entities/the-drum-feed.md) needed **receipt cards
 
 - The route uses **hex colors hardcoded from the site identity** (`#F9FBFA` canvas, `#0021FF` accent, etc.) — deliberate: an OG image is an asset, not app CSS, so the semantic-token rule doesn't reach into SVG (noted in the file header).
 - This `@resvg/resvg-js` version wants **`fontFiles` paths, not buffers** — fonts are read from `static/fonts/` at render time.
-- Fonts ship in-repo (`static/fonts/HankenGrotesk-{Regular,SemiBold}.ttf`, ~57KB each), fetched from Google Fonts via the css2 TTF trick (see [the gstatic TTF learning](../learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user-agent.md)) — no runtime CDN dependency, deterministic rendering.
+- Fonts ship in-repo (`static/fonts/HankenGrotesk-{Regular,SemiBold}.ttf`, ~57KB each), fetched from Google Fonts via the css2 TTF trick (see [the gstatic TTF learning](../learnings/gstatic-css2-api-serves-ttf-urls-with-an-old-user.md)) — no runtime CDN dependency, deterministic rendering.
 - Stack pages (`/listings/[id]`, feed cards) emit the right `og:image`/`twitter:card` meta so Bluesky unfurls work.
 
 Commit `2a72c2a`.

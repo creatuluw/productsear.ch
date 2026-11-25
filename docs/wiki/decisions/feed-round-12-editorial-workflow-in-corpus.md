@@ -4,7 +4,7 @@ title: "Feed round 12: editorial workflow in (corpus-drafted, admin-approved); a
 description: Context
 tags: [[feed, listings, editorial-workflow, admin-gate, the-drum, the-digest, impress-the-boss, artifact-origin-tags, utobo, brainstorm, proposed]]
 status: proposed
-supersedes: feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us
+supersedes: feed-round-11-the-floor-in-type-10-impress
 timestamp: "2026-11-06T19:29:47.720Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-06T19:29:47.720Z"
 
 ## Context
 
-Round 12 of the corpus-feed brainstorm (2026-11-06). The user answered the round-11 grill with *"q11-d"* (Impress-the-Boss artifact source) and *"the drum: i like it"* (The Drum verdict), and **originated a new architectural piece themselves**: the admin editorial gate. See [[decisions/feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us]] for the Q11/The-Drum context.
+Round 12 of the corpus-feed brainstorm (2026-11-06). The user answered the round-11 grill with *"q11-d"* (Impress-the-Boss artifact source) and *"the drum: i like it"* (The Drum verdict), and **originated a new architectural piece themselves**: the admin editorial gate. See [[decisions/feed-round-11-the-floor-in-type-10-impress]] for the Q11/The-Drum context.
 
 ## Newly settled this round
 
@@ -35,7 +35,7 @@ Not a type — the **distribution layer**: a recurring email via utobo (the exis
 
 - **Q12 gate scope** — asked, awaiting A/B/C + The Digest verdict.
 - Carried parked: accounts · share expansion · Marginalia · Confessions · Origin card · methodology page detail.
-- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

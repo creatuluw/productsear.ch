@@ -27,4 +27,4 @@ productsear.ch/feed showed **three Walk items in a row** (Nov 14/16/17) because 
 ## Consequences
 
 - The Walk streak cannot recur: with a 20-day gap, even a total LLM outage yields at most one Walk per 20 days, and the other draws fall through to the data-driven types (pulse/resurrections/tombola).
-- The broader failure mode (LLM outage collapses the rotation onto whatever cannot fail) remains — see [learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec](../../learnings/when-llm-providers-are-down-the-drum-degenerates-into-consec.md).
+- The broader failure mode (LLM outage collapses the rotation onto whatever cannot fail) remains — see [learnings/when-llm-providers-are-down-the-drum-degenerates](../learnings/when-llm-providers-are-down-the-drum-degenerates.md).

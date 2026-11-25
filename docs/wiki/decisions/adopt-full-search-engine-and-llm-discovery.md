@@ -36,5 +36,5 @@ The site's product IS findability — a search app invisible to search engines a
 
 - **User follow-ups (cannot be done from the repo)**: (1) verify the domain in Google Search Console and submit `https://productsear.ch/sitemap.xml` — the single biggest ranking lever; (2) replace the placeholder `mailto:security@productsear.ch` in security.txt with a mailbox that is actually read; (3) apple-touch-icon still TODO — the mascot PNG is portrait (163×256), not square-croppable.
 - Sitemap / llms.txt / RSS are fail-soft: DB errors degrade the file, never 500.
-- Feed/sitemap/llms responses cache 30–60 min publicly; bump a `?v=N` cache-bust on og:image URLs when card copy changes ([learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o](../learnings/bluesky-caches-og-image-aggressively-bump-a-v-n-cache-bust-o.md)).
+- Feed/sitemap/llms responses cache 30–60 min publicly; bump a `?v=N` cache-bust on og:image URLs when card copy changes ([learnings/bluesky-caches-og-image-aggressively-bump-a-v-n](../learnings/bluesky-caches-og-image-aggressively-bump-a-v-n.md)).
 - See [pages/concepts/search-and-llm-discovery-layer](../pages/concepts/search-and-llm-discovery-layer.md) for the layer's invariants.

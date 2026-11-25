@@ -29,4 +29,4 @@ The first real Bluesky unfurl of a receipt card showed a nearly blank image — 
 
 - The real TTFs are committed (root cause closed) — commit `faf3818`. Bluesky/its CDN may cache the old broken image per URL for a while.
 - Future card changes happen in one place; both cards stay typographically consistent.
-- Extends the renderer ADR [[decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace]] — resvg stays; this decision covers the card design, shared module, and route coverage.
+- Extends the renderer ADR [[decisions/receipt-card-og-images-hand-built-svg-resvg-resvg]] — resvg stays; this decision covers the card design, shared module, and route coverage.

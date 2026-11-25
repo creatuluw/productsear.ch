@@ -4,7 +4,7 @@ title: "Feed round 7: v1 ships all 7 item types; The Walk pitched"
 description: Context
 tags: [feed, listings, item-types, resurrections, the-walk, brainstorm, proposed]
 status: proposed
-supersedes: feed-round-6-bluesky-only-share-receipt-cards-accepted
+supersedes: feed-round-6-bluesky-only-share-receipt-cards
 timestamp: "2026-11-06T19:18:27.965Z"
 ---
 
@@ -45,7 +45,7 @@ Plus: is The Walk in, out, or parked?
 
 - **Q7 feed placement** — asked, awaiting A/B/C + The Walk verdict.
 - Carried parked: persona attribution · accounts (personalization post-accounts) · rotation calendar · share expansion (copy-image/link, other networks).
-- Still unclaimed from the round-1 menu: Semantic Walk · Marginalia · Ribbon's Diary · Confessions · The Floor. Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Still unclaimed from the round-1 menu: Semantic Walk · Marginalia · Ribbon's Diary · Confessions · The Floor. Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

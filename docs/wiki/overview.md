@@ -9,7 +9,7 @@ timestamp: "2026-07-04T00:00:00.000Z"
 
 **productsear.ch** is a semantic bookmark search application. Users search a corpus of bookmarks using natural language; the app returns relevant bookmarks via **hybrid search** (pgvector cosine similarity over embeddings fused with PostgreSQL full-text `ts_rank` via [reciprocal rank fusion](./pages/concepts/hybrid-search-via-reciprocal-rank-fusion.md)), plus an **Ask** mode that streams a RAG-style answer grounded in the top results.
 
-User-facing vocabulary (2026-11): the nav, homepage, and archive/collections headings all say **"listings"** — "corpus" and "archive" are internal terms only, and URLs remain `/archive`. The archetype roll-up was renamed from compendium to **collections** on 2026-11-06 (routes `/collections`, old paths redirect). See [the listings decision](./decisions/user-facing-vocabulary-is-listings-display-terms.md) and [the collections decision](./decisions/rename-compendium-to-collections-routes-moved-308-redirects.md).
+User-facing vocabulary (2026-11): the nav, homepage, and archive/collections headings all say **"listings"** — "corpus" and "archive" are internal terms only, and URLs remain `/archive`. The archetype roll-up was renamed from compendium to **collections** on 2026-11-06 (routes `/collections`, old paths redirect). See [the listings decision](./decisions/user-facing-vocabulary-is-listings-display-terms.md) and [the collections decision](./decisions/rename-compendium-to-collections-routes-moved-308.md).
 
 ## Tech stack
 

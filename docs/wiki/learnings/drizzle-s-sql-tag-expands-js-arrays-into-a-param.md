@@ -14,4 +14,4 @@ Hit in the Walk generator: `e.bookmark_id <> ALL(${exclude})` where `exclude` is
 
 **Fix** (`src/lib/server/feed/generators/walk.ts`): build the array literal explicitly — `ARRAY[1,2,3]::int[]` interpolated via `sql.raw()` — filtering values with `Number.isInteger` first so nothing unvalidated reaches the SQL string. For plain `IN (...)` lists prefer drizzle's `inArray()` helper instead of hand-rolling.
 
-Related: [[learnings/drizzle-s-sql-tag-has-no-json-use-explicit-json-stringify-js]] (same family: drizzle sql tag needs explicit type handling at the boundary).
+Related: [[learnings/drizzle-s-sql-tag-has-no-json-use-explicit-json]] (same family: drizzle sql tag needs explicit type handling at the boundary).

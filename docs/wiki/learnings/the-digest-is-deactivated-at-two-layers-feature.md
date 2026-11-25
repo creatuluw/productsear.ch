@@ -10,7 +10,7 @@ timestamp: "2026-11-09T15:26:58.723Z"
 
 **The state (2026-11-09):** The Digest is deliberately deactivated at BOTH control layers, so no email can go out:
 
-1. **Feature gate** — `feed_settings.digest_enabled = false` (it ships dark by default): 0 subscribers, never sent. Even if the cron ran, the send would stop at the gates (see [[learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr]] for the expected stop messages).
+1. **Feature gate** — `feed_settings.digest_enabled = false` (it ships dark by default): 0 subscribers, never sent. Even if the cron ran, the send would stop at the gates (see [[learnings/the-digest-send-pipeline-verifies-in-stages]] for the expected stop messages).
 2. **Cron** — the Monday 10:07 UTC workflow `.github/workflows/digest-send.yml` was disabled on GitHub via `gh workflow disable digest-send.yml` → state `disabled_manually`. The workflow won't even run to stop at the gates (keeps the Actions history clean of confusing "expected stop" runs).
 
 **What stays live:** the drum draw cron is untouched; the `/feed` subscribe form still works — new addresses simply accumulate in `digest_subscribers` and will receive the first send once re-armed.

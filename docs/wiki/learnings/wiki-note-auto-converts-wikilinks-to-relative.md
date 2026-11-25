@@ -15,7 +15,7 @@ Discovered 2026-11-06 while creating the [[utobo-email-transactional-email-servi
 - **Human-readable title-style wikilinks don't resolve at all** — e.g. `[[the utobo sending-domain ADR]]` is not a slug; the validator flags it as a broken link (W4).
 - **Bare-slug wikilinks to other folders produce relative links that resolve wrong** — e.g. `[[utobo-sending-domain-dns-records]]` written in a `pages/entities/` file was converted to a link relative to that folder, so a target living two directories up (`../../decisions/...`) came out broken.
 
-**The fix:** use **path-qualified slugs** for any cross-folder reference — `[[decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c]]`, not `[[set up utobo as transactional email sender]]`. Same-folder links can stay bare.
+**The fix:** use **path-qualified slugs** for any cross-folder reference — `[[decisions/set-up-utobo-as-transactional-email-sender]]`, not `[[set up utobo as transactional email sender]]`. Same-folder links can stay bare.
 
 **Working method:** after writing a page with wikilinks, run `wiki_validate` and read the actual written file (the transformation happens silently — the tool's input echoes don't show it); fix any W4 broken-link warnings with path-qualified slugs before declaring the page done. Pre-existing W2 long-filename warnings on tool-generated slugs are noise — leave them.
 

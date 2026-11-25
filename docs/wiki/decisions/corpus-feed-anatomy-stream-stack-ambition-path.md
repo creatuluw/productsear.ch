@@ -4,7 +4,7 @@ title: "Corpus feed anatomy: stream + stack; Ambition Path accepted; The Pulse p
 description: Context
 tags: [[feed, listings, item-types, stream, ambition-path, the-pulse, brainstorm, proposed]]
 status: proposed
-supersedes: reshape-the-corpus-feed-as-a-listings-feed-of-item-types-pit
+supersedes: reshape-the-corpus-feed-as-a-listings-feed
 timestamp: "2026-11-06T19:08:35.419Z"
 ---
 
@@ -40,7 +40,7 @@ Framing: "market intelligence from a newsroom that happens to be a database." Ef
 
 - **Stream ordering (Q4, asked, unanswered)**: A pure recency / B rotation algorithm — guarantees type/angle variety daily, Pulse on Mondays (assistant lean; makes the "multiple angles" promise mechanical and gives return visits a rhythm) / C personalized relevance — needs tracking, cold-start is weak.
 - **The Pulse: in / out / tweaked** — asked alongside Q4. If rejected, the 20%-surprise criteria gap reopens.
-- Parked/carried: persona-attribution disclosure line; 2a The Floor privacy; 2b obituary tone; 3a writing budget; 3b share destination; G audience sequencing. Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Parked/carried: persona-attribution disclosure line; 2a The Floor privacy; 2b obituary tone; 3a writing budget; 3b share destination; G audience sequencing. Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

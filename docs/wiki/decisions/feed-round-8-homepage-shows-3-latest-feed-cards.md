@@ -4,7 +4,7 @@ title: "Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's 
 description: "Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched"
 tags: [[feed, listings, item-types, homepage, the-walk, ribbons-diary, brainstorm, proposed]]
 status: proposed
-supersedes: feed-round-7-v1-ships-all-7-item-types-the-walk-pitched
+supersedes: feed-round-7-v1-ships-all-7-item-types-the-walk
 timestamp: "2026-11-06T19:20:18.124Z"
 ---
 
@@ -14,7 +14,7 @@ timestamp: "2026-11-06T19:20:18.124Z"
 
 ## Context
 
-Round 8 of the corpus-feed brainstorm (2026-11-06). Answers the round-7 grill Q7 (where does the feed live — see [[decisions/feed-round-7-v1-ships-all-7-item-types-the-walk-pitched]]) plus the pending Walk verdict. The user's answer, with a homepage screenshot: *"q7 - /feed + we add the most recent 3 items from the feed in cards in the center of the available space, when a user starts a search then the cards disappear"* — and *"the idea stays"* confirming The Walk.
+Round 8 of the corpus-feed brainstorm (2026-11-06). Answers the round-7 grill Q7 (where does the feed live — see [[decisions/feed-round-7-v1-ships-all-7-item-types-the-walk]]) plus the pending Walk verdict. The user's answer, with a homepage screenshot: *"q7 - /feed + we add the most recent 3 items from the feed in cards in the center of the available space, when a user starts a search then the cards disappear"* — and *"the idea stays"* confirming The Walk.
 
 ## Newly settled this round
 
@@ -41,7 +41,7 @@ Originally pitched in round 2; re-surfaced this round as the new-arrivals fix: t
 - **Q8 cadence** — asked, awaiting A/B/C + Ribbon's Diary verdict.
 - Carried parked: persona attribution · accounts (personalization post-accounts) · rotation calendar · share expansion.
 - Still unclaimed from the round-1 menu: Marginalia · Confessions · The Floor.
-- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

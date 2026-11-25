@@ -14,4 +14,4 @@ timestamp: "2026-11-06T18:57:22.646Z"
 
 **Rationale / evidence:** User directive 2026-11-06, magazine-feed ideation round 3: "each turn 1 grill me question and 1 idea to which i both need to respond, if with the ideation round create new decision branches you'll add those to the question/turn ledger." Third consecutive format iteration in one day — the trajectory converges on slower, tighter, traceable rounds: free-form interview rejected → lettered options → bare letters → now paired pacing with a ledger.
 
-**Related:** [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]] — how each grill question is formatted; [[learnings/interview-brevity-refinement-bare-lettered-options-no-prose-]] — bare letters, no prose; [[decisions/add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos]] — the brainstorm this protocol currently runs.
+**Related:** [[rules/interview-questions-ship-with-lettered-options]] — how each grill question is formatted; [[learnings/interview-brevity-refinement-bare-lettered]] — bare letters, no prose; [[decisions/add-a-corpus-narrated-magazine-feed]] — the brainstorm this protocol currently runs.

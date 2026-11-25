@@ -21,7 +21,7 @@ The server endpoints that render designed 1200×630 OG `image/png` cards so soci
 ## Details
 
 - **Location**: routes above + shared builder `src/lib/server/og`
-- **Renderer**: hand-built SVG string → PNG via `@resvg/resvg-js` (native NAPI, no wasm) — per [the renderer ADR](../../decisions/receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md); this resvg version takes `fontFiles` paths, not buffers.
+- **Renderer**: hand-built SVG string → PNG via `@resvg/resvg-js` (native NAPI, no wasm) — per [the renderer ADR](../../decisions/receipt-card-og-images-hand-built-svg-resvg-resvg.md); this resvg version takes `fontFiles` paths, not buffers.
 - **Card anatomy (2026-11-07 redesign)**: hairline type chip → one accent tick in #0021FF → 60px Hanken Grotesk SemiBold headline (tight tracking) → ink-soft standfirst (width-based word wrap) → hairline footer (`domain` left, `productsear.ch · the drum` in accent, right). The heavy full-height blue stripe was dropped; the mascot anchors the right band (~220px, RGBA-verified).
 - **Fonts**: self-hosted `static/fonts/HankenGrotesk-{Regular,SemiBold}.ttf` + `MartianMono-Std{Rg,Bd}.ttf` (OFL, license note at `static/fonts/LICENSE.txt`). Martian Mono comes from **`evilmartians/mono`** releases (not gstatic); resvg family name is `Martian Mono Std Rg`.
 - **Chip text**: display names via the `FEED_TYPE_BY_SLUG` registry, never the raw `f.type` slug (raw slugs render as `IMPRESS-THE-BOSS`).

@@ -8,7 +8,7 @@ timestamp: "2026-11-06T10:21:22.226Z"
 
 # Daily embed-new-bookmarks workflow
 
-`.github/workflows/embed-new-bookmarks.yml` — a GitHub Actions scheduled workflow that keeps the corpus enriched nightly. **Since 2026-11-06 it runs the full enrichment chain** (crawl → analyze → archetypes → embed), not just embeddings — see [corpus-enrichment-pipeline-sync-crawl-analyze](./corpus-enrichment-pipeline-sync-crawl-analyze.md) and the [self-containment ADR](../../decisions/product-search-corpus-pipeline-is-self-contained-in-products.md).
+`.github/workflows/embed-new-bookmarks.yml` — a GitHub Actions scheduled workflow that keeps the corpus enriched nightly. **Since 2026-11-06 it runs the full enrichment chain** (crawl → analyze → archetypes → embed), not just embeddings — see [corpus-enrichment-pipeline-sync-crawl-analyze](./corpus-enrichment-pipeline-sync-crawl-analyze.md) and the [self-containment ADR](../../decisions/product-search-corpus-pipeline-is-self-contained.md).
 
 ## What is it?
 

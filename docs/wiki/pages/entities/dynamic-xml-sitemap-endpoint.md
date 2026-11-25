@@ -12,7 +12,7 @@ timestamp: "2026-11-10T11:43:50.272Z"
 
 ## What it is
 
-The crawler entry point of the [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md). Search engines discover it via the `Sitemap:` line in `static/robots.txt` and the HTTP `Link:` header (hooks.server.ts); the user-side lever is submitting it in Google Search Console. Trimmed to hub-only on 2026-11-10 (commit `e4ecd86`) after shipping the same day with ~4,450 URLs — the user's call that 4,414 thin listing pages diluted crawl budget. See [decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-](../../decisions/trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md).
+The crawler entry point of the [pages/concepts/search-and-llm-discovery-layer](../concepts/search-and-llm-discovery-layer.md). Search engines discover it via the `Sitemap:` line in `static/robots.txt` and the HTTP `Link:` header (hooks.server.ts); the user-side lever is submitting it in Google Search Console. Trimmed to hub-only on 2026-11-10 (commit `e4ecd86`) after shipping the same day with ~4,450 URLs — the user's call that 4,414 thin listing pages diluted crawl budget. See [decisions/trim-sitemap-xml-to-hub-surfaces-only](../../decisions/trim-sitemap-xml-to-hub-surfaces-only.md).
 
 ## Details
 

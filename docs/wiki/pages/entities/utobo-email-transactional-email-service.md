@@ -8,7 +8,7 @@ timestamp: "2026-11-06T13:39:59.486Z"
 
 # utobo Email (transactional email service)
 
-**utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS SES. Accounts live at `email.utobo.com`; docs at `https://utobo.com/email/docs`. The productsear.ch sending domain was **verified on 2026-11-06** (see [the utobo sending-domain decision](../../decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) for the DNS contract and the DMARC p=none tradeoff). Any server code that sends email from this project should use this service.
+**utobo Email** is the email service powering outbound (and optionally inbound) mail for productsear.ch — transactional, marketing, and sequences, built on AWS SES. Accounts live at `email.utobo.com`; docs at `https://utobo.com/email/docs`. The productsear.ch sending domain was **verified on 2026-11-06** (see [the utobo sending-domain decision](../../decisions/set-up-utobo-as-transactional-email-sender.md) for the DNS contract and the DMARC p=none tradeoff). Any server code that sends email from this project should use this service.
 
 ## Details
 
@@ -79,7 +79,7 @@ Dashboard-only endpoints (domains, API keys) return plain `{ "error": "…" }` w
 - DNS contract (all live at GoDaddy, verified 2026-11-06): DKIM TXT `utobozgb9pzudt3k1._domainkey`, CNAME `send` → `send.utobo.com` (SPF), TXT `_dmarc` (currently `p=none` — enforcement follow-up owed), MX `@` → `mx.inbound.utobo.com` (receiving)
 - Plan: 50 sending domains, 4 in use
 
-- [the utobo sending-domain decision](../../decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — the ADR covering why utobo was chosen and the DMARC downgrade tradeoff
+- [the utobo sending-domain decision](../../decisions/set-up-utobo-as-transactional-email-sender.md) — the ADR covering why utobo was chosen and the DMARC downgrade tradeoff
 
 ## Lifecycle
 

@@ -21,7 +21,7 @@ Role: doubles as the "engine room" readout during flight (the latency cell pulse
 - [waveloader-component](./waveloader-component.md) — pulses in the drawer's latency cell while a search runs
 - [infotip-component](./infotip-component.md) — every vital-signs label and methodology term is an InfoTip hover/focus tooltip
 - [the-drum-feed](./the-drum-feed.md) — its 3 latest cards are the only content besides the search field on the idle homepage
-- Decision: [homepage content/system-metadata split](../../decisions/homepage-content-system-metadata-split-auto-opening-search-d.md)
+- Decision: [homepage content/system-metadata split](../../decisions/homepage-content-system-metadata-split-auto.md)
 
 ## Lifecycle
 

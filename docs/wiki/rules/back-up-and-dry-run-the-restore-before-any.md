@@ -16,6 +16,6 @@ timestamp: "2026-11-07T12:26:23.426Z"
 
 **Gotcha:** the intentional ROLLBACK at the end of a dry-run is usually thrown as an error — that non-zero exit breaks `&&` command chains. Make the dry-run script catch the intentional rollback and **exit cleanly (0)** so the backup → dry-run → wipe chain runs unattended.
 
-**When it applies:** any `DELETE` (not just generated-row cleanup) committed for real. Complements [[rules/prepare-and-dry-run-the-rollback-script-before-generating-de]] (derived-row undo scripts) and [[rules/validate-generated-sql-inserts-with-a-rollback-wrapped-dry-r]] (insert dry runs) — together the te9_dev bulk-mutation safety family.
+**When it applies:** any `DELETE` (not just generated-row cleanup) committed for real. Complements [[rules/prepare-and-dry-run-the-rollback-script-before]] (derived-row undo scripts) and [[rules/validate-generated-sql-inserts-with-a-rollback]] (insert dry runs) — together the te9_dev bulk-mutation safety family.
 
 **Evidence:** 2026-11-07 Drum wipe — 10 `feed_items` rows backed up, restore dry-run verified 10/10 in a rolled-back transaction, then wiped; rotation confirmed reset and due-now afterward.

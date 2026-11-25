@@ -22,7 +22,7 @@ The structured-data renderer of the [pages/concepts/search-and-llm-discovery-lay
   - `/` — `WebSite` + `SearchAction` (EntryPoint urlTemplate `https://productsear.ch/?q={search_term_string}` → Google sitelinks searchbox) + `WebApplication`
   - collections pages — `CollectionPage` + `ItemList` (the group page builds a `groupJsonLd` const)
   - `/listings/[id]` — `ItemPage`
-- **Gotcha baked into its history**: a literal `</script>` anywhere in this file — including inside a comment — terminates Svelte's script block and breaks the component; see [learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c](../../learnings/svelte-script-blocks-terminate-at-a-literal-script-even-in-c.md)
+- **Gotcha baked into its history**: a literal `</script>` anywhere in this file — including inside a comment — terminates Svelte's script block and breaks the component; see [learnings/svelte-script-blocks-terminate-at-a-literal](../../learnings/svelte-script-blocks-terminate-at-a-literal.md)
 
 ## Relationships
 

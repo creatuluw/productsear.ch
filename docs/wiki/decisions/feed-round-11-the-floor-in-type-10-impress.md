@@ -4,7 +4,7 @@ title: "Feed round 11: The Floor in (type #10), Impress the Boss in as user-orig
 description: Context
 tags: [feed, listings, item-types, the-floor, impress-the-boss, the-drum, disclosure, methodology-page, brainstorm, proposed]
 status: proposed
-supersedes: feed-round-10-tombola-selection-corpus-derived-origin-card-p
+supersedes: feed-round-10-tombola-selection-corpus-derived
 timestamp: "2026-11-06T19:27:39.566Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-06T19:27:39.566Z"
 
 ## Context
 
-Round 11 of the corpus-feed brainstorm (2026-11-06). The user answered the round-10 grill with *"the idea: yes keep it"* (The Floor verdict) and *"q10-b"* (disclosure choice), then originated a brand-new type themselves. See [[decisions/feed-round-10-tombola-selection-corpus-derived-origin-card-p]] for the The-Floor pitch + Q10 disclosure context.
+Round 11 of the corpus-feed brainstorm (2026-11-06). The user answered the round-10 grill with *"the idea: yes keep it"* (The Floor verdict) and *"q10-b"* (disclosure choice), then originated a brand-new type themselves. See [[decisions/feed-round-10-tombola-selection-corpus-derived]] for the The-Floor pitch + Q10 disclosure context.
 
 ## Newly settled this round
 
@@ -37,7 +37,7 @@ Not a type — a **return mechanic**: every feed card and the `/feed` header car
 
 - **Q11 artifact source** — asked, awaiting A/B/C/D + The Drum verdict.
 - Carried parked: accounts (personalization post-accounts) · share expansion · Marginalia · Confessions · Origin card · methodology page detail.
-- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

@@ -10,7 +10,7 @@ timestamp: "2026-11-01T01:27:44.055Z"
 
 `/collections` (index) and `/collections/[slug]` (group) — the archetype roll-up surface. The index lists all **30 canonical archetypes** with live counts; each group page shows bounded cards for its bookmarks with **WHAT / HOW / WHEN** rows plus tags and date (the "who" is implied in the wording, per the approved brief).
 
-**Formerly the "compendium"** — renamed to "collections" on 2026-11-06 (display term AND routes; see [the decision](../../decisions/rename-compendium-to-collections-routes-moved-308-redirects.md)). Old `/compendium` and `/compendium/<slug>` URLs 308-redirect to the new paths, query string preserved (`?view=llm` included).
+**Formerly the "compendium"** — renamed to "collections" on 2026-11-06 (display term AND routes; see [the decision](../../decisions/rename-compendium-to-collections-routes-moved-308.md)). Old `/compendium` and `/compendium/<slug>` URLs 308-redirect to the new paths, query string preserved (`?view=llm` included).
 
 ## Details
 

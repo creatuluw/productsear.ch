@@ -4,7 +4,7 @@ title: "Reshape the corpus feed as a listings feed of item types: pitches, One S
 description: Context
 tags: [feed, listings, item-types, pitches, brainstorm, proposed]
 status: proposed
-supersedes: [add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos]
+supersedes: [add-a-corpus-narrated-magazine-feed]
 timestamp: "2026-11-06T19:04:19.398Z"
 ---
 
@@ -35,7 +35,7 @@ The 14 ideas from the superseded magazine proposal remain the candidate item-typ
 - **Feed anatomy (Q3, asked, unanswered)**: A one mixed stream (all item types interleave, recency/relevance-ranked, social-feed style) / B listing-centered (browse listings; each carries its stack of pitch/two-futures/one-save posts) / C stream + stack — one mixed stream, every card links to the listing's full post-stack page (assistant lean: C — stream drives return visits, stack drives depth).
 - **Ambition Path (pitched round 3, awaiting in/out/tweaked)**: a feed item type chaining multiple listings into one ordered route toward a named ambition — *"From spreadsheet chaos to shipping your first SaaS — the 5 listings that matter, in order"* — generated from archetype + semantic clusters in the corpus. Bigger share artifact than a single post (people share destinations, not steps). Not yet accepted.
 - **Persona attribution (parked, flagged round 3)**: invented pitch voices will occasionally get called out online; the feed needs a one-line "drafted from the corpus, not a human" disclosure convention. Parked, not grilled.
-- Carried over from the superseded proposal, still unanswered: writing budget (3a), primary share destination (3b), audience-first sequencing (G), The Floor privacy line (2a). Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Carried over from the superseded proposal, still unanswered: writing budget (3a), primary share destination (3b), audience-first sequencing (G), The Floor privacy line (2a). Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

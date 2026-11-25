@@ -19,4 +19,4 @@ Key facts about the failure mode:
 - **Fix pattern**: set the var in Railway (`railway variables set ...`, which triggers a redeploy), then re-trigger the mail for the existing draft rather than redrawing.
 - Different surfaces hold different copies of secrets: **GitHub Secrets ≠ Railway runtime env ≠ local `.env`** — presence in one says nothing about the others.
 
-Evidence: Railway deploy logs + the re-sent approval email verified live (2026-11-12). See [[rules/verify-production-runtime-env-vars-before-declaring-a-send-pipeline-armed]] and [[learnings/the-digest-send-pipeline-verifies-in-stages-no-active-subscr]].
+Evidence: Railway deploy logs + the re-sent approval email verified live (2026-11-12). See [[rules/verify-production-runtime-env-vars-before-declaring-a-send-pipeline-armed]] and [[learnings/the-digest-send-pipeline-verifies-in-stages]].

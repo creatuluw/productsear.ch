@@ -39,8 +39,8 @@ It is the only way productsear.ch sends email (verification/delivery mail today,
 ## Relationships
 
 - [utobo-sending-domain-dns-records](./utobo-sending-domain-dns-records.md) — the DNS contract that makes productsear.ch a verified sending domain
-- [set-up-utobo-as-transactional-email-sender-for-productsear-c](../../decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — why utobo was chosen and why DMARC sits at `p=none`
-- [verify-godaddy-dns-writes-by-polling-the-authoritative-names](../../learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — verification method used during setup
+- [set-up-utobo-as-transactional-email-sender](../../decisions/set-up-utobo-as-transactional-email-sender.md) — why utobo was chosen and why DMARC sits at `p=none`
+- [verify-godaddy-dns-writes-by-polling](../../learnings/verify-godaddy-dns-writes-by-polling.md) — verification method used during setup
 
 ## Lifecycle
 

@@ -11,7 +11,7 @@ timestamp: "2026-11-10T11:43:26.025Z"
 
 ## Context
 
-The 2026-11-10 discovery pass ([[decisions/adopt-full-search-engine-and-llm-discovery-infrastructure]]) shipped a dynamic sitemap with one URL per corpus listing — ~4,450 URLs total (6 surfaces + 30 collections + 4,414 listings). Minutes later the user pushed back: individual listing pages are thin, 4,414 of them dilute crawl budget, and `/archive` plus `/collections` already expose every listing to crawlers via internal links.
+The 2026-11-10 discovery pass ([[decisions/adopt-full-search-engine-and-llm-discovery]]) shipped a dynamic sitemap with one URL per corpus listing — ~4,450 URLs total (6 surfaces + 30 collections + 4,414 listings). Minutes later the user pushed back: individual listing pages are thin, 4,414 of them dilute crawl budget, and `/archive` plus `/collections` already expose every listing to crawlers via internal links.
 
 ## Choice
 
@@ -31,4 +31,4 @@ A sitemap's job is URL discovery, not quality signaling — and listing URLs wer
 - Sitemap = 36 URLs / 0 listing URLs; listings stay indexable via `/archive` and `/collections` internal links.
 - User follow-up: resubmit `sitemap.xml` in Google Search Console after the deploy — Google drops removed URLs as it recrawls, and the transient 404s it saw on `/listings/-52x` resolve to real pages.
 - Amends only the sitemap scope of the discovery ADR; every other part of that decision stands.
-- See [[pages/entities/dynamic-xml-sitemap-endpoint]] for the resulting URL set and [[learnings/feed-surfaces-link-synthetic-negative-id-listings-public-lis]] for the related listing-route fix shipped in the same commit.
+- See [[pages/entities/dynamic-xml-sitemap-endpoint]] for the resulting URL set and [[learnings/feed-surfaces-link-synthetic-negative-id-listings]] for the related listing-route fix shipped in the same commit.

@@ -4,7 +4,7 @@ title: "Feed round 12 wrap: approvals are per-item admin toggles; The Digest in 
 description: Context
 tags: [feed, listings, editorial-workflow, admin-gate, the-digest, the-backlog, dark-launch, default-states, brainstorm, proposed]
 status: proposed
-supersedes: feed-round-12-editorial-workflow-in-corpus-drafted-admin-app
+supersedes: feed-round-12-editorial-workflow-in-corpus
 timestamp: "2026-11-06T19:32:55.391Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-06T19:32:55.391Z"
 
 ## Context
 
-Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-12 grill ([[decisions/feed-round-12-editorial-workflow-in-corpus-drafted-admin-app]]) — the user answered Q12 and gave The Digest verdict, and the assistant pitched round 13.
+Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-12 grill ([[decisions/feed-round-12-editorial-workflow-in-corpus]]) — the user answered Q12 and gave The Digest verdict, and the assistant pitched round 13.
 
 ## Newly settled this turn
 
@@ -36,7 +36,7 @@ A **launch mechanic, not a type**: before the feed goes live, the pipeline pre-d
 - **Q13 stream ordering** — asked, awaiting A/B/C + The Backlog verdict.
 - **Default states** — new parked branch: which feed features are on vs. dark at launch.
 - Carried parked: accounts · share expansion · Marginalia · Confessions · Origin card (fourth nudge) · methodology detail · rotation calendar.
-- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

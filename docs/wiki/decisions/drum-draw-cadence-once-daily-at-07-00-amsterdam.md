@@ -4,7 +4,7 @@ title: "Drum draw cadence: once daily at 07:00 Amsterdam time"
 description: Context
 tags: [feed, the-drum, cron, cadence, timezone]
 status: accepted
-supersedes: decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to
+supersedes: decisions/feed-round-9-cadence-1-item-2-days-admin
 timestamp: "2026-11-12T15:44:58.115Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-12T15:44:58.115Z"
 
 ## Context
 
-The Drum's draw cadence since [[decisions/feed-round-9-cadence-1-item-2-days-admin-configurable-the-to]] was **1 item / 2 days** (admin-configurable, 1–720h range), with the GitHub Actions draw cron (`feed-draw.yml`) firing daily at 09:07 UTC and no-oping until the cadence gate said DUE.
+The Drum's draw cadence since [[decisions/feed-round-9-cadence-1-item-2-days-admin]] was **1 item / 2 days** (admin-configurable, 1–720h range), with the GitHub Actions draw cron (`feed-draw.yml`) firing daily at 09:07 UTC and no-oping until the cadence gate said DUE.
 
 ## Choice
 

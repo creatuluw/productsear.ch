@@ -46,7 +46,7 @@ Brainstorm (2026-11-06, status: **proposed, awaiting user answers**). productsea
 
 ## Open questions blocking adoption (re-posed 2026-11-06 as option-based rounds)
 
-Interview reformatted per [the interview-protocol rule](../rules/interview-questions-ship-with-lettered-options-plus-a-procee.md): every question now ships lettered options + an interviewer lean, and all 14 ideas go through a "proceed? / notes / additional ideas?" scorecard (1b). Awaiting the user's letter answers:
+Interview reformatted per [the interview-protocol rule](../rules/interview-questions-ship-with-lettered-options.md): every question now ships lettered options + an interviewer lean, and all 14 ideas go through a "proceed? / notes / additional ideas?" scorecard (1b). Awaiting the user's letter answers:
 
 - **1a** Narrator voice: A curator "I" / B mascot product-search as recurring narrator / C editorial "we" / D hybrid (mascot daily, curator deep pieces).
 - **1b** Idea scorecard over all 14 ideas (proceed? / notes — e.g. "2 yes but frozen-walk, 7 kill") + user's own additional ideas.

@@ -27,8 +27,8 @@ A concrete DNS configuration surface owned by the domain (not the app repo): the
 
 ## Relationships
 
-- [set-up-utobo-as-transactional-email-sender-for-productsear-c](../../decisions/set-up-utobo-as-transactional-email-sender-for-productsear-c.md) — the decision recording why these records exist and why DMARC is `p=none`
-- [verify-godaddy-dns-writes-by-polling-the-authoritative-names](../../learnings/verify-godaddy-dns-writes-by-polling-the-authoritative-names.md) — the verification method used to confirm the records
+- [set-up-utobo-as-transactional-email-sender](../../decisions/set-up-utobo-as-transactional-email-sender.md) — the decision recording why these records exist and why DMARC is `p=none`
+- [verify-godaddy-dns-writes-by-polling](../../learnings/verify-godaddy-dns-writes-by-polling.md) — the verification method used to confirm the records
 
 ## Lifecycle
 

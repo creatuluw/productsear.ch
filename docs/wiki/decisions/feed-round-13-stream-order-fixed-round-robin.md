@@ -4,7 +4,7 @@ title: "Feed round 13: stream order fixed round-robin; The Backlog in (draw-time
 description: Context
 tags: [[feed, listings, stream-order, round-robin, the-backlog, inline-editor, accounts, editorial-workflow, same-day-last-year, brainstorm, proposed]]
 status: proposed
-supersedes: feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-
+supersedes: feed-round-12-wrap-approvals-are-per-item-admin
 timestamp: "2026-11-06T19:35:36.941Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-06T19:35:36.941Z"
 
 ## Context
 
-Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-12-wrap grill ([[decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-]]) — the user answered Q13 (A), gave The Backlog verdict, and added a workflow requirement (inline editor).
+Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-12-wrap grill ([[decisions/feed-round-12-wrap-approvals-are-per-item-admin]]) — the user answered Q13 (A), gave The Backlog verdict, and added a workflow requirement (inline editor).
 
 ## Newly settled this turn
 
@@ -39,7 +39,7 @@ Converging identity fork (the last one):
 
 - **Q14 naming fork** — asked, awaiting A/B/C/D + the Same Day Last Year verdict.
 - Parked carried: share expansion · Origin card (fourth nudge) · methodology detail · default states · accounts (→ phase 2, with Marginalia + Confessions).
-- Interview format per [[rules/interview-questions-ship-with-lettered-options-plus-a-procee]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per-turn-branc]].
+- Interview format per [[rules/interview-questions-ship-with-lettered-options]]; pacing per [[rules/brainstorm-pacing-one-idea-one-grill-question-per]].
 
 ## Consequences if adopted
 

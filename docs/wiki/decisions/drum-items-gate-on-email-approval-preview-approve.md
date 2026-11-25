@@ -4,7 +4,7 @@ title: Drum items gate on email approval — preview + Approve / Generate new / 
 description: Context
 tags: [feed, the-drum, approval, email, editorial-workflow]
 status: accepted
-supersedes: decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-
+supersedes: decisions/feed-round-12-wrap-approvals-are-per-item-admin
 timestamp: "2026-11-12T15:44:58.114Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-12T15:44:58.114Z"
 
 ## Context
 
-The Drum's human gate lived entirely in the admin console (`/admin/feed`): draft → inline editor → per-item approval toggle → publish, with gate-off items publishing automatically (see [[decisions/feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-]]). Reviewing a draw required logging in, and an unreviewed bad draw could go live — one did this session: a LinkedIn search-results listing ("leerkrachten basisonderwijs groningen - Google Zoeken") was drawn and published, then had to be removed from DB + site by hand.
+The Drum's human gate lived entirely in the admin console (`/admin/feed`): draft → inline editor → per-item approval toggle → publish, with gate-off items publishing automatically (see [[decisions/feed-round-12-wrap-approvals-are-per-item-admin]]). Reviewing a draw required logging in, and an unreviewed bad draw could go live — one did this session: a LinkedIn search-results listing ("leerkrachten basisonderwijs groningen - Google Zoeken") was drawn and published, then had to be removed from DB + site by hand.
 
 ## Choice
 

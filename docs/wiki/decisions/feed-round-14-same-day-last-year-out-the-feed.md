@@ -4,7 +4,7 @@ title: "Feed round 14: Same Day Last Year out; the feed is named The Drum; conve
 description: Context
 tags: [feed, the-drum, naming, same-day-last-year, convergence-slate, brainstorm, proposed]
 status: proposed
-supersedes: feed-round-13-stream-order-fixed-round-robin-the-backlog-in-
+supersedes: feed-round-13-stream-order-fixed-round-robin
 timestamp: "2026-11-06T19:37:30.055Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-06T19:37:30.055Z"
 
 ## Context
 
-Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-13 grill ([[decisions/feed-round-13-stream-order-fixed-round-robin-the-backlog-in-]]) — the user answered **Q14: B) The Drum** and gave the **Same Day Last Year** pitch verdict.
+Continuation of the corpus-feed brainstorm (2026-11-06), resolving the round-13 grill ([[decisions/feed-round-13-stream-order-fixed-round-robin]]) — the user answered **Q14: B) The Drum** and gave the **Same Day Last Year** pitch verdict.
 
 ## Newly settled this turn
 

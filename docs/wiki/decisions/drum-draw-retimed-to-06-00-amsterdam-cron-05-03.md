@@ -4,7 +4,7 @@ title: "Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted
 description: Context
 tags: [feed, the-drum, cron, cadence, timezone, github-actions, railway]
 status: accepted
-supersedes: decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time
+supersedes: decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam
 timestamp: "2026-11-12T15:58:17.797Z"
 ---
 
@@ -12,7 +12,7 @@ timestamp: "2026-11-12T15:58:17.797Z"
 
 ## Context
 
-Within the same session that adopted a daily 07:00 Amsterdam morning slot ([decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam-time]), the user overrode the clock time: "no make that 6:00 amsterdam time". The daily cadence (24h) stands; only the draw time moves an hour earlier. Implementation shipped in commits `e4ecd86..1b8bb66`.
+Within the same session that adopted a daily 07:00 Amsterdam morning slot ([decisions/drum-draw-cadence-once-daily-at-07-00-amsterdam]), the user overrode the clock time: "no make that 6:00 amsterdam time". The daily cadence (24h) stands; only the draw time moves an hour earlier. Implementation shipped in commits `e4ecd86..1b8bb66`.
 
 ## Choice
 

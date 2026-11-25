@@ -18,36 +18,36 @@ _Major decisions and direction shifts (ADRs) will be listed here._
 - [Embedding provider: Voyage voyage-4-large (1024-dim)](./embedding-provider-voyage-voyage-4-large-1024-dim.md) - Context
 - [Adopt agentos-sdk.dev visual design system](./adopt-agentos-sdk-dev-visual-design-system.md) - Context
 - [Hybrid semantic search stack: pgvector + tsvector with RRF fusion](./hybrid-semantic-search-stack-pgvector-tsvector.md) - Context
-- [Product-search corpus pipeline is self-contained in productsear.ch](./product-search-corpus-pipeline-is-self-contained-in-products.md) - Context
-- [Rename compendium to collections (routes moved, 308 redirects)](./rename-compendium-to-collections-routes-moved-308-redirects.md) - Context
-- [Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)](./set-up-utobo-as-transactional-email-sender-for-productsear-c.md) - Context
-- [Detect LLM clients by user-agent allowlist, not Accept header alone, for raw-markdown negotiation](./detect-llm-clients-by-user-agent-allowlist-not-accept-header.md) - Context
-- [Add a corpus-narrated magazine feed to productsear.ch (proposed)](./add-a-corpus-narrated-magazine-feed-to-productsear-ch-propos.md) - Context
-- [Reshape the corpus feed as a listings feed of item types: pitches, One Save, Two Futures (proposed)](./reshape-the-corpus-feed-as-a-listings-feed-of-item-types-pit.md) - Context
-- [Corpus feed anatomy: stream + stack; Ambition Path accepted; The Pulse pitched (proposed)](./corpus-feed-anatomy-stream-stack-ambition-path-accepted-the-.md) - Context
-- [Feed stream runs on rotation (personalization post-accounts); The Pulse accepted; Receipt cards pitched (proposed)](./feed-stream-runs-on-rotation-personalization-post-accounts-t.md) - Context
-- [Feed round 6: Bluesky-only share; Receipt cards accepted](./feed-round-6-bluesky-only-share-receipt-cards-accepted.md) - Context
-- [Adopt dark theme via semantic token swap on html.dark (reverses earlier deferral)](./adopt-dark-theme-via-semantic-token-swap-on-html-dark-revers.md) - Context
-- [Feed round 7: v1 ships all 7 item types; The Walk pitched](./feed-round-7-v1-ships-all-7-item-types-the-walk-pitched.md) - Context
-- [Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched](./feed-round-8-homepage-shows-3-latest-feed-cards-the-walk-in-.md) - Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched
-- [Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in as type #9; The Origin card pitched](./feed-round-9-cadence-1-item-2-days-admin-configurable-the-to.md) - Context
-- [Feed round 10: Tombola selection corpus-derived; Origin card parked; The Floor pitched (aggregated search misses)](./feed-round-10-tombola-selection-corpus-derived-origin-card-p.md) - Context
-- [Feed round 11: The Floor in (type #10), Impress the Boss in as user-originated type #11; The Drum pitched (countdown mechanic)](./feed-round-11-the-floor-in-type-10-impress-the-boss-in-as-us.md) - Context
-- [Feed round 12: editorial workflow in (corpus-drafted, admin-approved); artifact source D hybrid+origin tags; The Drum in; The Digest pitched (utobo email)](./feed-round-12-editorial-workflow-in-corpus-drafted-admin-app.md) - Context
-- [Feed round 12 wrap: approvals are per-item admin toggles; The Digest in as admin-toggled dark launch (off by default); The Backlog pitched (launch pre-draft)](./feed-round-12-wrap-approvals-are-per-item-admin-toggles-the-.md) - Context
-- [Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)](./feed-round-13-stream-order-fixed-round-robin-the-backlog-in-.md) - Context
-- [Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)](./feed-round-14-same-day-last-year-out-the-feed-is-named-the-d.md) - Context
-- [The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md](./the-drum-converged-q15-a-formal-spec-written-at-docs-specs-t.md) - Context
-- [Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)](./receipt-card-og-images-hand-built-svg-resvg-resvg-js-replace.md) - Context
-- [Redesign The Drum /feed around the nine Gestalt principles](./redesign-the-drum-feed-around-the-nine-gestalt-principles.md) - **Context.** The `/feed` page (The Drum, [[pages/entities/the-drum-feed]]) had shipped as a functional column of hairline-separated rows: unbounded cards with f
-- [Adapt every public surface for touch/mobile — rethink, don't scale](./adapt-every-public-surface-for-touch-mobile-rethink-don-t-sc.md) - **Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-
-- [Homepage content/system-metadata split: auto-opening search drawer](./homepage-content-system-metadata-split-auto-opening-search-d.md) - **Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text · cross-encoder rera
-- [Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint](./elegant-shared-og-cards-one-card-builder-in-lib-server-og-pl.md) - Context
-- [Adopt full search-engine and LLM discovery infrastructure](./adopt-full-search-engine-and-llm-discovery-infrastructure.md) - Context
-- [Trim sitemap.xml to hub surfaces only — no individual listing URLs](./trim-sitemap-xml-to-hub-surfaces-only-no-individual-listing-.md) - Context
-- [Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes](./drum-items-gate-on-email-approval-preview-approve-generate-n.md) - Context
-- [Drum draw cadence: once daily at 07:00 Amsterdam time](./drum-draw-cadence-once-daily-at-07-00-amsterdam-time.md) - Context
-- [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](./drum-draw-retimed-to-06-00-amsterdam-cron-05-03-utc-dst-drif.md) - Context
+- [Product-search corpus pipeline is self-contained in productsear.ch](./product-search-corpus-pipeline-is-self-contained.md) - Context
+- [Rename compendium to collections (routes moved, 308 redirects)](./rename-compendium-to-collections-routes-moved-308.md) - Context
+- [Set up utobo as transactional email sender for productsear.ch; DMARC downgraded to p=none (temporarily)](./set-up-utobo-as-transactional-email-sender.md) - Context
+- [Detect LLM clients by user-agent allowlist, not Accept header alone, for raw-markdown negotiation](./detect-llm-clients-by-user-agent-allowlist.md) - Context
+- [Add a corpus-narrated magazine feed to productsear.ch (proposed)](./add-a-corpus-narrated-magazine-feed.md) - Context
+- [Reshape the corpus feed as a listings feed of item types: pitches, One Save, Two Futures (proposed)](./reshape-the-corpus-feed-as-a-listings-feed.md) - Context
+- [Corpus feed anatomy: stream + stack; Ambition Path accepted; The Pulse pitched (proposed)](./corpus-feed-anatomy-stream-stack-ambition-path.md) - Context
+- [Feed stream runs on rotation (personalization post-accounts); The Pulse accepted; Receipt cards pitched (proposed)](./feed-stream-runs-on-rotation-personalization-post.md) - Context
+- [Feed round 6: Bluesky-only share; Receipt cards accepted](./feed-round-6-bluesky-only-share-receipt-cards.md) - Context
+- [Adopt dark theme via semantic token swap on html.dark (reverses earlier deferral)](./adopt-dark-theme-via-semantic-token-swap-on-html.md) - Context
+- [Feed round 7: v1 ships all 7 item types; The Walk pitched](./feed-round-7-v1-ships-all-7-item-types-the-walk.md) - Context
+- [Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched](./feed-round-8-homepage-shows-3-latest-feed-cards.md) - Feed round 8: homepage shows 3 latest feed cards; The Walk in, Ribbon's Diary re-pitched
+- [Feed round 9: cadence 1 item/2 days admin-configurable; The Tombola in as type #9; The Origin card pitched](./feed-round-9-cadence-1-item-2-days-admin.md) - Context
+- [Feed round 10: Tombola selection corpus-derived; Origin card parked; The Floor pitched (aggregated search misses)](./feed-round-10-tombola-selection-corpus-derived.md) - Context
+- [Feed round 11: The Floor in (type #10), Impress the Boss in as user-originated type #11; The Drum pitched (countdown mechanic)](./feed-round-11-the-floor-in-type-10-impress.md) - Context
+- [Feed round 12: editorial workflow in (corpus-drafted, admin-approved); artifact source D hybrid+origin tags; The Drum in; The Digest pitched (utobo email)](./feed-round-12-editorial-workflow-in-corpus.md) - Context
+- [Feed round 12 wrap: approvals are per-item admin toggles; The Digest in as admin-toggled dark launch (off by default); The Backlog pitched (launch pre-draft)](./feed-round-12-wrap-approvals-are-per-item-admin.md) - Context
+- [Feed round 13: stream order fixed round-robin; The Backlog in (draw-time drafts + auto-publish); inline editor on all posts; accounts = phase 2; Same Day Last Year pitched (type #12)](./feed-round-13-stream-order-fixed-round-robin.md) - Context
+- [Feed round 14: Same Day Last Year out; the feed is named The Drum; convergence slate locked pending final verdict (Q15)](./feed-round-14-same-day-last-year-out-the-feed.md) - Context
+- [The Drum converged (Q15-A) — formal spec written at docs/specs/the-drum.md](./the-drum-converged-q15-a-formal-spec-written.md) - Context
+- [Receipt-card OG images: hand-built SVG + @resvg/resvg-js (replaces broken-outside-Vercel @vercel/og)](./receipt-card-og-images-hand-built-svg-resvg-resvg.md) - Context
+- [Redesign The Drum /feed around the nine Gestalt principles](./redesign-the-drum-feed-around-the-nine-gestalt.md) - **Context.** The `/feed` page (The Drum, [[pages/entities/the-drum-feed]]) had shipped as a functional column of hairline-separated rows: unbounded cards with f
+- [Adapt every public surface for touch/mobile — rethink, don't scale](./adapt-every-public-surface-for-touch-mobile.md) - **Context.** The site was desktop-first. A diagnosis pass (impeccable adapt skill, run through the [[rules/redesign-surfaces-via-the-gestalt-diagnosis-then-map-
+- [Homepage content/system-metadata split: auto-opening search drawer](./homepage-content-system-metadata-split-auto.md) - **Context.** The homepage carried two system-metadata blocks inline in the page flow — the retrieval-methodology line (semantic + full-text · cross-encoder rera
+- [Elegant shared OG cards: one card builder in $lib/server/og plus a dedicated Drum OG endpoint](./elegant-shared-og-cards-one-card-builder-in-lib.md) - Context
+- [Adopt full search-engine and LLM discovery infrastructure](./adopt-full-search-engine-and-llm-discovery.md) - Context
+- [Trim sitemap.xml to hub surfaces only — no individual listing URLs](./trim-sitemap-xml-to-hub-surfaces-only.md) - Context
+- [Drum items gate on email approval — preview + Approve / Generate new / Skip mailed to the owner before anything publishes](./drum-items-gate-on-email-approval-preview-approve.md) - Context
+- [Drum draw cadence: once daily at 07:00 Amsterdam time](./drum-draw-cadence-once-daily-at-07-00-amsterdam.md) - Context
+- [Drum draw retimed to 06:00 Amsterdam (cron 05:03 UTC, DST drift accepted)](./drum-draw-retimed-to-06-00-amsterdam-cron-05-03.md) - Context
 - [Drum draw schedule made miss-proof (cron redundancy)](./drum-draw-schedule-made-miss-proof-cron-redundancy.md) - Context
-- [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](./the-walk-demoted-to-half-frequency-20-day-minimum-gap-and-it.md) - Context
-- [Drum rotation never draws the same type twice in a row](./drum-rotation-never-draws-the-same-type-twice-in-a-row.md) - Context
+- [The Walk demoted to half frequency (20-day minimum gap) and its trail items made clickable](./the-walk-demoted-to-half-frequency-20-day-minimum.md) - Context
+- [Drum rotation never draws the same type twice in a row](./drum-rotation-never-draws-the-same-type-twice.md) - Context

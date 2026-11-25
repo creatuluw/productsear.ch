@@ -15,4 +15,4 @@ timestamp: "2026-11-06T20:56:50.681Z"
 
 **When it applies.** Any visual/UX redesign of an existing page surface in this project.
 
-**Rationale.** Used 2026-11-06 for the `/feed` redesign ([[decisions/redesign-the-drum-feed-around-the-nine-gestalt-principles]]): the diagnosis table directly produced the treatment mapping and the result shipped in a single pass. Structural violations — no regions, no rhythm, no figure — are invisible to cosmetic tweaks; the principle audit is what surfaces them.
+**Rationale.** Used 2026-11-06 for the `/feed` redesign ([[decisions/redesign-the-drum-feed-around-the-nine-gestalt]]): the diagnosis table directly produced the treatment mapping and the result shipped in a single pass. Structural violations — no regions, no rhythm, no figure — are invisible to cosmetic tweaks; the principle audit is what surfaces them.
